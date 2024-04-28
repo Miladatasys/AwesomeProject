@@ -20,11 +20,11 @@ const SignInScreen = () => {
     };
 
     const onForgotPasswordPressed = () => {
-        navigation.navigate("ForgotPasswordScreen");
+        navigation.navigate('ForgotPassword');
     };
 
     const onSignUpPressed = () => {
-        navigation.navigate("SignUpScreen");
+        navigation.navigate('SignUp');
     };
 
     return (
