@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
-import CustomInput from "../../components/CustomInput";
-import CustomButton from "../../components/CustomButton";
+import { View, Text, StyleSheet, ScrollView, Image, TextInput, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 const SignUpScreen = () => {
@@ -74,55 +72,62 @@ const SignUpScreen = () => {
 
                 <Text style={styles.title}>Crea una cuenta</Text>
 
-                <CustomInput
-                    placeholder="Rut"
-                    value={rut}
-                    setValue={setRut}
-                    error={rutError}
-                    setError={setRutError}
-                    errorColor="#FE0F64"
-                    required
-                />
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Rut:</Text>
+                    <TextInput
+                        style={[styles.input, rutError && styles.inputError]}
+                        placeholder="XX.XXX.XXX-X"
+                        value={rut}
+                        onChangeText={setRut}
+                    />
+                    {rutError ? <Text style={styles.errorText}>{rutError}</Text> : null}
+                </View>
 
-                <CustomInput
-                    placeholder="Email" 
-                    value={email} 
-                    setValue={setEmail}
-                    error={emailError}
-                    setError={setEmailError}
-                    errorColor="#FE0F64"
-                    required
-                />
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Email:</Text>
+                    <TextInput
+                        style={[styles.input, emailError && styles.inputError]}
+                        placeholder="Email"
+                        value={email}
+                        onChangeText={setEmail}
+                    />
+                    {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+                </View>
 
-                <CustomInput 
-                    placeholder="Contraseña" 
-                    value={password} 
-                    setValue={setPassword} 
-                    secureTextEntry
-                    error={passwordError}
-                    setError={setPasswordError}
-                    errorColor="#FE0F64"
-                    required
-                />
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Contraseña:</Text>
+                    <TextInput
+                        style={[styles.input, passwordError && styles.inputError]}
+                        placeholder="Contraseña"
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry
+                    />
+                    {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+                </View>
 
-                <CustomInput
-                    placeholder="Confirmar contraseña" 
-                    value={confirmPassword} 
-                    setValue={setConfirmPassword}
-                    secureTextEntry
-                    error={confirmPasswordError}
-                    setError={setConfirmPasswordError}
-                    errorColor="#FE0F64"
-                    required
-                />
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Confirmar Contraseña:</Text>
+                    <TextInput
+                        style={[styles.input, confirmPasswordError && styles.inputError]}
+                        placeholder="Confirmar Contraseña"
+                        value={confirmPassword}
+                        onChangeText={setConfirmPassword}
+                        secureTextEntry
+                    />
+                    {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
+                </View>
 
-                <CustomButton text="Registrarse" onPress={onRegisterPressed}/>
+                <TouchableOpacity style={[styles.button, { backgroundColor: '#FE0F64' }]} onPress={onRegisterPressed}>
+                    <Text style={[styles.buttonText, { color: '#FFFFFF' }]}>Registrarse</Text>
+                </TouchableOpacity>
 
-                <CustomButton 
-                    text="¿Tienes una cuenta? Inicia sesión" 
-                    onPress={onSignInPressed} 
-                    type="TERTIARY"
-                />
+
+                <TouchableOpacity style={[styles.button, styles.tertiaryButton]} onPress={onSignInPressed}>
+                    <Text style={[styles.buttonText, styles.tertiaryButtonText]}>¿Tienes una cuenta? Inicia sesión</Text>
+                </TouchableOpacity>
+
+
             </View>
         </ScrollView>
     );
@@ -144,6 +149,41 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#2F2F2F',
         marginVertical: 10,
+    },
+    inputContainer: {
+        width: '100%',
+        marginBottom: 20,
+    },
+    label: {
+        marginBottom: 5,
+        color: '#2F2F2F',
+    },
+    input: {
+        width: '100%',
+        height: 40,
+        borderWidth: 1,
+        borderColor: '#F6F6F6',
+        borderRadius: 5,
+        paddingHorizontal: 10,
+        color: '#2F2F2F',
+    },
+    inputError: {
+        borderColor: '#FE0F64',
+    },
+    errorText: {
+        color: '#FE0F64',
+        fontSize: 12,
+    },
+    button: {
+        borderRadius: 5,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        marginBottom: 10,
+    },
+    buttonText: {
+        color: '#2F2F2F',
+        fontSize: 14,
+        textAlign: 'center',
     },
 });
 
