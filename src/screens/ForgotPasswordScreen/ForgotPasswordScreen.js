@@ -1,16 +1,29 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 
 const ForgotPasswordScreen = () => {
-    const [username, setUsername] = useState('');
+    const [rut, setRut] = useState('');
+    const [rutError, setRutError] = useState('');
 
     const navigation = useNavigation();
 
+    const validateRut = () => {
+        if (!rut.trim()) {
+            setRutError('Ingrese su RUT');
+            return false;
+        } else {
+            setRutError('');
+            return true;
+        }
+    };
+
     const onSendPressed = () => {
-        navigation.navigate('NewPassword');
+        if (validateRut()) {
+            navigation.navigate('NewPassword');
+        }
     };
 
     const onSignInPressed = () => {
@@ -22,13 +35,19 @@ const ForgotPasswordScreen = () => {
             <View style={styles.root}>
                 <Text style={styles.title}>Cambia tu contraseña</Text>
 
-                <CustomInput
-                    placeholder="Nombre de usuario" 
-                    value={username} 
-                    setValue={setUsername}
-                />
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Ingrese su RUT</Text>
+                    <CustomInput
+                        placeholder="RUT" 
+                        value={rut} 
+                        setValue={setRut}
+                        onBlur={validateRut}
+                        error={rutError}
+                    />
+                    {rutError ? <Text style={styles.errorText}>{rutError}</Text> : null}
+                </View>
 
-                <CustomButton text="Enviar" onPress={onSendPressed}/>
+                <CustomButton text="Enviar" onPress={onSendPressed} style={styles.button}/>
 
                 <CustomButton 
                     text="Volver a iniciar sesión" 
@@ -45,17 +64,27 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 20,
     },
-    logo: {
-        width: '70%',
-        maxWidth: 300,
-        maxHeight: 200,
-    },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: '#ffff',
+        color: '#2F2F2F',
         margin: 10,
     },
-
+    inputContainer: {
+        width: '100%',
+        marginBottom: 20,
+    },
+    label: {
+        marginBottom: 5,
+        color: '#2F2F2F',
+    },
+    errorText: {
+        color: '#FE0F64',
+        fontSize: 12,
+    },
+    button: {
+        marginTop: 20,
+    },
 });
+
 export default ForgotPasswordScreen;
