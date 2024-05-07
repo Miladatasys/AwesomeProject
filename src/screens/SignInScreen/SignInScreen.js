@@ -9,8 +9,9 @@ const SignInScreen = () => {
     const [password, setPassword] = useState('');
     const [rutError, setRutError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [selectedUserType, setSelectedUserType] = useState('PERSONA');
 
-    const { height } = useWindowDimensions();
+    const { width } = useWindowDimensions();
     const navigation = useNavigation();
 
     const validateRut = () => {
@@ -48,14 +49,43 @@ const SignInScreen = () => {
         navigation.navigate('SignUp');
     };
 
+    const handleUserTypeSelection = (userType) => {
+        setSelectedUserType(userType);
+    };
+
+    const onAdminLoginPressed = () => {
+        navigation.navigate('AdminSignIn');
+    };
+
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.root}>
                 <Image 
                     source={Logo} 
-                    style={[styles.logo, { height: height * 0.3 }]} 
+                    style={[styles.logo, { width: width * 0.7 }]} 
                     resizeMode="contain" 
                 />
+
+                <View style={styles.tabContainer}>
+                    <TouchableOpacity 
+                        style={[
+                            styles.tabButton, 
+                            selectedUserType === 'PERSONA' && styles.selectedTabButton
+                        ]}
+                        onPress={() => handleUserTypeSelection('PERSONA')}
+                    >
+                        <Text style={styles.tabButtonText}>PERSONA</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        style={[
+                            styles.tabButton, 
+                            selectedUserType === 'EMPRESA' && styles.selectedTabButton
+                        ]}
+                        onPress={() => handleUserTypeSelection('EMPRESA')}
+                    >
+                        <Text style={styles.tabButtonText}>EMPRESA</Text>
+                    </TouchableOpacity>
+                </View>
 
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>Ingrese su rut:</Text>
@@ -92,6 +122,9 @@ const SignInScreen = () => {
                         <Text style={styles.buttonText}>Crear una cuenta</Text>
                     </TouchableOpacity>
                 </View>
+                <TouchableOpacity onPress={onAdminLoginPressed}>
+                    <Text style={styles.adminButtonText}>Ingresar como Administrador</Text>
+                </TouchableOpacity>
             </View>
         </ScrollView>
     );
@@ -103,9 +136,29 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     logo: {
-        width: '70%',
-        maxWidth: 300,
         maxHeight: 200,
+        marginBottom: 20,
+    },
+    tabContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        width: '100%',
+        marginBottom: 20,
+    },
+    tabButton: {
+        flex: 1,
+        alignItems: 'center',
+        paddingVertical: 10,
+        borderBottomWidth: 3,
+        borderBottomColor: '#E1E1E1',
+    },
+    selectedTabButton: {
+        borderBottomColor: '#4271d4',
+    },
+    tabButtonText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#2F2F2F',
     },
     inputContainer: {
         width: '100%',
@@ -147,6 +200,17 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontSize: 14,
     },
+    adminButtonText: {
+        color: '#2F2F2F',
+        marginTop: 30, 
+        textAlign: 'left', 
+        alignSelf: 'flex-start', 
+        marginLeft: 20,
+    }
+    
+    
 });
 
-export default SignInScreen;
+export default SignInScreen;  
+
+

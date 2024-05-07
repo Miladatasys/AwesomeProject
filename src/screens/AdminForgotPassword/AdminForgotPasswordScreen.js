@@ -4,59 +4,59 @@ import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 
-const ForgotPasswordScreen = () => {
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [phoneNumberError, setPhoneNumberError] = useState('');
+const AdminForgotPasswordScreen = () => {
+    const [userIdentifier, setUserIdentifier] = useState('');
+    const [userIdentifierError, setUserIdentifierError] = useState('');
 
     const navigation = useNavigation();
 
-    const validatePhoneNumber = () => {
-        if (!phoneNumber.trim()) {
-            setPhoneNumberError('Ingrese su número de teléfono');
+    const validateUserIdentifier = () => {
+        if (!userIdentifier.trim()) {
+            setUserIdentifierError('Ingrese su correo electrónico o número de teléfono');
             return false;
         } else {
-            setPhoneNumberError('');
+            setUserIdentifierError('');
             return true;
         }
     };
 
     const onSendPressed = () => {
-        if (validatePhoneNumber()) {
-            // Aquí enviar la solicitud de recuperación de contraseña por número de teléfono
-            navigation.navigate('NewPassword');
+        if (validateUserIdentifier()) {
+            // Aquí enviar la solicitud de recuperación de contraseña por correo electrónico o número de teléfono
+            navigation.navigate('AdminNewPassword');
         }
     };
 
     const onSignInPressed = () => {
-        navigation.navigate('SignIn');
+        navigation.navigate('AdminSignIn');
     };
 
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.root}>
                 <Image 
-                    source={require("../../../assets/images/Ciudad.jpg")} 
+                    source={require("../../../assets/images/Tecnico.png")} 
                     style={styles.image} 
                     resizeMode="cover" 
                 />
-                <Text style={styles.title}>Recuperar contraseña</Text>
+                <Text style={styles.title}>Recuperar contraseña de Administrador</Text>
 
                 <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Ingrese su número de teléfono</Text>
+                    <Text style={styles.label}>Ingrese su correo electrónico o número de teléfono</Text>
                     <CustomInput
-                        placeholder="Número de teléfono" 
-                        value={phoneNumber} 
-                        setValue={setPhoneNumber}
-                        onBlur={validatePhoneNumber}
-                        error={phoneNumberError}
+                        placeholder="Correo electrónico o número de teléfono" 
+                        value={userIdentifier} 
+                        setValue={setUserIdentifier}
+                        onBlur={validateUserIdentifier}
+                        error={userIdentifierError}
                     />
-                    {phoneNumberError ? <Text style={styles.errorText}>{phoneNumberError}</Text> : null}
+                    {userIdentifierError ? <Text style={styles.errorText}>{userIdentifierError}</Text> : null}
                 </View>
 
                 <CustomButton text="Enviar" onPress={onSendPressed} style={styles.button}/>
 
                 <CustomButton 
-                    text="Volver a iniciar sesión" 
+                    text="Volver a iniciar sesión como administrador" 
                     onPress={onSignInPressed} 
                     type="TERTIARY"
                 />
@@ -99,4 +99,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ForgotPasswordScreen;
+export default AdminForgotPasswordScreen;
