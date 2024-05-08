@@ -31,9 +31,9 @@ const AdminSignInScreen = () => {
 
     const handleSignIn = () => {
         if (validateFields()) {
-            // Aquí agregarías la lógica para el inicio de sesión con el backend
+            // Aquí agregar la lógica para el inicio de sesión con el backend
             // Si el inicio de sesión es exitoso, navegar a la pantalla de inicio del administrador
-            navigation.navigate('AdminHomeScreen'); // Ajusta este nombre si es diferente en tu aplicación
+            navigation.navigate('AdminHomeScreen');
         }
     };
 
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#fff",
-        padding: 0,
+
     },
     goBackContainer: {
         position: 'absolute',
@@ -122,6 +122,8 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         color: '#2F2F2F',
         textAlign: 'left',
+        alignSelf: 'flex-start',
+        marginStart: 20,
     },
     input: {
         width: '100%',
@@ -131,7 +133,9 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal: 10,
         color: '#2F2F2F',
-        marginBottom: 10,
+        marginBottom: 20,
+        marginStart: 30,
+        paddingeEnd: 20,
     },
     errorText: {
         color: '#FE0F64',

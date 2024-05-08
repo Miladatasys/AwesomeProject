@@ -11,6 +11,7 @@ const NewPasswordScreen = () => {
     const [codeError, setCodeError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [confirmPasswordError, setConfirmPasswordError] = useState('');
+    const [passwordStrength, setPasswordStrength] = useState(0);
 
     const navigation = useNavigation();
 
@@ -25,6 +26,9 @@ const NewPasswordScreen = () => {
         if (!newPassword.trim()) {
             setPasswordError('Ingrese la nueva contraseña');
             isValid = false;
+        } else if (newPassword.length < 8) {
+            setPasswordError('La contraseña debe tener al menos 8 caracteres');
+            isValid = false;
         } else {
             setPasswordError('');
         }
@@ -38,6 +42,30 @@ const NewPasswordScreen = () => {
             setConfirmPasswordError('');
         }
         return isValid;
+    };
+
+    const calculatePasswordStrength = (password) => {
+        // Puedes ajustar esta lógica según tus requisitos específicos para determinar la fortaleza de la contraseña
+        let strength = 0;
+        if (password.length >= 8) {
+            strength += 1;
+        }
+        if (/[a-z]/.test(password)) {
+            strength += 1;
+        }
+        if (/[A-Z]/.test(password)) {
+            strength += 1;
+        }
+        if (/\d/.test(password)) {
+            strength += 1;
+        }
+        return (strength / 4) * 100;
+    };
+
+    const handlePasswordChange = (text) => {
+        setNewPassword(text);
+        const strength = calculatePasswordStrength(text);
+        setPasswordStrength(strength);
     };
 
     const onSubmitPressed = () => {
@@ -67,11 +95,29 @@ const NewPasswordScreen = () => {
                 <CustomInput
                     placeholder="Nueva contraseña" 
                     value={newPassword} 
-                    setValue={setNewPassword}
+                    setValue={handlePasswordChange}
                     secureTextEntry
                     error={passwordError}
                 />
                 {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+
+                {/* Barra de progreso para mostrar la fortaleza de la contraseña */}
+                <View style={styles.passwordStrengthContainer}>
+                    <View
+                        style={[
+                            styles.passwordStrengthIndicator,
+                            {
+                                width: `${passwordStrength}%`,
+                                backgroundColor:
+                                    passwordStrength < 50
+                                        ? 'gray'
+                                        : passwordStrength < 75
+                                        ? 'yellow'
+                                        : 'green',
+                            },
+                        ]}
+                    />
+                </View>
 
                 <CustomInput
                     placeholder="Confirmar nueva contraseña" 
@@ -82,7 +128,7 @@ const NewPasswordScreen = () => {
                 />
                 {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
 
-                <CustomButton text="Enviar" onPress={onSubmitPressed} style={styles.button}/>
+                <CustomButton text="Enviar" onPress={onSubmitPressed} style={styles.button} disabled={passwordError || !passwordStrength}/>
 
                 <CustomButton 
                     text="Volver a iniciar sesión" 
@@ -111,6 +157,18 @@ const styles = StyleSheet.create({
     },
     button: {
         marginTop: 20,
+    },
+    // Estilos para la barra de progreso de la fortaleza de la contraseña
+    passwordStrengthContainer: {
+        width: '100%',
+        height: 10,
+        backgroundColor: '#F6F6F6',
+        borderRadius: 5,
+        marginBottom: 10,
+    },
+    passwordStrengthIndicator: {
+        height: '100%',
+        borderRadius: 5,
     },
 });
 

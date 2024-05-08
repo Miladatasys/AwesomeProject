@@ -40,6 +40,19 @@ const AdminNewPasswordScreen = () => {
         return isValid;
     };
 
+    const calculateStrength = () => {
+        // Verifica si la contraseña cumple con los requisitos
+        const hasNumber = /\d/.test(newPassword);
+        const hasLowerCase = /[a-z]/.test(newPassword);
+        const hasUpperCase = /[A-Z]/.test(newPassword);
+        const hasMinLength = newPassword.length >= 8;
+
+        // Calcula la fuerza de la contraseña
+        const strength = (hasNumber + hasLowerCase + hasUpperCase + hasMinLength) / 4 * 100;
+
+        return strength;
+    };
+
     const onSubmitPressed = () => {
         if (validateInputs()) {
             // nviar la solicitud para cambiar la contraseña del administrador
@@ -50,6 +63,8 @@ const AdminNewPasswordScreen = () => {
     const onSignInPressed = () => {
         navigation.navigate('AdminSignIn');
     };
+
+    const strength = calculateStrength();
 
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -72,6 +87,16 @@ const AdminNewPasswordScreen = () => {
                     error={passwordError}
                 />
                 {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+
+                <View style={styles.strengthIndicatorContainer}>
+                    <View
+                        style={{
+                            ...styles.strengthIndicator,
+                            width: `${strength}%`,
+                            backgroundColor: strength < 50 ? 'gray' : strength < 75 ? 'yellow' : 'green',
+                        }}
+                    />
+                </View>
 
                 <CustomInput
                     placeholder="Confirmar nueva contraseña" 
@@ -111,6 +136,18 @@ const styles = StyleSheet.create({
     },
     button: {
         marginTop: 20,
+    },
+    strengthIndicatorContainer: {
+        width: '100%',
+        height: 5,
+        backgroundColor: 'lightgray',
+        borderRadius: 5,
+        marginTop: 5,
+        marginBottom: 10,
+    },
+    strengthIndicator: {
+        height: '100%',
+        borderRadius: 5,
     },
 });
 

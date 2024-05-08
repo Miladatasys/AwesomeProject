@@ -11,8 +11,12 @@ const ForgotPasswordScreen = () => {
     const navigation = useNavigation();
 
     const validatePhoneNumber = () => {
+        const phoneRegex = /^[0-9]{9}$/; // Expresión regular para validar números de teléfono de 9 dígitos
         if (!phoneNumber.trim()) {
             setPhoneNumberError('Ingrese su número de teléfono');
+            return false;
+        } else if (!phoneRegex.test(phoneNumber.trim())) {
+            setPhoneNumberError('Número de teléfono no válido');
             return false;
         } else {
             setPhoneNumberError('');
@@ -41,15 +45,20 @@ const ForgotPasswordScreen = () => {
                 />
                 <Text style={styles.title}>Recuperar contraseña</Text>
 
-                <View style={styles.inputContainer}>
+                <View style={[styles.inputContainer, {alignSelf: 'flex-start'}]}>
                     <Text style={styles.label}>Ingrese su número de teléfono</Text>
-                    <CustomInput
-                        placeholder="Número de teléfono" 
-                        value={phoneNumber} 
-                        setValue={setPhoneNumber}
-                        onBlur={validatePhoneNumber}
-                        error={phoneNumberError}
-                    />
+                    <View style={styles.phoneNumberContainer}>
+                        <Text style={styles.countryCode}>+56</Text>
+                        <CustomInput
+                            placeholder="Número de teléfono" 
+                            value={phoneNumber} 
+                            setValue={setPhoneNumber}
+                            onBlur={validatePhoneNumber}
+                            error={phoneNumberError}
+                            keyboardType="phone-pad"
+                            style={styles.phoneNumberInput}
+                        />
+                    </View>
                     {phoneNumberError ? <Text style={styles.errorText}>{phoneNumberError}</Text> : null}
                 </View>
 
@@ -83,11 +92,30 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     inputContainer: {
-        width: '100%',
+        width: '85%',
         marginBottom: 20,
+        alignSelf: 'flex-start', // Alinea el contenedor hacia la izquierda
     },
     label: {
         marginBottom: 5,
+        color: '#2F2F2F',
+    },
+    phoneNumberContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    countryCode: {
+        marginRight: 10,
+        fontSize: 16,
+        color: '#2F2F2F',
+    },
+    phoneNumberInput: {
+        flex: 1,
+        height: 40,
+        borderWidth: 1,
+        borderColor: '#F6F6F6',
+        borderRadius: 5,
+        paddingHorizontal: 10,
         color: '#2F2F2F',
     },
     errorText: {
@@ -100,3 +128,6 @@ const styles = StyleSheet.create({
 });
 
 export default ForgotPasswordScreen;
+
+
+

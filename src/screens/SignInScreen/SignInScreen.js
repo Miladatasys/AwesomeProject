@@ -15,8 +15,13 @@ const SignInScreen = () => {
     const navigation = useNavigation();
 
     const validateRut = () => {
+        // Expresión regular para validar rut chileno
+        const rutRegex = /^[0-9]+-[0-9kK]{1}$/;
         if (!rut.trim()) {
             setRutError('Ingrese su rut');
+            return false;
+        } else if (!rutRegex.test(rut)) {
+            setRutError('Rut no válido');
             return false;
         } else {
             setRutError('');
@@ -24,9 +29,13 @@ const SignInScreen = () => {
         }
     };
 
+
     const validatePassword = () => {
         if (!password.trim()) {
             setPasswordError('Ingrese su contraseña');
+            return false;
+        } else if (password.length < 8) { // Validación de longitud mínima de contraseña
+            setPasswordError('La contraseña debe tener al menos 8 caracteres');
             return false;
         } else {
             setPasswordError('');
@@ -91,7 +100,7 @@ const SignInScreen = () => {
                     <Text style={styles.label}>Ingrese su rut:</Text>
                     <TextInput
                         style={[styles.input, rutError && styles.inputError]}
-                        placeholder="XX.XXX.XXX-X"
+                        placeholder="11111111-1"
                         value={rut}
                         onChangeText={(text) => setRut(text)}
                         onBlur={validateRut}

@@ -2,6 +2,36 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Image, TextInput, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
+// Componente para mostrar el indicador de fortaleza de la contraseña
+const PasswordStrengthIndicator = ({ password }) => {
+    const calculateStrength = () => {
+        // Verifica si la contraseña cumple con los requisitos
+        const hasNumber = /\d/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasMinLength = password.length >= 8;
+
+        // Calcula la fuerza de la contraseña
+        const strength = (hasNumber + hasLowerCase + hasUpperCase + hasMinLength) / 4 * 100;
+
+        return strength;
+    };
+
+    const strength = calculateStrength();
+
+    return (
+        <View style={styles.strengthIndicatorContainer}>
+            <View
+                style={{
+                    ...styles.strengthIndicator,
+                    width: `${strength}%`,
+                    backgroundColor: strength < 50 ? 'gray' : strength < 75 ? 'yellow' : 'green',
+                }}
+            />
+        </View>
+    );
+};
+
 const SignUpScreen = () => {
     const [rut, setRut] = useState('');
     const [email, setEmail] = useState(''); 
@@ -14,18 +44,84 @@ const SignUpScreen = () => {
     
     const navigation = useNavigation();
 
+    const validateRut = () => {
+        const rutRegex = /^[0-9]+-[0-9kK]{1}$/; // Expresión regular para validar RUT chileno
+        if (!rut.trim()) {
+            setRutError('Ingrese su RUT');
+            return false;
+        } else if (!rutRegex.test(rut)) {
+            setRutError('RUT no válido');
+            return false;
+        } else {
+            setRutError('');
+            return true;
+        }
+    };
+
+    const validateEmail = () => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expresión regular para validar formato de correo electrónico
+        if (!email.trim()) {
+            setEmailError('Ingrese su correo electrónico');
+            return false;
+        } else if (!emailRegex.test(email)) {
+            setEmailError('Correo electrónico no válido');
+            return false;
+        } else {
+            setEmailError('');
+            return true;
+        }
+    };
+    
+    const validatePassword = () => {
+        const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/; // Al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número
+        if (!password.trim()) {
+            setPasswordError('Ingrese su contraseña');
+            return false;
+        } else if (!passwordRegex.test(password)) {
+            setPasswordError('La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número');
+            return false;
+        } else {
+            setPasswordError('');
+            return true;
+        }
+    };
+    
+    const validateConfirmPassword = () => {
+        if (!confirmPassword.trim()) {
+            setConfirmPasswordError('Confirme su contraseña');
+            return false;
+        } else if (confirmPassword !== password) {
+            setConfirmPasswordError('Las contraseñas no coinciden');
+            return false;
+        } else {
+            setConfirmPasswordError('');
+            return true;
+        }
+    };
+    
+
     const validateFields = () => {
         let valid = true;
 
+        const rutRegex = /^[0-9]+-[0-9kK]{1}$/; // Expresión regular para validar RUT chileno
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expresión regular para validar formato de correo electrónico
+        const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/; // Al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número
+
         if (!rut.trim()) {
-            setRutError('Ingrese su rut');
+            setRutError('Ingrese su RUT');
+            valid = false;
+        } else if (!rutRegex.test(rut)) {
+            setRutError('RUT no válido');
             valid = false;
         } else {
             setRutError('');
         }
 
         if (!email.trim()) {
-            setEmailError('Ingrese su email');
+            setEmailError('Ingrese su correo electrónico');
+            valid = false;
+        } else if (!emailRegex.test(email)) {
+            setEmailError('Correo electrónico no válido');
             valid = false;
         } else {
             setEmailError('');
@@ -33,6 +129,9 @@ const SignUpScreen = () => {
 
         if (!password.trim()) {
             setPasswordError('Ingrese su contraseña');
+            valid = false;
+        } else if (!passwordRegex.test(password)) {
+            setPasswordError('La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número');
             valid = false;
         } else {
             setPasswordError('');
@@ -73,13 +172,15 @@ const SignUpScreen = () => {
                 <Text style={styles.title}>Crea una cuenta</Text>
 
                 <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Rut:</Text>
+                    <Text style={styles.label}>RUT:</Text>
                     <TextInput
                         style={[styles.input, rutError && styles.inputError]}
-                        placeholder="XX.XXX.XXX-X"
+                        placeholder="11111111-1"
                         value={rut}
-                        onChangeText={setRut}
+                        onChangeText={(text) => setRut(text)}
+                        onBlur={validateRut} // Llamada a la función validateRut en el evento onBlur
                     />
+
                     {rutError ? <Text style={styles.errorText}>{rutError}</Text> : null}
                 </View>
 
@@ -87,9 +188,10 @@ const SignUpScreen = () => {
                     <Text style={styles.label}>Email:</Text>
                     <TextInput
                         style={[styles.input, emailError && styles.inputError]}
-                        placeholder="Email"
+                        placeholder="Correo electrónico"
                         value={email}
-                        onChangeText={setEmail}
+                        onChangeText={(text) => setEmail(text)}
+                        onBlur={validateEmail} // Llamada a la función validateEmail en el evento onBlur
                     />
                     {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
                 </View>
@@ -100,10 +202,15 @@ const SignUpScreen = () => {
                         style={[styles.input, passwordError && styles.inputError]}
                         placeholder="Contraseña"
                         value={password}
-                        onChangeText={setPassword}
+                        onChangeText={(text) => setPassword(text)}
+                        onBlur={validatePassword} // Llamada a la función validatePassword en el evento onBlur
                         secureTextEntry
                     />
+
                     {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+
+                    {/* Muestra el indicador de fortaleza de la contraseña */}
+                    <PasswordStrengthIndicator password={password} />
                 </View>
 
                 <View style={styles.inputContainer}>
@@ -112,9 +219,11 @@ const SignUpScreen = () => {
                         style={[styles.input, confirmPasswordError && styles.inputError]}
                         placeholder="Confirmar Contraseña"
                         value={confirmPassword}
-                        onChangeText={setConfirmPassword}
+                        onChangeText={(text) => setConfirmPassword(text)}
+                        onBlur={validateConfirmPassword} // Llamada a la función validateConfirmPassword en el evento onBlur
                         secureTextEntry
                     />
+
                     {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
                 </View>
 
@@ -122,11 +231,9 @@ const SignUpScreen = () => {
                     <Text style={[styles.buttonText, { color: '#FFFFFF' }]}>Registrarse</Text>
                 </TouchableOpacity>
 
-
                 <TouchableOpacity style={[styles.button, styles.tertiaryButton]} onPress={onSignInPressed}>
                     <Text style={[styles.buttonText, styles.tertiaryButtonText]}>¿Tienes una cuenta? Inicia sesión</Text>
                 </TouchableOpacity>
-
 
             </View>
         </ScrollView>
@@ -185,6 +292,26 @@ const styles = StyleSheet.create({
         fontSize: 14,
         textAlign: 'center',
     },
+    tertiaryButton: {
+        backgroundColor: 'transparent',
+    },
+    tertiaryButtonText: {
+        color: '#FE0F64',
+    },
+    // Estilos para el indicador de fortaleza de la contraseña
+    strengthIndicatorContainer: {
+        width: '100%',
+        height: 5,
+        backgroundColor: 'lightgray',
+        borderRadius: 5,
+        marginTop: 5,
+        marginBottom: 10,
+    },
+    strengthIndicator: {
+        height: '100%',
+        borderRadius: 5,
+    },
 });
 
 export default SignUpScreen;
+

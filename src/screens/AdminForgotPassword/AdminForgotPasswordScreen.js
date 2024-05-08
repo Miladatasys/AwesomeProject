@@ -11,12 +11,21 @@ const AdminForgotPasswordScreen = () => {
     const navigation = useNavigation();
 
     const validateUserIdentifier = () => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expresión regular para validar formato de correo electrónico
+        const phoneNumberRegex = /^\d{9}$/; // Expresión regular para validar que el número de teléfono tenga exactamente 9 dígitos
+    
         if (!userIdentifier.trim()) {
             setUserIdentifierError('Ingrese su correo electrónico o número de teléfono');
             return false;
-        } else {
+        } else if (userIdentifier.endsWith('@enel.cl')) {
             setUserIdentifierError('');
             return true;
+        } else if (phoneNumberRegex.test(userIdentifier)) {
+            setUserIdentifierError('');
+            return true;
+        } else if (!emailRegex.test(userIdentifier)) {
+            setUserIdentifierError('Ingrese un correo electrónico válido de Enel o un número de teléfono de 9 dígitos');
+            return false;
         }
     };
 
