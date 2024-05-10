@@ -15,7 +15,7 @@ const BottomBar = () => {
         style={[styles.tab, activeTab === 'home' && styles.activeTab]}
         onPress={() => handleTabPress('home')}>
         <Icon name="home" size={24} color={activeTab === 'home' ? '#FE0F64' : '#2F2F2F'} />
-        <Text style={[styles.tabText, activeTab === 'home' && styles.activeTabText]}>Mi Consumo</Text>
+        <Text style={[styles.tabText, activeTab === 'home' && styles.activeTabText]}>Inicio</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.tab, activeTab === 'help' && styles.activeTab]}
