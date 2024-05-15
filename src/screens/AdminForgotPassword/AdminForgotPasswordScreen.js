@@ -17,14 +17,14 @@ const AdminForgotPasswordScreen = () => {
         if (!userIdentifier.trim()) {
             setUserIdentifierError('Ingrese su correo electrónico o número de teléfono');
             return false;
-        } else if (userIdentifier.endsWith('@enel.cl')) {
+        } else if (userIdentifier.endsWith('@gmail.com')) {
             setUserIdentifierError('');
             return true;
         } else if (phoneNumberRegex.test(userIdentifier)) {
             setUserIdentifierError('');
             return true;
         } else if (!emailRegex.test(userIdentifier)) {
-            setUserIdentifierError('Ingrese un correo electrónico válido de Enel o un número de teléfono de 9 dígitos');
+            setUserIdentifierError('Ingrese un correo electrónico válido o un número de teléfono de 9 dígitos');
             return false;
         }
     };
