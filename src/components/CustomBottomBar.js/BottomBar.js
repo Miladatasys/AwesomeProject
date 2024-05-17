@@ -1,12 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Por ejemplo, utilizando FontAwesome como librería de íconos
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native'; // Importar la navegación y la ruta
 
 const BottomBar = () => {
+  const navigation = useNavigation();
+  const route = useRoute(); // Obtener la ruta actual
+
   const [activeTab, setActiveTab] = useState('home');
+
+  // Actualizar la pestaña activa cuando la ruta cambia
+  useFocusEffect(
+    React.useCallback(() => {
+      switch (route.name) {
+        case 'HomeScreen':
+          setActiveTab('home');
+          break;
+        case 'HelpScreen':
+          setActiveTab('help');
+          break;
+        // Agregar más casos según sea necesario para otras pantallas
+        default:
+          setActiveTab('home');
+          break;
+      }
+    }, [route.name])
+  );
 
   const handleTabPress = (tabName) => {
     setActiveTab(tabName);
+    switch (tabName) {
+      case 'home':
+        navigation.navigate('HomeScreen');
+        break;
+      case 'help':
+        navigation.navigate('HelpScreen');
+        break;
+      // Agregar más condiciones según sea necesario para otras pestañas
+      default:
+        navigation.navigate('HomeScreen');
+        break;
+    }
   };
 
   return (
@@ -50,13 +84,13 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    height: 60, // Ajusta la altura según tus necesidades
-    backgroundColor: '#fff', // Color de fondo
-    flexDirection: 'row', // Dirección de los elementos
-    justifyContent: 'space-around', // Ajuste de los elementos dentro de la barra
-    alignItems: 'center', // Alineación vertical
-    borderTopWidth: 1, // Borde superior
-    borderTopColor: '#ccc', // Color del borde superior
+    height: 60,
+    backgroundColor: '#fff',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: '#ccc',
   },
   tab: {
     alignItems: 'center',

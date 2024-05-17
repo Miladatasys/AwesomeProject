@@ -13,6 +13,8 @@ import AdminForgotPasswordScreen from '../screens/AdminForgotPassword/AdminForgo
 import AdminHomeScreen from '../screens/AdminHomeScreen/AdminHomeScreen';
 import AdminNewPasswordScreen from '../screens/AdminNewPasswordScreen/AdminNewPasswordScreen';
 import AddressScreen from '../screens/AddressScreen/AddressScreen';
+import ClientNumberScreen from '../screens/ClientNumberScreen/ClientNumberScreen';
+import HelpScreen from "../screens/HelpScreen/HelpScreen";
 
 
 const Stack = createNativeStackNavigator();
@@ -32,6 +34,8 @@ const Navigation = () => {
                 <Stack.Screen name="AdminHomeScreen" component={AdminHomeScreen} />
                 <Stack.Screen name="AdminNewPassword" component={AdminNewPasswordScreen} />
                 <Stack.Screen name="AddressScreen" component={AddressScreen} />
+                <Stack.Screen name="ClientNumberScreen" component={ClientNumberScreen} />
+                <Stack.Screen name="HelpScreen" component={HelpScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );

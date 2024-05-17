@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Platform, Alert, TouchableOpacity } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomButton from '../../components/CustomButton';
 import comunasData from '../../components/data/Comunas.json';
+import { useNavigation } from '@react-navigation/native'; // Importar useNavigation
 
 const AddressScreen = () => {
   const [region, setRegion] = useState(null);
@@ -12,6 +13,7 @@ const AddressScreen = () => {
   const [comunasList, setComunasList] = useState([]);
   const [openRegion, setOpenRegion] = useState(false);
   const [openComuna, setOpenComuna] = useState(false);
+  const navigation = useNavigation(); // Usar useNavigation
 
   const regionOptions = comunasData.map(region => ({
     label: region.region,
@@ -37,8 +39,8 @@ const AddressScreen = () => {
       return;
     }
 
-    // Aquí puedes manejar el envío del formulario
-    console.log(`Región: ${region}, Comuna: ${comuna}, Dirección: ${direccion}`);
+    // Navegar a ClientNumberScreen sin datos falsos
+    navigation.navigate('ClientNumberScreen');
   };
 
   return (
@@ -47,58 +49,61 @@ const AddressScreen = () => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.root}
       >
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Región:</Text>
-            <DropDownPicker
-              open={openRegion}
-              value={region}
-              items={regionOptions}
-              setOpen={setOpenRegion}
-              setValue={setRegion}
-              containerStyle={styles.dropdownContainer}
-              style={styles.dropdown}
-              dropDownContainerStyle={styles.dropdownContainerStyle}
-              placeholder="Seleccione una región"
-              onChangeValue={(value) => setRegion(value)}
-              zIndex={3000}
-              zIndexInverse={1000}
-            />
-          </View>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Text style={styles.backButtonText}>Volver atrás</Text>
+        </TouchableOpacity>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Región:</Text>
+          <DropDownPicker
+            open={openRegion}
+            value={region}
+            items={regionOptions}
+            setOpen={setOpenRegion}
+            setValue={setRegion}
+            containerStyle={styles.dropdownContainer}
+            style={styles.dropdown}
+            dropDownContainerStyle={styles.dropdownContainerStyle}
+            placeholder="Seleccione una región"
+            onChangeValue={(value) => setRegion(value)}
+            zIndex={3000}
+            zIndexInverse={1000}
+            listMode="MODAL"  // Usar un modal para mostrar todas las opciones
+          />
+        </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Comuna:</Text>
-            <DropDownPicker
-              open={openComuna}
-              value={comuna}
-              items={comunasList}
-              setOpen={setOpenComuna}
-              setValue={setComuna}
-              containerStyle={styles.dropdownContainer}
-              style={styles.dropdown}
-              dropDownContainerStyle={styles.dropdownContainerStyle}
-              placeholder="Seleccione una comuna"
-              disabled={!region}
-              onChangeValue={(value) => setComuna(value)}
-              zIndex={2000}
-              zIndexInverse={2000}
-            />
-          </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Comuna:</Text>
+          <DropDownPicker
+            open={openComuna}
+            value={comuna}
+            items={comunasList}
+            setOpen={setOpenComuna}
+            setValue={setComuna}
+            containerStyle={styles.dropdownContainer}
+            style={styles.dropdown}
+            dropDownContainerStyle={styles.dropdownContainerStyle}
+            placeholder="Seleccione una comuna"
+            disabled={!region}
+            onChangeValue={(value) => setComuna(value)}
+            zIndex={2000}
+            zIndexInverse={1000}
+            listMode="MODAL"  // Usar un modal para mostrar todas las opciones
+          />
+        </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Dirección:</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Ingrese su dirección"
-              value={direccion}
-              onChangeText={setDireccion}
-            />
-          </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Dirección:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Ingrese su dirección"
+            value={direccion}
+            onChangeText={setDireccion}
+          />
+        </View>
 
-          <View style={styles.buttonContainer}>
-            <CustomButton text="Enviar" onPress={onSubmit} />
-          </View>
-        </ScrollView>
+        <View style={styles.buttonContainer}>
+          <CustomButton text="Buscar" onPress={onSubmit} />
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -111,10 +116,6 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     padding: 20,
-  },
-  scrollContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',
   },
   label: {
     width: '100%',
@@ -148,6 +149,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
   },
+  backButton: {
+    marginBottom: 20,
+  },
+  backButtonText: {
+    fontSize: 16,
+    color: '#4271d4',
+    fontWeight: 'bold',
+  },
 });
 
 export default AddressScreen;
+
