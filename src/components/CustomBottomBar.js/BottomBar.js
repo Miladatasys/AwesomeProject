@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native'; // Importar la navegación y la ruta
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 
 const BottomBar = () => {
   const navigation = useNavigation();
-  const route = useRoute(); // Obtener la ruta actual
-
+  const route = useRoute();
   const [activeTab, setActiveTab] = useState('home');
 
-  // Actualizar la pestaña activa cuando la ruta cambia
   useFocusEffect(
     React.useCallback(() => {
       switch (route.name) {
@@ -18,6 +16,9 @@ const BottomBar = () => {
           break;
         case 'HelpScreen':
           setActiveTab('help');
+          break;
+        case 'FAQScreen': // Añadir el caso para la pantalla FAQ
+          setActiveTab('faq');
           break;
         // Agregar más casos según sea necesario para otras pantallas
         default:
@@ -35,6 +36,9 @@ const BottomBar = () => {
         break;
       case 'help':
         navigation.navigate('HelpScreen');
+        break;
+      case 'faq': // Añadir la navegación para la pantalla FAQ
+        navigation.navigate('FAQScreen');
         break;
       // Agregar más condiciones según sea necesario para otras pestañas
       default:

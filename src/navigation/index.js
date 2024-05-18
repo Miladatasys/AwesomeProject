@@ -1,7 +1,6 @@
-import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
 import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import ConfirmEmailScreen from '../screens/ConfirmEmailScreen';
@@ -14,8 +13,8 @@ import AdminHomeScreen from '../screens/AdminHomeScreen/AdminHomeScreen';
 import AdminNewPasswordScreen from '../screens/AdminNewPasswordScreen/AdminNewPasswordScreen';
 import AddressScreen from '../screens/AddressScreen/AddressScreen';
 import ClientNumberScreen from '../screens/ClientNumberScreen/ClientNumberScreen';
-import HelpScreen from "../screens/HelpScreen/HelpScreen";
-
+import HelpScreen from '../screens/HelpScreen/HelpScreen';
+import FAQScreen from '../screens/FAQScreen/FAQScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +35,7 @@ const Navigation = () => {
                 <Stack.Screen name="AddressScreen" component={AddressScreen} />
                 <Stack.Screen name="ClientNumberScreen" component={ClientNumberScreen} />
                 <Stack.Screen name="HelpScreen" component={HelpScreen} />
+                <Stack.Screen name="FAQScreen" component={FAQScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );
