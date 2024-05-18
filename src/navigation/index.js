@@ -15,6 +15,8 @@ import AddressScreen from '../screens/AddressScreen/AddressScreen';
 import ClientNumberScreen from '../screens/ClientNumberScreen/ClientNumberScreen';
 import HelpScreen from '../screens/HelpScreen/HelpScreen';
 import FAQScreen from '../screens/FAQScreen/FAQScreen';
+import CorteReposicionScreen from '../screens/CorteReposicionScreen/CorteReposicionScreen';
+import LecturaScreen from '../screens/LecturaScreen/LecturaScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +38,8 @@ const Navigation = () => {
                 <Stack.Screen name="ClientNumberScreen" component={ClientNumberScreen} />
                 <Stack.Screen name="HelpScreen" component={HelpScreen} />
                 <Stack.Screen name="FAQScreen" component={FAQScreen} />
+                <Stack.Screen name="CorteReposicionScreen" component={CorteReposicionScreen} />
+                <Stack.Screen name="LecturaScreen" component={LecturaScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );
