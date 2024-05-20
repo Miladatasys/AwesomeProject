@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const CorteReposicionScreen = () => {
   const navigation = useNavigation();
@@ -26,8 +27,9 @@ const CorteReposicionScreen = () => {
   ];
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+    <ScrollView style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButtonContainer}>
+        <Icon name="arrow-back" size={24} color="#4271d4" />
         <Text style={styles.backButton}>Volver</Text>
       </TouchableOpacity>
       <Text style={styles.title}>Corte y Reposición</Text>
@@ -36,10 +38,14 @@ const CorteReposicionScreen = () => {
           <TouchableOpacity onPress={() => toggleExpand(faq.id)} style={styles.questionContainer}>
             <Text style={styles.question}>{faq.question}</Text>
           </TouchableOpacity>
-          {expanded === faq.id && <Text style={styles.answer}>{faq.answer}</Text>}
+          {expanded === faq.id && (
+            <View style={styles.answerContainer}>
+              <Text style={styles.answer}>{faq.answer}</Text>
+            </View>
+          )}
         </View>
       ))}
-    </View>
+    </ScrollView>
   );
 };
 
@@ -47,38 +53,65 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: '#E8EAF6',
+  },
+  backButtonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
   },
   backButton: {
     fontSize: 16,
     color: '#4271d4',
-    marginBottom: 20,
+    marginLeft: 5,
+    fontWeight: 'bold',
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 20,
     textAlign: 'center',
+    marginBottom: 30,
     color: '#2F2F2F',
   },
   faqContainer: {
-    marginBottom: 10,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 5,
   },
   questionContainer: {
-    backgroundColor: '#FE0F64',
-    padding: 10,
-    borderRadius: 5,
+    backgroundColor: '#FE0F64', // Parte superior en color 2F2F2F
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#dddddd',
   },
   question: {
-    color: '#FFFFFF',
+    fontSize: 19,
     fontWeight: 'bold',
+    color: '#fff',
+  },
+  answerContainer: {
+    backgroundColor: '#f9f9f9',
+    borderRadius: 8,
+    padding: 15,
+    marginTop: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+    elevation: 2,
   },
   answer: {
-    marginTop: 10,
-    padding: 10,
-    backgroundColor: '#fafafa',
-    borderRadius: 5,
+    fontSize: 19,
     color: '#2F2F2F',
-  }
+  },
 });
 
 export default CorteReposicionScreen;

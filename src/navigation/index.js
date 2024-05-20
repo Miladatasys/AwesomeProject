@@ -17,6 +17,8 @@ import HelpScreen from '../screens/HelpScreen/HelpScreen';
 import FAQScreen from '../screens/FAQScreen/FAQScreen';
 import CorteReposicionScreen from '../screens/CorteReposicionScreen/CorteReposicionScreen';
 import LecturaScreen from '../screens/LecturaScreen/LecturaScreen';
+import TemasGeneralesScreen from '../screens/TemasGenerales/TemasGenerales';
+import ClientProfileScreen from '../screens/ClientProfileScreen/ClientProfileScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +42,8 @@ const Navigation = () => {
                 <Stack.Screen name="FAQScreen" component={FAQScreen} />
                 <Stack.Screen name="CorteReposicionScreen" component={CorteReposicionScreen} />
                 <Stack.Screen name="LecturaScreen" component={LecturaScreen} />
+                <Stack.Screen name="TemasGeneralesScreen" component={TemasGeneralesScreen} />
+                <Stack.Screen name="ClientProfileScreen" component={ClientProfileScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );

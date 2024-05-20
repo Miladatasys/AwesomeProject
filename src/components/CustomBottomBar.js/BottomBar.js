@@ -6,6 +6,7 @@ import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/nativ
 const BottomBar = () => {
   const navigation = useNavigation();
   const route = useRoute();
+
   const [activeTab, setActiveTab] = useState('home');
 
   useFocusEffect(
@@ -17,10 +18,15 @@ const BottomBar = () => {
         case 'HelpScreen':
           setActiveTab('help');
           break;
-        case 'FAQScreen': // Añadir el caso para la pantalla FAQ
+        case 'FAQScreen':
           setActiveTab('faq');
           break;
-        // Agregar más casos según sea necesario para otras pantallas
+        case 'TemasGeneralesScreen':
+          setActiveTab('temasGenerales');
+          break;
+        case 'ClientProfileScreen': // Asegúrate de que esta línea esté presente
+          setActiveTab('profile');
+          break;
         default:
           setActiveTab('home');
           break;
@@ -37,10 +43,15 @@ const BottomBar = () => {
       case 'help':
         navigation.navigate('HelpScreen');
         break;
-      case 'faq': // Añadir la navegación para la pantalla FAQ
+      case 'faq':
         navigation.navigate('FAQScreen');
         break;
-      // Agregar más condiciones según sea necesario para otras pestañas
+      case 'temasGenerales':
+        navigation.navigate('TemasGeneralesScreen');
+        break;
+      case 'profile': // Asegúrate de que esta línea esté presente
+        navigation.navigate('ClientProfileScreen');
+        break;
       default:
         navigation.navigate('HomeScreen');
         break;

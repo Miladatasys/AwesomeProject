@@ -3,68 +3,74 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-nati
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const LecturaScreen = () => {
-  const [expandedQuestion, setExpandedQuestion] = useState(null);
+const TemasGeneralesScreen = () => {
   const navigation = useNavigation();
+  const [expandedQuestion, setExpandedQuestion] = useState(null);
 
   const handleToggleQuestion = (question) => {
     setExpandedQuestion(expandedQuestion === question ? null : question);
   };
 
-  const handleBackPress = () => {
-    navigation.goBack();
-  };
-
   return (
     <ScrollView style={styles.container}>
-      <TouchableOpacity onPress={handleBackPress} style={styles.backButtonContainer}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButtonContainer}>
         <Icon name="arrow-back" size={24} color="#4271d4" />
         <Text style={styles.backButton}>Volver</Text>
       </TouchableOpacity>
-      <Text style={styles.title}>Lectura</Text>
+      <Text style={styles.title}>Temas Generales</Text>
+
       <View style={styles.faqContainer}>
         <TouchableOpacity onPress={() => handleToggleQuestion('q1')} style={styles.questionContainer}>
-          <Text style={styles.question}>¿Debo permitir el acceso de los lectores a mi medidor?</Text>
+          <Text style={styles.question}>¿Qué hacer ante un corte de luz?</Text>
         </TouchableOpacity>
         {expandedQuestion === 'q1' && (
           <View style={styles.answerContainer}>
             <Text style={styles.answer}>
-              Sí. De esa forma podemos emitir tu boleta de acuerdo a lo que realmente consumiste. El personal que realiza esta labor, debe portar la credencial que lo acredita para acceder al medidor y efectuar el registro de tu consumo. Si por cualquier causa no imputable a la compañía, no pudiera efectuarse la lectura correspondiente, se dejará una constancia de esta situación en un lugar visible del inmueble y se facturará provisoriamente.
-              Si nuestros lectores no pueden acceder a tu medidor, te invitamos a registrar tu consumo fácilmente.
+              En caso de que en tu propiedad se produzca un corte de luz, por favor considera lo siguiente.
             </Text>
           </View>
         )}
 
         <TouchableOpacity onPress={() => handleToggleQuestion('q2')} style={styles.questionContainer}>
-          <Text style={styles.question}>¿Cuándo se factura un consumo provisional en la boleta?</Text>
+          <Text style={styles.question}>¿Cómo puedo obtener información sobre cortes programados en algún sector de las comunas de la zona de concesión de Enel?</Text>
         </TouchableOpacity>
         {expandedQuestion === 'q2' && (
           <View style={styles.answerContainer}>
             <Text style={styles.answer}>
-              Cuando no es posible registrar la lectura del medidor, las empresas distribuidoras de energía eléctrica están facultadas para facturar provisoriamente el promedio de los consumos de los últimos seis meses. Al normalizarse la lectura, la facturación del consumo provisional en energía se descuenta de la boleta o factura, ajustando el consumo real.
+              Para revisar los cortes programados de las próximas 72 horas por comuna, por favor ingresa.
             </Text>
           </View>
         )}
 
         <TouchableOpacity onPress={() => handleToggleQuestion('q3')} style={styles.questionContainer}>
-          <Text style={styles.question}>¿Cómo puedo registrar el consumo de energía de mi medidor?</Text>
+          <Text style={styles.question}>¿Cuándo se cobra cargo adicional de invierno?</Text>
         </TouchableOpacity>
         {expandedQuestion === 'q3' && (
           <View style={styles.answerContainer}>
             <Text style={styles.answer}>
-              Si nuestros lectores no pueden acceder a tu medidor, te invitamos a registrar tu consumo fácilmente. 
-              Si estás registrado en nuestra Sucursal Virtual, ingresa a la sección "Mis Cuentas" y luego a "Ingreso de Lecturas" que se encuentra al final del listado de detalle de facturas.
+              El límite de invierno es una medida establecida en la normativa eléctrica, que busca regular el aumento del consumo eléctrico durante el periodo de invierno.
             </Text>
           </View>
         )}
 
         <TouchableOpacity onPress={() => handleToggleQuestion('q4')} style={styles.questionContainer}>
-          <Text style={styles.question}>¿Cómo leer el medidor?</Text>
+          <Text style={styles.question}>¿Cómo denunciar un hurto de energía?</Text>
         </TouchableOpacity>
         {expandedQuestion === 'q4' && (
           <View style={styles.answerContainer}>
             <Text style={styles.answer}>
-              Si nuestros lectores no pueden acceder a tu domicilio, puedes hacerlo tú mismo con solo subir una foto. Encontrarás en detalle cómo identificar tu medidor y los simples pasos que debes seguir para registrar tu consumo.
+              ¡Evita los robos! Si quieres denunciar un hurto de energía, por favor ingresa.
+            </Text>
+          </View>
+        )}
+
+        <TouchableOpacity onPress={() => handleToggleQuestion('q5')} style={styles.questionContainer}>
+          <Text style={styles.question}>¿Cómo hacer un reclamo a Enel?</Text>
+        </TouchableOpacity>
+        {expandedQuestion === 'q5' && (
+          <View style={styles.answerContainer}>
+            <Text style={styles.answer}>
+              Para ingresar un reclamo, accede al formulario en nuestro sitio web y tu requerimiento será atendido a la brevedad.
             </Text>
           </View>
         )}
@@ -76,8 +82,8 @@ const LecturaScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     backgroundColor: '#E8EAF6',
+    padding: 20,
   },
   backButtonContainer: {
     flexDirection: 'row',
@@ -101,6 +107,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 8,
     padding: 20,
+    marginBottom: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
@@ -122,7 +129,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 15,
     marginTop: 10,
-    marginBottom: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
@@ -135,4 +141,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LecturaScreen;
+export default TemasGeneralesScreen;
