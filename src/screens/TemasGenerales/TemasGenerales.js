@@ -95,6 +95,7 @@ const styles = StyleSheet.create({
     color: '#4271d4',
     marginLeft: 5,
     fontWeight: 'bold',
+    fontFamily: 'Roboto-Regular',
   },
   title: {
     fontSize: 28,
@@ -102,6 +103,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 30,
     color: '#2F2F2F',
+    fontFamily: 'Roboto-Bold',
   },
   faqContainer: {
     backgroundColor: '#fff',
@@ -123,6 +125,7 @@ const styles = StyleSheet.create({
     fontSize: 19,
     fontWeight: 'bold',
     color: '#2F2F2F',
+    fontFamily: 'Roboto-Regular',
   },
   answerContainer: {
     backgroundColor: '#f9f9f9',
@@ -138,6 +141,7 @@ const styles = StyleSheet.create({
   answer: {
     fontSize: 19,
     color: '#2F2F2F',
+    fontFamily: 'Roboto-Regular',
   },
 });
 

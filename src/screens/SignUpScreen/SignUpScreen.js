@@ -5,15 +5,11 @@ import { useNavigation } from "@react-navigation/native";
 // Componente para mostrar el indicador de fortaleza de la contraseña
 const PasswordStrengthIndicator = ({ password }) => {
     const calculateStrength = () => {
-        // Verifica si la contraseña cumple con los requisitos
         const hasNumber = /\d/.test(password);
         const hasLowerCase = /[a-z]/.test(password);
         const hasUpperCase = /[A-Z]/.test(password);
         const hasMinLength = password.length >= 8;
-
-        // Calcula la fuerza de la contraseña
         const strength = (hasNumber + hasLowerCase + hasUpperCase + hasMinLength) / 4 * 100;
-
         return strength;
     };
 
@@ -41,11 +37,10 @@ const SignUpScreen = () => {
     const [emailError, setEmailError] = useState(''); 
     const [passwordError, setPasswordError] = useState('');
     const [confirmPasswordError, setConfirmPasswordError] = useState('');
-    
     const navigation = useNavigation();
 
     const validateRut = () => {
-        const rutRegex = /^[0-9]+-[0-9kK]{1}$/; // Expresión regular para validar RUT chileno
+        const rutRegex = /^[0-9]+-[0-9kK]{1}$/;
         if (!rut.trim()) {
             setRutError('Ingrese su RUT');
             return false;
@@ -59,7 +54,7 @@ const SignUpScreen = () => {
     };
 
     const validateEmail = () => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expresión regular para validar formato de correo electrónico
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!email.trim()) {
             setEmailError('Ingrese su correo electrónico');
             return false;
@@ -71,9 +66,9 @@ const SignUpScreen = () => {
             return true;
         }
     };
-    
+
     const validatePassword = () => {
-        const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/; // Al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número
+        const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
         if (!password.trim()) {
             setPasswordError('Ingrese su contraseña');
             return false;
@@ -85,7 +80,7 @@ const SignUpScreen = () => {
             return true;
         }
     };
-    
+
     const validateConfirmPassword = () => {
         if (!confirmPassword.trim()) {
             setConfirmPasswordError('Confirme su contraseña');
@@ -98,54 +93,14 @@ const SignUpScreen = () => {
             return true;
         }
     };
-    
 
     const validateFields = () => {
         let valid = true;
 
-        const rutRegex = /^[0-9]+-[0-9kK]{1}$/; // Expresión regular para validar RUT chileno
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expresión regular para validar formato de correo electrónico
-        const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/; // Al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número
-
-        if (!rut.trim()) {
-            setRutError('Ingrese su RUT');
-            valid = false;
-        } else if (!rutRegex.test(rut)) {
-            setRutError('RUT no válido');
-            valid = false;
-        } else {
-            setRutError('');
-        }
-
-        if (!email.trim()) {
-            setEmailError('Ingrese su correo electrónico');
-            valid = false;
-        } else if (!emailRegex.test(email)) {
-            setEmailError('Correo electrónico no válido');
-            valid = false;
-        } else {
-            setEmailError('');
-        }
-
-        if (!password.trim()) {
-            setPasswordError('Ingrese su contraseña');
-            valid = false;
-        } else if (!passwordRegex.test(password)) {
-            setPasswordError('La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número');
-            valid = false;
-        } else {
-            setPasswordError('');
-        }
-
-        if (!confirmPassword.trim()) {
-            setConfirmPasswordError('Confirme su contraseña');
-            valid = false;
-        } else if (confirmPassword !== password) {
-            setConfirmPasswordError('Las contraseñas no coinciden');
-            valid = false;
-        } else {
-            setConfirmPasswordError('');
-        }
+        if (!validateRut()) valid = false;
+        if (!validateEmail()) valid = false;
+        if (!validatePassword()) valid = false;
+        if (!validateConfirmPassword()) valid = false;
 
         return valid;
     };
@@ -178,9 +133,9 @@ const SignUpScreen = () => {
                         placeholder="11111111-1"
                         value={rut}
                         onChangeText={(text) => setRut(text)}
-                        onBlur={validateRut} // Llamada a la función validateRut en el evento onBlur
+                        onBlur={validateRut}
+                        fontFamily="Roboto-Regular"
                     />
-
                     {rutError ? <Text style={styles.errorText}>{rutError}</Text> : null}
                 </View>
 
@@ -191,7 +146,8 @@ const SignUpScreen = () => {
                         placeholder="Correo electrónico"
                         value={email}
                         onChangeText={(text) => setEmail(text)}
-                        onBlur={validateEmail} // Llamada a la función validateEmail en el evento onBlur
+                        onBlur={validateEmail}
+                        fontFamily="Roboto-Regular"
                     />
                     {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
                 </View>
@@ -203,13 +159,11 @@ const SignUpScreen = () => {
                         placeholder="Contraseña"
                         value={password}
                         onChangeText={(text) => setPassword(text)}
-                        onBlur={validatePassword} // Llamada a la función validatePassword en el evento onBlur
+                        onBlur={validatePassword}
                         secureTextEntry
+                        fontFamily="Roboto-Regular"
                     />
-
                     {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
-
-                    {/* Muestra el indicador de fortaleza de la contraseña */}
                     <PasswordStrengthIndicator password={password} />
                 </View>
 
@@ -220,10 +174,10 @@ const SignUpScreen = () => {
                         placeholder="Confirmar Contraseña"
                         value={confirmPassword}
                         onChangeText={(text) => setConfirmPassword(text)}
-                        onBlur={validateConfirmPassword} // Llamada a la función validateConfirmPassword en el evento onBlur
+                        onBlur={validateConfirmPassword}
                         secureTextEntry
+                        fontFamily="Roboto-Regular"
                     />
-
                     {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
                 </View>
 
@@ -234,7 +188,6 @@ const SignUpScreen = () => {
                 <TouchableOpacity style={[styles.button, styles.tertiaryButton]} onPress={onSignInPressed}>
                     <Text style={[styles.buttonText, styles.tertiaryButtonText]}>¿Tienes una cuenta? Inicia sesión</Text>
                 </TouchableOpacity>
-
             </View>
         </ScrollView>
     );
@@ -256,6 +209,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#2F2F2F',
         marginVertical: 10,
+        fontFamily: 'Roboto-Regular',
     },
     inputContainer: {
         width: '100%',
@@ -264,6 +218,7 @@ const styles = StyleSheet.create({
     label: {
         marginBottom: 5,
         color: '#2F2F2F',
+        fontFamily: 'Roboto-Regular',
     },
     input: {
         width: '100%',
@@ -273,6 +228,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal: 10,
         color: '#2F2F2F',
+        fontFamily: 'Roboto-Regular',
     },
     inputError: {
         borderColor: '#FE0F64',
@@ -280,6 +236,7 @@ const styles = StyleSheet.create({
     errorText: {
         color: '#FE0F64',
         fontSize: 12,
+        fontFamily: 'Roboto-Regular',
     },
     button: {
         borderRadius: 5,
@@ -291,6 +248,7 @@ const styles = StyleSheet.create({
         color: '#2F2F2F',
         fontSize: 14,
         textAlign: 'center',
+        fontFamily: 'Roboto-Regular',
     },
     tertiaryButton: {
         backgroundColor: 'transparent',
@@ -298,7 +256,6 @@ const styles = StyleSheet.create({
     tertiaryButtonText: {
         color: '#FE0F64',
     },
-    // Estilos para el indicador de fortaleza de la contraseña
     strengthIndicatorContainer: {
         width: '100%',
         height: 5,
@@ -314,4 +271,3 @@ const styles = StyleSheet.create({
 });
 
 export default SignUpScreen;
-

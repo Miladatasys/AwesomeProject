@@ -31,12 +31,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 10,
     color: '#2F2F2F',
+    fontFamily: 'Roboto-Regular',
   },
   clientNumber: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     color: '#2F2F2F',
+    fontFamily: 'Roboto-Bold',
   },
   buttonContainer: {
     alignItems: 'center',

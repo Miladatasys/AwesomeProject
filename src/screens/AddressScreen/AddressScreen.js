@@ -121,6 +121,7 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 5,
     color: '#2F2F2F',
+    fontFamily: 'Roboto-Regular',
   },
   dropdownContainer: {
     width: '100%',
@@ -144,6 +145,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     color: '#2F2F2F',
+    fontFamily: 'Roboto-Regular',
   },
   buttonContainer: {
     alignItems: 'center',
@@ -156,8 +158,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#4271d4',
     fontWeight: 'bold',
+    fontFamily: 'Roboto-Regular',
   },
 });
 
 export default AddressScreen;
-

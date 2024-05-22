@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#4271d4',
         fontWeight: 'bold',
+        fontFamily: 'Roboto-Regular',
     },
     button: {
         backgroundColor: '#FFFFFF',
@@ -89,6 +90,7 @@ const styles = StyleSheet.create({
         color: '#4271d4',
         textAlign: 'center',
         fontWeight: 'bold',
+        fontFamily: 'Roboto-Regular',
     },
 });
 

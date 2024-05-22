@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#2F2F2F',
         margin: 10,
+        fontFamily: 'Roboto-Bold',
     },
     inputContainer: {
         width: '100%',
@@ -98,10 +99,12 @@ const styles = StyleSheet.create({
     label: {
         marginBottom: 5,
         color: '#2F2F2F',
+        fontFamily: 'Roboto-Regular',
     },
     errorText: {
         color: '#FE0F64',
         fontSize: 12,
+        fontFamily: 'Roboto-Regular',
     },
     button: {
         marginTop: 20,

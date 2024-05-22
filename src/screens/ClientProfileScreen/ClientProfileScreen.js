@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
     color: '#4271d4',
     marginLeft: 5,
     fontWeight: 'bold',
+    fontFamily: 'Roboto-Regular',
   },
   title: {
     fontSize: 28,
@@ -99,6 +100,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 30,
     color: '#2F2F2F',
+    fontFamily: 'Roboto-Bold',
   },
   profileContainer: {
     alignItems: 'center',
@@ -108,10 +110,12 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     color: '#2F2F2F',
+    fontFamily: 'Roboto-Regular',
   },
   profileEmail: {
     fontSize: 16,
     color: '#2F2F2F',
+    fontFamily: 'Roboto-Regular',
   },
   button: {
     backgroundColor: '#5C6BC0',
@@ -130,6 +134,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#FFFFFF',
     fontWeight: 'bold',
+    fontFamily: 'Roboto-Regular',
   },
 });
 

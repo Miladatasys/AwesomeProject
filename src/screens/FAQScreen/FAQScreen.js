@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     color: '#4271d4',
     marginLeft: 5,
     fontWeight: 'bold',
+    fontFamily: 'Roboto-Regular',
   },
   title: {
     fontSize: 28,
@@ -57,6 +58,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     textAlign: 'center',
     color: '#2F2F2F',
+    fontFamily: 'Roboto-Bold',
   },
   button: {
     backgroundColor: '#5C6BC0',
@@ -75,6 +77,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#FFFFFF',
     fontWeight: 'bold',
+    fontFamily: 'Roboto-Regular',
   },
 });
 

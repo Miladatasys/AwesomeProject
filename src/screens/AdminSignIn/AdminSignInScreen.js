@@ -87,7 +87,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#fff",
-
     },
     goBackContainer: {
         position: 'absolute',
@@ -99,6 +98,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
         color: '#4271d4',
+        fontFamily: 'Roboto-Regular',
     },
     imageContainer: {
         width: windowWidth - 40, // 20 padding a cada lado
@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         marginVertical: 20,
         textAlign: "center",
+        fontFamily: 'Roboto-Bold',
     },
     label: {
         fontSize: 16,
@@ -124,9 +125,10 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         alignSelf: 'flex-start',
         marginStart: 20,
+        fontFamily: 'Roboto-Regular',
     },
     input: {
-        width: '100%',
+        width: '90%',
         height: 40,
         borderWidth: 1,
         borderColor: '#F6F6F6',
@@ -134,23 +136,22 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         color: '#2F2F2F',
         marginBottom: 20,
-        marginStart: 30,
-        paddingeEnd: 20,
+        fontFamily: 'Roboto-Regular',
     },
     errorText: {
         color: '#FE0F64',
         fontSize: 12,
         textAlign: "center",
+        fontFamily: 'Roboto-Regular',
     },
     forgotPasswordText: {
         color: '#4271d4',
         marginTop: 10,
+        fontFamily: 'Roboto-Regular',
     },
 });
 
 export default AdminSignInScreen;
-
-
 
 
 

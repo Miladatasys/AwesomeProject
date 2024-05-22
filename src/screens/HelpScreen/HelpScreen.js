@@ -121,6 +121,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#4271d4',
         fontWeight: 'bold',
+        fontFamily: 'Roboto-Regular',
     },
     title: {
         fontSize: 24,
@@ -128,6 +129,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         color: '#2F2F2F',
+        fontFamily: 'Roboto-Bold',
     },
     clientInfo: {
         marginBottom: 20,
@@ -136,11 +138,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 5,
         color: '#2F2F2F',
+        fontFamily: 'Roboto-Regular',
     },
     label: {
         fontSize: 16,
         marginBottom: 5,
         color: '#2F2F2F',
+        fontFamily: 'Roboto-Regular',
     },
     dropdownContainer: {
         width: '100%',
@@ -163,6 +167,7 @@ const styles = StyleSheet.create({
         color: '#2F2F2F',
         marginBottom: 20,
         textAlignVertical: 'top',
+        fontFamily: 'Roboto-Regular',
     },
     button: {
         backgroundColor: '#FE0F64',
@@ -180,6 +185,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#FFFFFF',
         fontWeight: 'bold',
+        fontFamily: 'Roboto-Regular',
     },
 });
 

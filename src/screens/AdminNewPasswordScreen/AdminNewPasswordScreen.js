@@ -55,7 +55,7 @@ const AdminNewPasswordScreen = () => {
 
     const onSubmitPressed = () => {
         if (validateInputs()) {
-            // nviar la solicitud para cambiar la contraseña del administrador
+            // Enviar la solicitud para cambiar la contraseña del administrador
             navigation.navigate('AdminHomeScreen'); 
         }
     };
@@ -129,10 +129,12 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#2F2F2F',
         margin: 10,
+        fontFamily: 'Roboto-Bold',
     },
     errorText: {
         color: '#FE0F64',
         fontSize: 12,
+        fontFamily: 'Roboto-Regular',
     },
     button: {
         marginTop: 20,

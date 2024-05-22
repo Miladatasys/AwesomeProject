@@ -5,10 +5,8 @@ import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 
 const NewPasswordScreen = () => {
-    const [code, setCode] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
-    const [codeError, setCodeError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [confirmPasswordError, setConfirmPasswordError] = useState('');
     const [passwordStrength, setPasswordStrength] = useState(0);
@@ -17,12 +15,6 @@ const NewPasswordScreen = () => {
 
     const validateInputs = () => {
         let isValid = true;
-        if (!code.trim()) {
-            setCodeError('Ingrese el código de verificación');
-            isValid = false;
-        } else {
-            setCodeError('');
-        }
         if (!newPassword.trim()) {
             setPasswordError('Ingrese la nueva contraseña');
             isValid = false;
@@ -45,7 +37,6 @@ const NewPasswordScreen = () => {
     };
 
     const calculatePasswordStrength = (password) => {
-        // Puedes ajustar esta lógica según tus requisitos específicos para determinar la fortaleza de la contraseña
         let strength = 0;
         if (password.length >= 8) {
             strength += 1;
@@ -83,14 +74,6 @@ const NewPasswordScreen = () => {
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.root}>
                 <Text style={styles.title}>Cambia tu contraseña</Text>
-
-                <CustomInput
-                    placeholder="Código de verificación" 
-                    value={code} 
-                    setValue={setCode}
-                    error={codeError}
-                />
-                {codeError ? <Text style={styles.errorText}>{codeError}</Text> : null}
 
                 <CustomInput
                     placeholder="Nueva contraseña" 
@@ -150,15 +133,16 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#2F2F2F',
         margin: 10,
+        fontFamily: 'Roboto-Bold',
     },
     errorText: {
         color: '#FE0F64',
         fontSize: 12,
+        fontFamily: 'Roboto-Regular',
     },
     button: {
         marginTop: 20,
     },
-    // Estilos para la barra de progreso de la fortaleza de la contraseña
     passwordStrengthContainer: {
         width: '100%',
         height: 10,

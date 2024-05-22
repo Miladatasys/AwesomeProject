@@ -15,7 +15,6 @@ const SignInScreen = () => {
     const navigation = useNavigation();
 
     const validateRut = () => {
-        // Expresión regular para validar rut chileno
         const rutRegex = /^[0-9]+-[0-9kK]{1}$/;
         if (!rut.trim()) {
             setRutError('Ingrese su rut');
@@ -29,12 +28,11 @@ const SignInScreen = () => {
         }
     };
 
-
     const validatePassword = () => {
         if (!password.trim()) {
             setPasswordError('Ingrese su contraseña');
             return false;
-        } else if (password.length < 8) { // Validación de longitud mínima de contraseña
+        } else if (password.length < 8) {
             setPasswordError('La contraseña debe tener al menos 8 caracteres');
             return false;
         } else {
@@ -45,7 +43,6 @@ const SignInScreen = () => {
 
     const onSignInPressed = () => {
         if (validateRut() && validatePassword()) {
-            // Validar al usuario (conexión con el backend)
             navigation.navigate('HomeScreen');
         }
     };
@@ -104,6 +101,7 @@ const SignInScreen = () => {
                         value={rut}
                         onChangeText={(text) => setRut(text)}
                         onBlur={validateRut}
+                        fontFamily="Roboto-Regular" // Añadido aquí
                     />
                     {rutError ? <Text style={styles.errorText}>{rutError}</Text> : null}
                 </View>
@@ -117,6 +115,7 @@ const SignInScreen = () => {
                         onChangeText={(text) => setPassword(text)}
                         onBlur={validatePassword}
                         secureTextEntry
+                        fontFamily="Roboto-Regular" // Añadido aquí
                     />
                     {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
                 </View>
@@ -168,6 +167,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         color: '#2F2F2F',
+        fontFamily: 'Roboto-Regular',
     },
     inputContainer: {
         width: '100%',
@@ -176,6 +176,7 @@ const styles = StyleSheet.create({
     label: {
         marginBottom: 5,
         color: '#2F2F2F',
+        fontFamily: 'Roboto-Regular',
     },
     input: {
         width: '100%',
@@ -185,6 +186,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal: 10,
         color: '#2F2F2F',
+        fontFamily: 'Roboto-Regular',
     },
     inputError: {
         borderColor: '#FE0F64',
@@ -192,12 +194,14 @@ const styles = StyleSheet.create({
     errorText: {
         color: '#FE0F64',
         fontSize: 12,
+        fontFamily: 'Roboto-Regular',
     },
     buttonsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '100%',
         marginTop: 20,
+        marginBottom: 20,
     },
     button: {
         backgroundColor: '#4271d4',
@@ -208,6 +212,7 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#FFFFFF',
         fontSize: 14,
+        fontFamily: 'Roboto-Regular',
     },
     adminButtonText: {
         color: '#2F2F2F',
@@ -215,11 +220,8 @@ const styles = StyleSheet.create({
         textAlign: 'left', 
         alignSelf: 'flex-start', 
         marginLeft: 20,
+        fontFamily: 'Roboto-Regular',
     }
-    
-    
 });
 
-export default SignInScreen;  
-
-
+export default SignInScreen;
