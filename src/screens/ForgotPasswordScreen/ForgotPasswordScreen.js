@@ -6,9 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const ForgotPasswordScreen = () => {
     const [email, setEmail] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
     const [emailError, setEmailError] = useState('');
-    const [phoneNumberError, setPhoneNumberError] = useState('');
 
     const navigation = useNavigation();
 
@@ -26,25 +24,9 @@ const ForgotPasswordScreen = () => {
         }
     };
 
-    const validatePhoneNumber = () => {
-        const phoneRegex = /^[0-9]{9}$/; // Expresión regular para validar números de teléfono de 9 dígitos
-        if (!phoneNumber.trim()) {
-            setPhoneNumberError('Ingrese su número de teléfono');
-            return false;
-        } else if (!phoneRegex.test(phoneNumber.trim())) {
-            setPhoneNumberError('Número de teléfono no válido');
-            return false;
-        } else {
-            setPhoneNumberError('');
-            return true;
-        }
-    };
-
     const onSendPressed = () => {
-        const isEmailValid = validateEmail();
-        const isPhoneNumberValid = validatePhoneNumber();
-        if (isEmailValid && isPhoneNumberValid) {
-            // Aquí enviar la solicitud de recuperación de contraseña por correo electrónico o número de teléfono
+        if (validateEmail()) {
+            // Aquí enviar la solicitud de recuperación de contraseña por correo electrónico
             navigation.navigate('VerificacionCodigoScreen');
         }
     };
@@ -73,23 +55,6 @@ const ForgotPasswordScreen = () => {
                         error={emailError}
                     />
                     {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-                </View>
-
-                <View style={[styles.inputContainer, { alignSelf: 'flex-start' }]}>
-                    <Text style={styles.label}>Ingrese su número de teléfono</Text>
-                    <View style={styles.phoneNumberContainer}>
-                        <Text style={styles.countryCode}>+56</Text>
-                        <CustomInput
-                            placeholder="Número de teléfono"
-                            value={phoneNumber}
-                            setValue={setPhoneNumber}
-                            onBlur={validatePhoneNumber}
-                            error={phoneNumberError}
-                            keyboardType="phone-pad"
-                            style={styles.phoneNumberInput}
-                        />
-                    </View>
-                    {phoneNumberError ? <Text style={styles.errorText}>{phoneNumberError}</Text> : null}
                 </View>
 
                 <CustomButton text="Enviar" onPress={onSendPressed} style={styles.button} />
@@ -129,26 +94,6 @@ const styles = StyleSheet.create({
     },
     label: {
         marginBottom: 5,
-        color: '#2F2F2F',
-        fontFamily: 'Roboto-Regular',
-    },
-    phoneNumberContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    countryCode: {
-        marginRight: 10,
-        fontSize: 16,
-        color: '#2F2F2F',
-        fontFamily: 'Roboto-Regular',
-    },
-    phoneNumberInput: {
-        flex: 1,
-        height: 40,
-        borderWidth: 1,
-        borderColor: '#F6F6F6',
-        borderRadius: 5,
-        paddingHorizontal: 10,
         color: '#2F2F2F',
         fontFamily: 'Roboto-Regular',
     },

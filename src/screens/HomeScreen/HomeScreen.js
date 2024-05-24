@@ -3,22 +3,27 @@ import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import BottomBar from "../../components/CustomBottomBar.js/BottomBar";
 import ClientHeader from "../../components/CustomHeader/ClientHeader";
 import { useNavigation } from "@react-navigation/native";
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const HomeScreen = () => {
     const navigation = useNavigation();
 
     const cliente = {
-        nombre: "Juan Pérez",
+        nombre: "", // Vacío hasta que se integre con el backend
         direccion: {
-            calle: "Calle Principal",
-            numero: "123",
-            comuna: "Santiago",
-            numeroCliente: "0001"
+            calle: "",
+            numero: "",
+            comuna: "",
+            numeroCliente: ""
         }
     };
 
     const handleNavigateToAddMeter = () => {
         navigation.navigate('AddressScreen');
+    };
+
+    const handleNavigateToHistorialCliente = () => {
+        navigation.navigate('HistorialClienteScreen');
     };
 
     const handleBackPress = () => {
@@ -42,9 +47,14 @@ const HomeScreen = () => {
         <>
             <View style={styles.container}>
                 <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
-                    <Text style={styles.backButtonText}>Volver atrás</Text>
+                    <Text style={styles.backButtonText}>Volver</Text>
                 </TouchableOpacity>
-                <ClientHeader nombreCliente={cliente.nombre} direccion={cliente.direccion} />
+                <View style={styles.headerContainer}>
+                    <ClientHeader nombreCliente={cliente.nombre} direccion={cliente.direccion} />
+                    <TouchableOpacity onPress={handleNavigateToHistorialCliente} style={styles.iconButton}>
+                        <Icon name="arrow-forward" size={24} color="#FE0F64" />
+                    </TouchableOpacity>
+                </View>
                 <TouchableOpacity style={styles.button} onPress={handleNavigateToAddMeter}>
                     <Text style={styles.buttonText}>Ingrese su medidor</Text>
                 </TouchableOpacity>
@@ -69,6 +79,14 @@ const styles = StyleSheet.create({
         color: '#4271d4',
         fontWeight: 'bold',
         fontFamily: 'Roboto-Regular',
+    },
+    headerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    iconButton: {
+        padding: 10,
     },
     button: {
         backgroundColor: '#FFFFFF',

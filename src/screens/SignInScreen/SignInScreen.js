@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TextInput, TouchableOpacity, Alert } from "react-native";
+import axios from "axios";
 import Logo from "../../../assets/images/Enel.png";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
@@ -9,8 +10,6 @@ const SignInScreen = () => {
     const [password, setPassword] = useState('');
     const [rutError, setRutError] = useState('');
     const [passwordError, setPasswordError] = useState('');
-    const [selectedUserType, setSelectedUserType] = useState('PERSONA');
-
     const { width } = useWindowDimensions();
     const navigation = useNavigation();
 
@@ -43,7 +42,22 @@ const SignInScreen = () => {
 
     const onSignInPressed = () => {
         if (validateRut() && validatePassword()) {
-            navigation.navigate('HomeScreen');
+            const user = {
+                rut,
+                password
+            };
+
+            axios.post('https://localhost:8080/login', user)
+                .then((response) => {
+                    if (response.data.success) {
+                        navigation.navigate('HomeScreen');
+                    } else {
+                        Alert.alert('Error', response.data.message);
+                    }
+                })
+                .catch((error) => {
+                    Alert.alert('Error', 'Hubo un problema con el inicio de sesión. Inténtelo de nuevo.');
+                });
         }
     };
 
@@ -53,10 +67,6 @@ const SignInScreen = () => {
 
     const onSignUpPressed = () => {
         navigation.navigate('SignUp');
-    };
-
-    const handleUserTypeSelection = (userType) => {
-        setSelectedUserType(userType);
     };
 
     const onAdminLoginPressed = () => {
@@ -72,27 +82,6 @@ const SignInScreen = () => {
                     resizeMode="contain" 
                 />
 
-                <View style={styles.tabContainer}>
-                    <TouchableOpacity 
-                        style={[
-                            styles.tabButton, 
-                            selectedUserType === 'PERSONA' && styles.selectedTabButton
-                        ]}
-                        onPress={() => handleUserTypeSelection('PERSONA')}
-                    >
-                        <Text style={styles.tabButtonText}>PERSONA</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        style={[
-                            styles.tabButton, 
-                            selectedUserType === 'EMPRESA' && styles.selectedTabButton
-                        ]}
-                        onPress={() => handleUserTypeSelection('EMPRESA')}
-                    >
-                        <Text style={styles.tabButtonText}>EMPRESA</Text>
-                    </TouchableOpacity>
-                </View>
-
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>Ingrese su rut:</Text>
                     <TextInput
@@ -101,7 +90,7 @@ const SignInScreen = () => {
                         value={rut}
                         onChangeText={(text) => setRut(text)}
                         onBlur={validateRut}
-                        fontFamily="Roboto-Regular" // Añadido aquí
+                        fontFamily="Roboto-Regular"
                     />
                     {rutError ? <Text style={styles.errorText}>{rutError}</Text> : null}
                 </View>
@@ -115,7 +104,7 @@ const SignInScreen = () => {
                         onChangeText={(text) => setPassword(text)}
                         onBlur={validatePassword}
                         secureTextEntry
-                        fontFamily="Roboto-Regular" // Añadido aquí
+                        fontFamily="Roboto-Regular"
                     />
                     {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
                 </View>
@@ -146,28 +135,6 @@ const styles = StyleSheet.create({
     logo: {
         maxHeight: 200,
         marginBottom: 20,
-    },
-    tabContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        width: '100%',
-        marginBottom: 20,
-    },
-    tabButton: {
-        flex: 1,
-        alignItems: 'center',
-        paddingVertical: 10,
-        borderBottomWidth: 3,
-        borderBottomColor: '#E1E1E1',
-    },
-    selectedTabButton: {
-        borderBottomColor: '#4271d4',
-    },
-    tabButtonText: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#2F2F2F',
-        fontFamily: 'Roboto-Regular',
     },
     inputContainer: {
         width: '100%',

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Image, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert, useWindowDimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 
 // Componente para mostrar el indicador de fortaleza de la contraseña
 const PasswordStrengthIndicator = ({ password }) => {
@@ -30,13 +31,20 @@ const PasswordStrengthIndicator = ({ password }) => {
 
 const SignUpScreen = () => {
     const [rut, setRut] = useState('');
+    const [firstname, setFirstname] = useState('');
+    const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState(''); 
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [rutError, setRutError] = useState('');
+    const [firstnameError, setFirstnameError] = useState(''); 
+    const [lastnameError, setLastnameError] = useState(''); 
     const [emailError, setEmailError] = useState(''); 
     const [passwordError, setPasswordError] = useState('');
     const [confirmPasswordError, setConfirmPasswordError] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [phoneNumberError, setPhoneNumberError] = useState('');
+    const { width } = useWindowDimensions();
     const navigation = useNavigation();
 
     const validateRut = () => {
@@ -49,6 +57,26 @@ const SignUpScreen = () => {
             return false;
         } else {
             setRutError('');
+            return true;
+        }
+    };
+
+    const validateFirstname = () => {
+        if (!firstname.trim()) {
+            setFirstnameError('Ingrese su nombre');
+            return false;
+        } else {
+            setFirstnameError('');
+            return true;
+        }
+    };
+
+    const validateLastname = () => {
+        if (!lastname.trim()) {
+            setLastnameError('Ingrese su apellido');
+            return false;
+        } else {
+            setLastnameError('');
             return true;
         }
     };
@@ -94,20 +122,57 @@ const SignUpScreen = () => {
         }
     };
 
+    const validatePhoneNumber = () => {
+        const phoneRegex = /^[0-9]{9}$/; // Expresión regular para validar números de teléfono de 9 dígitos
+        if (!phoneNumber.trim()) {
+            setPhoneNumberError('Ingrese su número de teléfono');
+            return false;
+        } else if (!phoneRegex.test(phoneNumber.trim())) {
+            setPhoneNumberError('Número de teléfono no válido');
+            return false;
+        } else {
+            setPhoneNumberError('');
+            return true;
+        }
+    };
+
     const validateFields = () => {
         let valid = true;
-
+        
         if (!validateRut()) valid = false;
+        if (!validateFirstname()) valid = false;
+        if (!validateLastname()) valid = false;
         if (!validateEmail()) valid = false;
         if (!validatePassword()) valid = false;
         if (!validateConfirmPassword()) valid = false;
+        if (!validatePhoneNumber()) valid = false;
 
         return valid;
     };
 
     const onRegisterPressed = () => {
         if (validateFields()) {
-            navigation.navigate('ConfirmEmail');
+            const user = {
+                rut,
+                password,
+                firstname,
+                lastname,
+                email,
+                phoneNumber,
+                userType: 'PERSONA' // Valor por defecto ya que eliminamos la selección
+            };
+
+            axios.post('https://localhost:8080/register', user)
+                .then((response) => {
+                    if (response.data.success) {
+                        navigation.navigate('ConfirmEmail');
+                    } else {
+                        Alert.alert('Error', response.data.message);
+                    }
+                })
+                .catch((error) => {
+                    Alert.alert('Error', 'Hubo un problema con el registro. Inténtelo de nuevo.');
+                });
         }
     };
 
@@ -118,12 +183,6 @@ const SignUpScreen = () => {
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.root}>
-                <Image 
-                    source={require("../../../assets/images/Familia.jpg")} 
-                    style={styles.image} 
-                    resizeMode="cover" 
-                />
-
                 <Text style={styles.title}>Crea una cuenta</Text>
 
                 <View style={styles.inputContainer}>
@@ -137,6 +196,32 @@ const SignUpScreen = () => {
                         fontFamily="Roboto-Regular"
                     />
                     {rutError ? <Text style={styles.errorText}>{rutError}</Text> : null}
+                </View>
+
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Nombre:</Text>
+                    <TextInput
+                        style={[styles.input, firstnameError && styles.inputError]}
+                        placeholder="Escriba su nombre"
+                        value={firstname}
+                        onChangeText={(text) => setFirstname(text)}
+                        onBlur={validateFirstname}
+                        fontFamily="Roboto-Regular"
+                    />
+                    {firstnameError ? <Text style={styles.errorText}>{firstnameError}</Text> : null}
+                </View>
+
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Apellido:</Text>
+                    <TextInput
+                        style={[styles.input, lastnameError && styles.inputError]}
+                        placeholder="Escriba su Apellido"
+                        value={lastname}
+                        onChangeText={(text) => setLastname(text)}
+                        onBlur={validateLastname}
+                        fontFamily="Roboto-Regular"
+                    />
+                    {lastnameError ? <Text style={styles.errorText}>{lastnameError}</Text> : null}
                 </View>
 
                 <View style={styles.inputContainer}>
@@ -181,6 +266,19 @@ const SignUpScreen = () => {
                     {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
                 </View>
 
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Teléfono:</Text>
+                    <TextInput
+                        style={[styles.input, phoneNumberError && styles.inputError]}
+                        placeholder="Número de teléfono"
+                        value={phoneNumber}
+                        onChangeText={(text) => setPhoneNumber(text)}
+                        onBlur={validatePhoneNumber}
+                        fontFamily="Roboto-Regular"
+                    />
+                    {phoneNumberError ? <Text style={styles.errorText}>{phoneNumberError}</Text> : null}
+                </View>
+
                 <TouchableOpacity style={[styles.button, { backgroundColor: '#FE0F64' }]} onPress={onRegisterPressed}>
                     <Text style={[styles.buttonText, { color: '#FFFFFF' }]}>Registrarse</Text>
                 </TouchableOpacity>
@@ -197,12 +295,6 @@ const styles = StyleSheet.create({
     root: {
         alignItems: 'center',
         padding: 20,
-    },
-    image: {
-        width: '90%',
-        height: 300,
-        borderRadius: 10,
-        marginBottom: 20,
     },
     title: {
         fontSize: 24,

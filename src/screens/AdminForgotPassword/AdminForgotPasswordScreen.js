@@ -5,33 +5,29 @@ import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 
 const AdminForgotPasswordScreen = () => {
-    const [userIdentifier, setUserIdentifier] = useState('');
-    const [userIdentifierError, setUserIdentifierError] = useState('');
+    const [email, setEmail] = useState('');
+    const [emailError, setEmailError] = useState('');
 
     const navigation = useNavigation();
 
-    const validateUserIdentifier = () => {
+    const validateEmail = () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expresión regular para validar formato de correo electrónico
-        const phoneNumberRegex = /^\d{9}$/; // Expresión regular para validar que el número de teléfono tenga exactamente 9 dígitos
-    
-        if (!userIdentifier.trim()) {
-            setUserIdentifierError('Ingrese su correo electrónico o número de teléfono');
+
+        if (!email.trim()) {
+            setEmailError('Ingrese su correo electrónico');
             return false;
-        } else if (userIdentifier.endsWith('@gmail.com')) {
-            setUserIdentifierError('');
-            return true;
-        } else if (phoneNumberRegex.test(userIdentifier)) {
-            setUserIdentifierError('');
-            return true;
-        } else if (!emailRegex.test(userIdentifier)) {
-            setUserIdentifierError('Ingrese un correo electrónico válido o un número de teléfono de 9 dígitos');
+        } else if (!emailRegex.test(email.trim())) {
+            setEmailError('Ingrese un correo electrónico válido');
             return false;
+        } else {
+            setEmailError('');
+            return true;
         }
     };
 
     const onSendPressed = () => {
-        if (validateUserIdentifier()) {
-            // Aquí enviar la solicitud de recuperación de contraseña por correo electrónico o número de teléfono
+        if (validateEmail()) {
+            // Aquí enviar la solicitud de recuperación de contraseña por correo electrónico
             navigation.navigate('AdminNewPassword');
         }
     };
@@ -51,15 +47,15 @@ const AdminForgotPasswordScreen = () => {
                 <Text style={styles.title}>Recuperar contraseña de Administrador</Text>
 
                 <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Ingrese su correo electrónico o número de teléfono</Text>
+                    <Text style={styles.label}>Ingrese su correo electrónico</Text>
                     <CustomInput
-                        placeholder="Correo electrónico o número de teléfono" 
-                        value={userIdentifier} 
-                        setValue={setUserIdentifier}
-                        onBlur={validateUserIdentifier}
-                        error={userIdentifierError}
+                        placeholder="Correo electrónico" 
+                        value={email} 
+                        setValue={setEmail}
+                        onBlur={validateEmail}
+                        error={emailError}
                     />
-                    {userIdentifierError ? <Text style={styles.errorText}>{userIdentifierError}</Text> : null}
+                    {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
                 </View>
 
                 <CustomButton text="Enviar" onPress={onSendPressed} style={styles.button}/>

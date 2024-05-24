@@ -20,6 +20,7 @@ import LecturaScreen from '../screens/LecturaScreen/LecturaScreen';
 import TemasGeneralesScreen from '../screens/TemasGenerales/TemasGenerales';
 import ClientProfileScreen from '../screens/ClientProfileScreen/ClientProfileScreen';
 import VerificacionCodigoScreen from '../screens/VerificacionCodigoScreen/VerificacionCodigoScreen';
+import HistorialClienteScreen from '../screens/HistorialClienteScreen/HistorialClienteScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -46,6 +47,9 @@ const Navigation = () => {
                 <Stack.Screen name="TemasGeneralesScreen" component={TemasGeneralesScreen} />
                 <Stack.Screen name="ClientProfileScreen" component={ClientProfileScreen} />
                 <Stack.Screen name="VerificacionCodigoScreen" component={VerificacionCodigoScreen} />
+                <Stack.Screen name="HistorialClienteScreen" component={HistorialClienteScreen} />
+                
+                
             </Stack.Navigator>
         </NavigationContainer>
     );
