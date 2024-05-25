@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Image, Alert } from "react-native";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 
 const ForgotPasswordScreen = () => {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
-
     const navigation = useNavigation();
 
     const validateEmail = () => {
@@ -27,7 +27,18 @@ const ForgotPasswordScreen = () => {
     const onSendPressed = () => {
         if (validateEmail()) {
             // Aquí enviar la solicitud de recuperación de contraseña por correo electrónico
-            navigation.navigate('VerificacionCodigoScreen');
+            axios.post('https://zay6amugsl.execute-api.us-east-1.amazonaws.com/Api/my-enel/send-reset-email', { email })
+                .then(response => {
+                    if (response.data.success) {
+                        navigation.navigate('VerificacionCodigoScreen', { email });
+                    } else {
+                        Alert.alert('Error', response.data.message);
+                    }
+                })
+                .catch(error => {
+                    Alert.alert('Error', 'Hubo un problema al enviar el correo de recuperación. Inténtelo de nuevo.');
+                    console.error('Error al enviar el correo de recuperación:', error);
+                });
         }
     };
 

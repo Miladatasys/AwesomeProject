@@ -59,7 +59,7 @@ const SignInScreen = () => {
                     if (response.data.success) {
                         navigation.navigate('HomeScreen');
                     } else {
-                        Alert.alert('Error', response.data.message);
+                        Alert.alert('Error', response.data.message || 'Error en la respuesta del servidor');
                     }
                 })
                 .catch((error) => {

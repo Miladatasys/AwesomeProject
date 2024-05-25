@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const VerificacionCodigoScreen = () => {
     const [code, setCode] = useState(["", "", "", ""]);
     const [generatedCode, setGeneratedCode] = useState(generateRandomCode());
     const navigation = useNavigation();
+    const route = useRoute();
+    const email = route.params.email;
+
+    useEffect(() => {
+        sendCodeByEmailOrSMS(generatedCode.join(""));
+    }, []);
 
     function generateRandomCode() {
         const randomCode = Math.floor(1000 + Math.random() * 9000).toString();
@@ -31,15 +38,23 @@ const VerificacionCodigoScreen = () => {
     const handleResend = () => {
         const newCode = generateRandomCode();
         setGeneratedCode(newCode);
-        // Simulación del envío del código por email o SMS
         sendCodeByEmailOrSMS(newCode.join(""));
         Alert.alert("Código reenviado", "El código ha sido reenviado.");
     };
 
     const sendCodeByEmailOrSMS = (code) => {
-        // Aquí se simula el envío del código por email o SMS
-        console.log(`Código enviado: ${code}`);
-        // Aquí implementar la lógica real de envío de email o SMS
+        axios.post('https://zay6amugsl.execute-api.us-east-1.amazonaws.com/Api/my-enel/send-code', { code, email })
+            .then(response => {
+                if (response.data.success) {
+                    console.log('Código enviado:', code);
+                } else {
+                    Alert.alert('Error', 'No se pudo enviar el código. Inténtelo de nuevo.');
+                }
+            })
+            .catch(error => {
+                console.error('Error al enviar el código:', error);
+                Alert.alert('Error', 'Hubo un problema al enviar el código. Inténtelo de nuevo.');
+            });
     };
 
     return (
@@ -49,7 +64,7 @@ const VerificacionCodigoScreen = () => {
                 <Text style={styles.backButtonText}>Volver</Text>
             </TouchableOpacity>
             <Text style={styles.title}>Confirmación</Text>
-            <Text style={styles.subtitle}>Ingrese el código de 4 dígitos enviado a usted</Text>
+            <Text style={styles.subtitle}>Ingrese el código de 4 dígitos enviado a {email}</Text>
             <View style={styles.codeContainer}>
                 {code.map((digit, index) => (
                     <TextInput
