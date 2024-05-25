@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TextInput, TouchableOpacity, Alert } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert, useWindowDimensions } from "react-native";
 import axios from "axios";
 import Logo from "../../../assets/images/Enel.png";
 import CustomButton from "../../components/CustomButton";
@@ -40,14 +40,21 @@ const SignInScreen = () => {
         }
     };
 
+    const validateFields = () => {
+        let valid = true;
+        if (!validateRut()) valid = false;
+        if (!validatePassword()) valid = false;
+        return valid;
+    };
+
     const onSignInPressed = () => {
-        if (validateRut() && validatePassword()) {
+        if (validateFields()) {
             const user = {
                 rut,
                 password
             };
 
-            axios.post('https://localhost:8080/login', user)
+            axios.post('http://10.0.2.2:8080/auth/login', user)
                 .then((response) => {
                     if (response.data.success) {
                         navigation.navigate('HomeScreen');
@@ -56,7 +63,17 @@ const SignInScreen = () => {
                     }
                 })
                 .catch((error) => {
-                    Alert.alert('Error', 'Hubo un problema con el inicio de sesión. Inténtelo de nuevo.');
+                    if (error.response) {
+                        console.error('Respuesta del servidor:', error.response.data);
+                        Alert.alert('Error', error.response.data.message || 'Error en la respuesta del servidor');
+                    } else if (error.request) {
+                        console.error('Solicitud realizada, sin respuesta:', error.request);
+                        Alert.alert('Error', 'No se recibió respuesta del servidor');
+                    } else {
+                        console.error('Error al configurar la solicitud:', error.message);
+                        Alert.alert('Error', 'Error al configurar la solicitud: ' + error.message);
+                    }
+                    console.error('Detalles del error:', error.config);
                 });
         }
     };
@@ -109,7 +126,7 @@ const SignInScreen = () => {
                     {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
                 </View>
 
-                <CustomButton text="Ingresar" onPress={onSignInPressed}/>
+                <CustomButton text="Ingresar" onPress={onSignInPressed} />
 
                 <View style={styles.buttonsContainer}>
                     <TouchableOpacity style={styles.button} onPress={onForgotPasswordPressed}>

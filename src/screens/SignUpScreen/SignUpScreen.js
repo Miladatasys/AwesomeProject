@@ -159,22 +159,35 @@ const SignUpScreen = () => {
                 lastname,
                 email,
                 phoneNumber,
-                userType: 'PERSONA' // Valor por defecto ya que eliminamos la selección
+                //userType: 'PERSONA' // Valor por defecto ya que eliminamos la selección
             };
 
-            axios.post('https://localhost:8080/register', user)
-                .then((response) => {
-                    if (response.data.success) {
-                        navigation.navigate('ConfirmEmail');
-                    } else {
-                        Alert.alert('Error', response.data.message);
-                    }
-                })
-                .catch((error) => {
-                    Alert.alert('Error', 'Hubo un problema con el registro. Inténtelo de nuevo.');
-                });
-        }
-    };
+            axios.post('http://10.0.2.2:8080/auth/register', user)
+            .then((response) => {
+                if (response.data.success) {
+                    navigation.navigate('ConfirmEmail');
+                } else {
+                    Alert.alert('Error', response.data.message);
+                }
+            })
+            .catch((error) => {
+                if (error.response) {
+                    // El servidor respondió con un código de estado fuera del rango 2xx
+                    console.error('Respuesta del servidor:', error.response.data);
+                    Alert.alert('Error', error.response.data.message || 'Error en la respuesta del servidor');
+                } else if (error.request) {
+                    // La solicitud fue hecha pero no se recibió respuesta
+                    console.error('Solicitud realizada, sin respuesta:', error.request);
+                    Alert.alert('Error', 'No se recibió respuesta del servidor');
+                } else {
+                    // Algo ocurrió al configurar la solicitud
+                    console.error('Error al configurar la solicitud:', error.message);
+                    Alert.alert('Error', 'Error al configurar la solicitud: ' + error.message);
+                }
+                console.error('Detalles del error:', error.config);
+            });
+    }
+};
 
     const onSignInPressed = () => {
         navigation.navigate('SignIn');
