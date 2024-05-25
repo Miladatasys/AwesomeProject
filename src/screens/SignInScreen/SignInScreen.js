@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert, useWindowDimensions } from "react-native";
+import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TextInput, TouchableOpacity, Alert } from "react-native";
 import axios from "axios";
 import Logo from "../../../assets/images/Enel.png";
 import CustomButton from "../../components/CustomButton";
