@@ -54,7 +54,7 @@ const ForgotPasswordScreen = () => {
     };
     const sendRecoveryEmail = () => {
             const code = generatedCode.join("");
-            axios.post('https://zay6amugsl.execute-api.us-east-1.amazonaws.com/Api/my-enel', { email, code })
+            axios.post('https://lsd49dkuof.execute-api.us-east-1.amazonaws.com/api-ses/enel', { email, code })
                 .then(response => {
                  console.log('Respuesta recibida:', JSON.stringify(response, null, 2));
                  const responseData = JSON.parse(response.data.body); // Parsear el cuerpo de la respuesta
