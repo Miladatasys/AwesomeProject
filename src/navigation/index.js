@@ -21,6 +21,7 @@ import TemasGeneralesScreen from '../screens/TemasGenerales/TemasGenerales';
 import ClientProfileScreen from '../screens/ClientProfileScreen/ClientProfileScreen';
 import VerificacionCodigoScreen from '../screens/VerificacionCodigoScreen/VerificacionCodigoScreen';
 import HistorialClienteScreen from '../screens/HistorialClienteScreen/HistorialClienteScreen';
+import CameraScreen from '../screens/CamaraScreen/CamaraScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -48,8 +49,7 @@ const Navigation = () => {
                 <Stack.Screen name="ClientProfileScreen" component={ClientProfileScreen} />
                 <Stack.Screen name="VerificacionCodigoScreen" component={VerificacionCodigoScreen} />
                 <Stack.Screen name="HistorialClienteScreen" component={HistorialClienteScreen} />
-                
-                
+                <Stack.Screen name="CameraScreen" component={CameraScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );

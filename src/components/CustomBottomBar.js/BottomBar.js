@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, TouchableOpacity, Text, StyleSheet, PermissionsAndroid, Platform, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 
@@ -24,7 +24,7 @@ const BottomBar = () => {
         case 'TemasGeneralesScreen':
           setActiveTab('temasGenerales');
           break;
-        case 'ClientProfileScreen': // Asegúrate de que esta línea esté presente
+        case 'ClientProfileScreen':
           setActiveTab('profile');
           break;
         default:
@@ -34,7 +34,28 @@ const BottomBar = () => {
     }, [route.name])
   );
 
-  const handleTabPress = (tabName) => {
+  const requestPermissions = async () => {
+    try {
+      const cameraPermission = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA
+      );
+      const audioPermission = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
+      );
+
+      if (cameraPermission === PermissionsAndroid.RESULTS.GRANTED && audioPermission === PermissionsAndroid.RESULTS.GRANTED) {
+        return true;
+      } else {
+        Alert.alert('Permisos no otorgados', 'Permisos de Cámara o Micrófono denegados');
+        return false;
+      }
+    } catch (err) {
+      console.warn(err);
+      return false;
+    }
+  };
+
+  const handleTabPress = async (tabName) => {
     setActiveTab(tabName);
     switch (tabName) {
       case 'home':
@@ -49,7 +70,17 @@ const BottomBar = () => {
       case 'temasGenerales':
         navigation.navigate('TemasGeneralesScreen');
         break;
-      case 'profile': // Asegúrate de que esta línea esté presente
+      case 'camera':
+        if (Platform.OS === 'android') {
+          const hasPermissions = await requestPermissions();
+          if (hasPermissions) {
+            navigation.navigate('CameraScreen');
+          }
+        } else {
+          navigation.navigate('CameraScreen');
+        }
+        break;
+      case 'profile':
         navigation.navigate('ClientProfileScreen');
         break;
       default:
