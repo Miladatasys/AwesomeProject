@@ -43,7 +43,7 @@ const VerificacionCodigoScreen = () => {
     };
 
     const sendCodeByEmailOrSMS = (code) => {
-        axios.post('https://zay6amugsl.execute-api.us-east-1.amazonaws.com/Api/my-enel/send-code', { code, email })
+        axios.post('https://zay6amugsl.execute-api.us-east-1.amazonaws.com/Api/my-enel', { code, email })
             .then(response => {
                 if (response.data.success) {
                     console.log('Código enviado:', code);

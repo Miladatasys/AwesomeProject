@@ -9,9 +9,10 @@ const ForgotPasswordScreen = () => {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
     const navigation = useNavigation();
+    const [generatedCode, setGeneratedCode] = useState(generateRandomCode());
 
     const validateEmail = () => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expresión regular para validar correos electrónicos
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!email.trim()) {
             setEmailError('Ingrese su correo electrónico');
             return false;
@@ -24,16 +25,22 @@ const ForgotPasswordScreen = () => {
         }
     };
 
+    function generateRandomCode() {
+        const randomCode = Math.floor(1000 + Math.random() * 9000).toString();
+        return randomCode.split("");
+    }
+
     const onSendPressed = () => {
         if (validateEmail()) {
-            // Aquí enviar la solicitud de recuperación de contraseña por correo electrónico
-            axios.post('https://zay6amugsl.execute-api.us-east-1.amazonaws.com/Api/my-enel', { email })
+            const code = generatedCode.join("");
+            axios.post('https://zay6amugsl.execute-api.us-east-1.amazonaws.com/Api/my-enel', { email, code })
                 .then(response => {
+                    console.log('Respuesta recibida:', JSON.stringify(response, null, 2));
                     if (response.data.success) {
-                        console.log('hay respuesta en if: '+response)
-                        navigation.navigate('VerificacionCodigoScreen', { email });
+                        console.log('hay respuesta en if:', JSON.stringify(response, null, 2));
+                        navigation.navigate('VerificacionCodigoScreen', { email, generatedCode });
                     } else {
-                        console.log('hay respuesta en else: '+response)
+                        console.log('hay respuesta en else:', JSON.stringify(response, null, 2));
                         Alert.alert('Error', response.data.message);
                     }
                 })
