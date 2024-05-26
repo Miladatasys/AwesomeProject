@@ -27,16 +27,18 @@ const ForgotPasswordScreen = () => {
     const onSendPressed = () => {
         if (validateEmail()) {
             // Aquí enviar la solicitud de recuperación de contraseña por correo electrónico
-            axios.post('https://zay6amugsl.execute-api.us-east-1.amazonaws.com/Api/my-enel/send-reset-email', { email })
+            axios.post('https://zay6amugsl.execute-api.us-east-1.amazonaws.com/Api/my-enel', { email })
                 .then(response => {
                     if (response.data.success) {
+                        console.log('hay respuesta en if: '+response)
                         navigation.navigate('VerificacionCodigoScreen', { email });
                     } else {
+                        console.log('hay respuesta en else: '+response)
                         Alert.alert('Error', response.data.message);
                     }
                 })
                 .catch(error => {
-                    Alert.alert('Error', 'Hubo un problema al enviar el correo de recuperación. Inténtelo de nuevo.');
+                    Alert.alert('Error', 'Hubo un problema al enviar el correo de recuperación. Inténtelo de nuevo. Error: ' + error.message);
                     console.error('Error al enviar el correo de recuperación:', error);
                 });
         }
