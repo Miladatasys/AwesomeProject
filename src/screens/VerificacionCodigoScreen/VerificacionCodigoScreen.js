@@ -8,7 +8,7 @@ const VerificacionCodigoScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const email = route.params.email;
-    const generatedCode = route.params.generatedCode; // El código generado se pasa desde ForgotPasswordScreen
+    const generatedCode = route.params.generatedCode;
 
     const handleCodeChange = (text, index) => {
         const newCode = [...code];
@@ -19,7 +19,7 @@ const VerificacionCodigoScreen = () => {
     const handleConfirm = () => {
         if (code.join("") === generatedCode.join("")) {
             Alert.alert("Éxito", "Código de verificación correcto.");
-            navigation.navigate('HomeScreen');
+            navigation.navigate('NewPassword', {email});
         } else {
             Alert.alert("Error", "Código de verificación incorrecto.");
         }
