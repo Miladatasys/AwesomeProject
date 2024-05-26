@@ -36,12 +36,13 @@ const ForgotPasswordScreen = () => {
             axios.post('https://zay6amugsl.execute-api.us-east-1.amazonaws.com/Api/my-enel', { email, code })
                 .then(response => {
                     console.log('Respuesta recibida:', JSON.stringify(response, null, 2));
-                    if (response.data.success) {
-                        console.log('hay respuesta en if:', JSON.stringify(response, null, 2));
+                    const responseData = JSON.parse(response.data.body); // Parsear el cuerpo de la respuesta
+                    if (responseData.success) {
+                        console.log('hay respuesta en if:', JSON.stringify(responseData, null, 2));
                         navigation.navigate('VerificacionCodigoScreen', { email, generatedCode });
                     } else {
-                        console.log('hay respuesta en else:', JSON.stringify(response, null, 2));
-                        Alert.alert('Error', response.data.message);
+                        console.log('hay respuesta en else:', JSON.stringify(responseData, null, 2));
+                        Alert.alert('Error', responseData.message);
                     }
                 })
                 .catch(error => {
