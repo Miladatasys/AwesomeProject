@@ -1,24 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import axios from 'axios';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const VerificacionCodigoScreen = () => {
     const [code, setCode] = useState(["", "", "", ""]);
-    const [generatedCode, setGeneratedCode] = useState(generateRandomCode());
     const navigation = useNavigation();
     const route = useRoute();
     const email = route.params.email;
-
-    useEffect(() => {
-        sendCodeByEmailOrSMS(generatedCode.join(""));
-    }, []);
-
-    function generateRandomCode() {
-        const randomCode = Math.floor(1000 + Math.random() * 9000).toString();
-        return randomCode.split("");
-    }
+    const generatedCode = route.params.generatedCode; // El código generado se pasa desde ForgotPasswordScreen
 
     const handleCodeChange = (text, index) => {
         const newCode = [...code];
@@ -36,25 +26,7 @@ const VerificacionCodigoScreen = () => {
     };
 
     const handleResend = () => {
-        const newCode = generateRandomCode();
-        setGeneratedCode(newCode);
-        sendCodeByEmailOrSMS(newCode.join(""));
         Alert.alert("Código reenviado", "El código ha sido reenviado.");
-    };
-
-    const sendCodeByEmailOrSMS = (code) => {
-        axios.post('https://zay6amugsl.execute-api.us-east-1.amazonaws.com/Api/my-enel', { code, email })
-            .then(response => {
-                if (response.data.success) {
-                    console.log('Código enviado:', code);
-                } else {
-                    Alert.alert('Error', 'No se pudo enviar el código. Inténtelo de nuevo.');
-                }
-            })
-            .catch(error => {
-                console.error('Error al enviar el código:', error);
-                Alert.alert('Error', 'Hubo un problema al enviar el código. Inténtelo de nuevo.');
-            });
     };
 
     return (
