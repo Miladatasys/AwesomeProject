@@ -165,7 +165,7 @@ const SignUpScreen = () => {
             axios.post('http://10.0.2.2:8080/auth/register', user)
             .then((response) => {
                 if (response.data.success) {
-                    navigation.navigate('ConfirmEmail');
+                    navigation.navigate('HomeScreen');
                 } else {
                     Alert.alert('Error', response.data.message);
                 }

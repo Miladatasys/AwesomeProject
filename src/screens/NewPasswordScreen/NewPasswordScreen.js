@@ -4,6 +4,7 @@ import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios'; // Asegúrate de importar axios
+import { Alert} from "react-native";
 
 
 
@@ -68,33 +69,35 @@ const NewPasswordScreen = () => {
 
     const onSubmitPressed = () => {
         if (validateInputs()) {
-            // Aquí podrías enviar la solicitud para cambiar la contraseña
-                console.log(email);
-                console.log(newPassword);
-                axios.put('http://10.0.2.2:8080/auth/update-password', { email, newPassword })
-                    .then(response => {
-                        if (response.data.success) {
-                            navigation.navigate('HomeScreen');
-                        } else {
-                            Alert.alert('Error', response.data.message || 'Error en la respuesta del servidor');
-                        }   })
-                    .catch((error) => {
-                        if (error.response) {
-                            console.error('Respuesta del servidor:', error.response.data);
-                            Alert.alert('Error', error.response.data.message || 'Error en la respuesta del servidor');
-                        } else if (error.request) {
-                            console.error('Solicitud realizada, sin respuesta:', error.request);
-                            Alert.alert('Error', 'No se recibió respuesta del servidor');
-                        } else {
-                            console.error('Error al configurar la solicitud:', error.message);
-                            Alert.alert('Error', 'Error al configurar la solicitud: ' + error.message);
-                        }
-                        console.error('Detalles del error:', error.config);
-                    });
-            }
-        };
-//
-
+            console.log(email);
+            console.log(newPassword);
+            const payload = { email, newPassword };
+            console.log('Payload:', payload); // Log payload for debugging
+    
+            axios.put('http://172.25.208.1:8080/auth/update-password', payload)
+                .then(response => {
+                    if (response.data.success) {
+                        navigation.navigate('HomeScreen');
+                    } else {
+                        Alert.alert('Error', response.data.message || 'Error en la respuesta del servidor');
+                    }
+                })
+                .catch(error => {
+                    if (error.response) {
+                        console.error('Respuesta del servidor:', error.response.data);
+                        Alert.alert('Error', error.response.data.message || 'Error en la respuesta del servidor');
+                    } else if (error.request) {
+                        console.error('Solicitud realizada, sin respuesta:', error.request);
+                        Alert.alert('Error', 'No se recibió respuesta del servidor');
+                    } else {
+                        console.error('Error al configurar la solicitud:', error.message);
+                        Alert.alert('Error', 'Error al configurar la solicitud: ' + error.message);
+                    }
+                    console.error('Detalles del error:', error.config);
+                });
+        }
+    };
+    
 
     const onSignInPressed = () => {
         navigation.navigate('SignIn');
