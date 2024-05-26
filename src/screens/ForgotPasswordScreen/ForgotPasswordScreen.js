@@ -10,6 +10,7 @@ const ForgotPasswordScreen = () => {
     const [emailError, setEmailError] = useState('');
     const navigation = useNavigation();
     const [generatedCode, setGeneratedCode] = useState(generateRandomCode());
+    const [emailExists, setEmailExists] = useState(false);
 
     const validateEmail = () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -32,12 +33,32 @@ const ForgotPasswordScreen = () => {
 
     const onSendPressed = () => {
         if (validateEmail()) {
+            console.log(email);
+            axios.post('http://10.0.2.2:8080/auth/getEmail', {email }) 
+                           .then((response) => {
+                    console.log("respuesta get recibida");
+                    if (response.data.success){
+                        setEmailExists(true);
+                        console.log('hay respuesta en if get:', response.data);
+                        sendRecoveryEmail();
+                    } else {
+                        console.log('hay respuesta en else get:', response.data);
+                        Alert.alert('Error', 'El correo electrónico no existe en nuestra base de datos.');
+                    }
+                })
+                .catch(error => {
+                    Alert.alert('Error', 'Hubo un problema al verificar el correo electrónico. Inténtelo de nuevo.');
+                    console.error('Error al verificar el correo electrónico:', error);
+                });
+        }
+    };
+    const sendRecoveryEmail = () => {
             const code = generatedCode.join("");
             axios.post('https://zay6amugsl.execute-api.us-east-1.amazonaws.com/Api/my-enel', { email, code })
                 .then(response => {
-                    console.log('Respuesta recibida:', JSON.stringify(response, null, 2));
-                    const responseData = JSON.parse(response.data.body); // Parsear el cuerpo de la respuesta
-                    if (responseData.success) {
+                 console.log('Respuesta recibida:', JSON.stringify(response, null, 2));
+                 const responseData = JSON.parse(response.data.body); // Parsear el cuerpo de la respuesta
+                   if (responseData.success) {
                         console.log('hay respuesta en if:', JSON.stringify(responseData, null, 2));
                         navigation.navigate('VerificacionCodigoScreen', { email, generatedCode });
                     } else {
@@ -49,8 +70,8 @@ const ForgotPasswordScreen = () => {
                     Alert.alert('Error', 'Hubo un problema al enviar el correo de recuperación. Inténtelo de nuevo. Error: ' + error.message);
                     console.error('Error al enviar el correo de recuperación:', error);
                 });
-        }
-    };
+
+    }
 
     const onSignInPressed = () => {
         navigation.navigate('SignIn');
