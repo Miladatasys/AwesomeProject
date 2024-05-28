@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, Button, StyleSheet } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 const PreviewScreen = () => {
@@ -10,6 +10,44 @@ const PreviewScreen = () => {
   console.log('PreviewScreen imageUri:', imageUri);
   console.log('PreviewScreen recognizedText:', recognizedText);
 
+  const handleSubmit = () => {
+    // Aquí se agregaría la lógica de integración con el backend para guardar la foto en la base de datos
+    // Ejemplo:
+    // axios.post('https://el-backend-endpoint.com/save-image', {
+    //   imageUri,
+    //   recognizedText,
+    // }).then(response => {
+    //   console.log('Image saved successfully:', response.data);
+    //   Alert.alert(
+    //     'Lectura Enviada',
+    //     'Su lectura se ha enviado',
+    //     [
+    //       {
+    //         text: 'OK',
+    //         onPress: () => navigation.navigate('HomeScreen'),
+    //       },
+    //     ],
+    //     { cancelable: false }
+    //   );
+    // }).catch(error => {
+    //   console.error('Error saving image:', error);
+    //   Alert.alert('Error', 'Failed to save image');
+    // });
+
+    // Simulación de la lógica de envío y alerta
+    Alert.alert(
+      'Lectura Enviada',
+      'Su lectura se ha enviado',
+      [
+        {
+          text: 'OK',
+          onPress: () => navigation.navigate('HomeScreen'),
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   return (
     <View style={styles.container}>
       {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
@@ -18,8 +56,12 @@ const PreviewScreen = () => {
           {typeof recognizedText === 'object' ? JSON.stringify(recognizedText, null, 2) : recognizedText}
         </Text>
       )}
-      <Button title="Retake" onPress={() => navigation.goBack()} />
-      <Button title="Submit" onPress={() => {/* lógica para enviar la imagen */}} />
+      <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
+        <Text style={styles.buttonText}>Retake</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Submit</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -37,6 +79,19 @@ const styles = StyleSheet.create({
   },
   text: {
     marginBottom: 20,
+  },
+  button: {
+    width: '80%',
+    padding: 15,
+    borderRadius: 10,
+    backgroundColor: '#FF1493',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
