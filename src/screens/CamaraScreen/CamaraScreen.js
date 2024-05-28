@@ -25,6 +25,7 @@ const CameraScreen = () => {
       } else {
         const uri = response.assets[0].uri;
         setImageUri(uri);
+        console.log('Image URI:', uri);
         processImage(uri);
       }
     });
@@ -33,6 +34,7 @@ const CameraScreen = () => {
   const convertImageToBase64 = async (uri) => {
     try {
       const base64String = await RNFS.readFile(uri, 'base64');
+      console.log('Base64 Image:', base64String);
       return base64String;
     } catch (error) {
       console.error('Error converting image to base64', error);
@@ -43,10 +45,16 @@ const CameraScreen = () => {
   const processImage = async (uri) => {
     try {
       const base64Image = await convertImageToBase64(uri);
-      const response = await axios.post('https://tbnmzqmst6.execute-api.us-east-1.amazonaws.com/rekognition/our-rekognition', { image: base64Image });
+      const response = await axios.post(
+        'https://tbnmzqmst6.execute-api.us-east-1.amazonaws.com/rekognition/our-rekognition',
+        JSON.stringify({ body: base64Image }),
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+      console.log('Response from Rekognition:', response.data);
       setRecognizedText(response.data);
       navigation.navigate('PreviewScreen', { imageUri: uri, recognizedText: response.data });
     } catch (error) {
+      console.error('Error processing image:', error);
       Alert.alert('Error', 'Failed to process image');
     }
   };

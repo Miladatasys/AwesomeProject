@@ -7,15 +7,19 @@ const PreviewScreen = () => {
   const route = useRoute();
   const { imageUri, recognizedText } = route.params;
 
-  // Asegúrate de mostrar solo las partes relevantes del objeto recognizedText
-  const recognizedTextString = recognizedText ? JSON.stringify(recognizedText, null, 2) : 'No text recognized';
+  console.log('PreviewScreen imageUri:', imageUri);
+  console.log('PreviewScreen recognizedText:', recognizedText);
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri: imageUri }} style={styles.image} />
-      <Text style={styles.text}>{recognizedTextString}</Text>
-      <Button title="Retake" onPress={() => navigation.navigate('CameraScreen')} />
-      <Button title="Submit" onPress={() => console.log('Submit pressed')} />
+      {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
+      {recognizedText && (
+        <Text style={styles.text}>
+          {typeof recognizedText === 'object' ? JSON.stringify(recognizedText, null, 2) : recognizedText}
+        </Text>
+      )}
+      <Button title="Retake" onPress={() => navigation.goBack()} />
+      <Button title="Submit" onPress={() => {/* lógica para enviar la imagen */}} />
     </View>
   );
 };
@@ -27,12 +31,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    width: 300,
-    height: 300,
+    width: 200,
+    height: 200,
+    marginBottom: 20,
   },
   text: {
-    margin: 20,
-    textAlign: 'center',
+    marginBottom: 20,
   },
 });
 
