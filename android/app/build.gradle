@@ -37,6 +37,7 @@ android {
 
 dependencies {
     implementation("com.facebook.react:react-android")
+    implementation project(':react-native-fs') //   esto debe estar  aquí
 
     if (rootProject.ext.hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
