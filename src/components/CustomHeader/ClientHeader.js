@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ClientHeader = () => {
   const [clientData, setClientData] = useState(null);
-  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,12 +41,7 @@ const ClientHeader = () => {
         </View>
         <View style={styles.addressContainer}>
           <Text style={styles.addressText}><Text style={styles.bold}>{clientData.direccion.calle}, {clientData.direccion.comuna}, {clientData.direccion.region}</Text></Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Supplies')}>
-            <View style={styles.arrowContainer}>
-              <Text style={styles.addressText}>Cliente N° <Text style={styles.bold}>{clientData.direccion.numeroCliente}</Text></Text>
-              <Icon name="arrow-right" size={20} color="#FE0F64" style={styles.arrowIcon} />
-            </View>
-          </TouchableOpacity>
+          <Text style={styles.addressText}>Cliente N° <Text style={styles.bold}>{clientData.direccion.numeroCliente}</Text></Text>
         </View>
       </View>
     </View>
@@ -104,14 +97,6 @@ const styles = StyleSheet.create({
   },
   icon: {
     padding: 5,
-  },
-  arrowContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 5,
-  },
-  arrowIcon: {
-    marginLeft: 150,
   },
 });
 
