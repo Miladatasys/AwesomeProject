@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -38,6 +38,18 @@ const ClientProfileScreen = () => {
     navigation.navigate(screen);
   };
 
+  const handleLogout = () => {
+    Alert.alert(
+      'Cerrar Sesión',
+      '¿Estás seguro de que deseas cerrar sesión?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Aceptar', onPress: () => navigation.navigate('SignIn') }
+      ],
+      { cancelable: false }
+    );
+  };
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -60,10 +72,10 @@ const ClientProfileScreen = () => {
       <TouchableOpacity style={styles.button} onPress={() => handleNavigate('EditProfileScreen')}>
         <Text style={styles.buttonText}>Editar Perfil</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => handleNavigate('SettingsScreen')}>
+      <TouchableOpacity style={styles.button} onPress={() => handleNavigate('ClientSettings')}>
         <Text style={styles.buttonText}>Configuraciones</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => handleNavigate('Logout')}>
+      <TouchableOpacity style={styles.button} onPress={handleLogout}>
         <Text style={styles.buttonText}>Cerrar Sesión</Text>
       </TouchableOpacity>
     </ScrollView>
