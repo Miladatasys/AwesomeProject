@@ -1,15 +1,17 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';
 
 const ClientNumberScreen = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { clientNumber } = route.params;
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Tu número de cliente es:</Text>
-      <Text style={styles.clientNumber}>[Pendiente de implementación]</Text>
+      <Text style={styles.clientNumber}>{clientNumber}</Text>
       <View style={styles.buttonContainer}>
         <CustomButton
           text="Aceptar"

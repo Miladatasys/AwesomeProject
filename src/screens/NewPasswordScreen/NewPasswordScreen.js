@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView } from "react-native";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation, useRoute } from '@react-navigation/native';
-import axios from 'axios'; // Asegúrate de importar axios
+import axios from 'axios'; //  importar axios
 import { Alert} from "react-native";
 
 

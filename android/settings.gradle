@@ -4,3 +4,7 @@ include ':app'
 includeBuild('../node_modules/@react-native/gradle-plugin')
 include ':react-native-fs'
 project(':react-native-fs').projectDir = new File(settingsDir, '../node_modules/react-native-fs/android')
+
+// Añadir esta línea para react-native-async-storage
+include ':react-native-async-storage_async-storage'
+project(':react-native-async-storage_async-storage').projectDir = new File(settingsDir, '../node_modules/@react-native-async-storage/async-storage/android')

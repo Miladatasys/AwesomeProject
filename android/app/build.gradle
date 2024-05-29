@@ -37,7 +37,10 @@ android {
 
 dependencies {
     implementation("com.facebook.react:react-android")
-    implementation project(':react-native-fs') //   esto debe estar  aquí
+    implementation project(':react-native-fs')
+
+    // Añadir esta línea para react-native-async-storage
+    implementation project(':react-native-async-storage_async-storage')
 
     if (rootProject.ext.hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")

@@ -4,7 +4,9 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomButton from '../../components/CustomButton';
 import comunasData from '../../components/data/Comunas.json';
-import { useNavigation } from '@react-navigation/native'; // Importar useNavigation
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 const AddressScreen = () => {
   const [region, setRegion] = useState(null);
@@ -13,7 +15,7 @@ const AddressScreen = () => {
   const [comunasList, setComunasList] = useState([]);
   const [openRegion, setOpenRegion] = useState(false);
   const [openComuna, setOpenComuna] = useState(false);
-  const navigation = useNavigation(); // Usar useNavigation
+  const navigation = useNavigation();
 
   const regionOptions = comunasData.map(region => ({
     label: region.region,
@@ -33,14 +35,52 @@ const AddressScreen = () => {
     }
   }, [region]);
 
-  const onSubmit = () => {
+  const generateClientNumber = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  };
+
+  const onSubmit = async () => {
     if (!direccion) {
       Alert.alert('Error', 'Por favor, ingrese su dirección.');
       return;
     }
 
-    // Navegar a ClientNumberScreen sin datos falsos
-    navigation.navigate('ClientNumberScreen');
+    const clientNumber = generateClientNumber();
+    console.log('Generated Client Number:', clientNumber);
+
+    const clientData = {
+      nombreCliente: 'Don Gonzalo', // Puedes reemplazar esto con el nombre real del usuario
+      direccion: {
+        region,
+        comuna,
+        calle: direccion,
+        numeroCliente: clientNumber,
+      },
+    };
+
+    console.log('Client Data to Save:', clientData);
+
+    try {
+      await AsyncStorage.setItem('clientData', JSON.stringify(clientData));
+      console.log('Client Data Saved Successfully');
+      navigation.navigate('ClientNumberScreen', { clientNumber });
+    } catch (error) {
+      Alert.alert('Error', 'Hubo un problema al guardar los datos.');
+      console.error('Error saving data', error);
+    }
+
+    // Descomentar esta sección cuando integres con el backend
+    // try {
+    //   const response = await axios.post('https://la-backend.com/saveDireccion', clientData);
+    //   if (response.status === 200) {
+    //     navigation.navigate('ClientNumberScreen', { clientNumber });
+    //   } else {
+    //     Alert.alert('Error', 'Hubo un problema al guardar los datos.');
+    //   }
+    // } catch (error) {
+    //   Alert.alert('Error', 'Hubo un problema al conectar con el servidor.');
+    //   console.error('Error connecting to server', error);
+    // }
   };
 
   return (
@@ -67,7 +107,7 @@ const AddressScreen = () => {
             onChangeValue={(value) => setRegion(value)}
             zIndex={3000}
             zIndexInverse={1000}
-            listMode="MODAL"  // Usar un modal para mostrar todas las opciones
+            listMode="MODAL"
           />
         </View>
 
@@ -87,7 +127,7 @@ const AddressScreen = () => {
             onChangeValue={(value) => setComuna(value)}
             zIndex={2000}
             zIndexInverse={1000}
-            listMode="MODAL"  // Usar un modal para mostrar todas las opciones
+            listMode="MODAL"
           />
         </View>
 
