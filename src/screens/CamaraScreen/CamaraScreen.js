@@ -1,14 +1,46 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Alert, TouchableOpacity, Text, ScrollView } from 'react-native';
 import { launchCamera } from 'react-native-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import RNFS from 'react-native-fs';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ClientHeader from '../../components/CustomHeader/ClientHeader'; // Asegúrate de que la ruta sea correcta
 
 const CameraScreen = () => {
   const navigation = useNavigation();
   const [imageUri, setImageUri] = useState(null);
   const [recognizedText, setRecognizedText] = useState(null);
+  const [clientData, setClientData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = await AsyncStorage.getItem('userToken');
+        if (!token) {
+          throw new Error('No token found');
+        }
+
+        const response = await axios.get('http://192.168.1.90:8080/cliente/user/profile', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        if (response.data) {
+          setClientData(response.data);
+          console.log('Fetched Client Data:', response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching data', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const openCamera = () => {
     const options = {
@@ -59,6 +91,16 @@ const CameraScreen = () => {
     }
   };
 
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (!clientData) {
+    return <Text>No client data available</Text>;
+  }
+
+  const medidor = clientData.medidores && clientData.medidores.length > 0 ? clientData.medidores[0] : {};
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -66,10 +108,15 @@ const CameraScreen = () => {
           <Text style={styles.backButtonText}>Volver atrás</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.clientInfoContainer}>
-        <Text style={styles.clientName}>Don Gonzalo</Text>
-        <Text style={styles.clientNumber}>N° de cliente 123456-7</Text>
-      </View>
+      <ClientHeader 
+        nombreCliente={`${clientData.firstname} ${clientData.lastname}`} 
+        direccion={{
+          calle: medidor.direccion,
+          comuna: medidor.comuna,
+          region: medidor.region,
+          numeroCliente: medidor.numcliente
+        }} 
+      />
       <View style={styles.infoContainer}>
         <View style={styles.recommendation}>
           <Text style={styles.recommendationText}>
@@ -99,22 +146,6 @@ const styles = StyleSheet.create({
   header: {
     paddingTop: 10,
     paddingHorizontal: 10,
-  },
-  clientInfoContainer: {
-    paddingHorizontal: 20,
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    marginHorizontal: 10,
-  },
-  clientName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 10,
-  },
-  clientNumber: {
-    fontSize: 16,
-    color: '#888',
   },
   infoContainer: {
     padding: 20,

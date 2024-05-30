@@ -57,10 +57,10 @@ const PreviewScreen = () => {
         </Text>
       )}
       <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
-        <Text style={styles.buttonText}>Retake</Text>
+        <Text style={styles.buttonText}>Retomar</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Submit</Text>
+        <Text style={styles.buttonText}>Enviar imagen</Text>
       </TouchableOpacity>
     </View>
   );

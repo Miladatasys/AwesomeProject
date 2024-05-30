@@ -1,22 +1,44 @@
-import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from "react-native";
 import BottomBar from "../../components/CustomBottomBar.js/BottomBar";
 import ClientHeader from "../../components/CustomHeader/ClientHeader";
 import { useNavigation } from "@react-navigation/native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = () => {
     const navigation = useNavigation();
+    const [clientData, setClientData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    const cliente = {
-        nombre: "", // Vacío hasta que se integre con el backend
-        direccion: {
-            calle: "",
-            numero: "",
-            comuna: "",
-            numeroCliente: ""
-        }
-    };
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const token = await AsyncStorage.getItem('userToken');
+                if (!token) {
+                    throw new Error('No token found');
+                }
+
+                const response = await axios.get('http://192.168.1.90:8080/cliente/user/profile', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                if (response.data) {
+                    setClientData(response.data);
+                    console.log('Fetched Client Data:', response.data);
+                }
+            } catch (error) {
+                console.error('Error fetching data', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const handleNavigateToAddMeter = () => {
         navigation.navigate('AddressScreen');
@@ -43,6 +65,16 @@ const HomeScreen = () => {
         );
     };
 
+    if (loading) {
+        return <ActivityIndicator size="large" color="#0000ff" />;
+    }
+
+    if (!clientData) {
+        return <Text>No client data available</Text>;
+    }
+
+    const medidor = clientData.medidores && clientData.medidores.length > 0 ? clientData.medidores[0] : {};
+
     return (
         <>
             <View style={styles.container}>
@@ -50,7 +82,15 @@ const HomeScreen = () => {
                     <Text style={styles.backButtonText}>Volver</Text>
                 </TouchableOpacity>
                 <View style={styles.headerContainer}>
-                    <ClientHeader nombreCliente={cliente.nombre} direccion={cliente.direccion} />
+                    <ClientHeader 
+                        nombreCliente={`${clientData.firstname} ${clientData.lastname}`} 
+                        direccion={{
+                            calle: medidor.direccion,
+                            comuna: medidor.comuna,
+                            region: medidor.region,
+                            numeroCliente: medidor.numcliente
+                        }} 
+                    />
                     <TouchableOpacity onPress={handleNavigateToHistorialCliente} style={styles.iconButton}>
                         <Icon name="arrow-forward" size={24} color="#FE0F64" />
                     </TouchableOpacity>

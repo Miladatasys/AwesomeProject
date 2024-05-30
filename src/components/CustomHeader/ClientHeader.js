@@ -1,36 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ClientHeader = () => {
-  const [clientData, setClientData] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await AsyncStorage.getItem('clientData');
-        if (data) {
-          const parsedData = JSON.parse(data);
-          setClientData(parsedData);
-          console.log('Fetched Client Data:', parsedData);
-        }
-      } catch (error) {
-        console.error('Error fetching data', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (!clientData) {
+const ClientHeader = ({ nombreCliente, direccion }) => {
+  if (!nombreCliente || !direccion) {
     return null;
   }
 
   return (
     <View>
       <View style={styles.greetingContainer}>
-        <Text style={styles.greeting}>Hola {clientData.nombreCliente},</Text>
+        <Text style={styles.greeting}>Hola {nombreCliente},</Text>
         <Text style={styles.revisandoText}>estás revisando:</Text>
       </View>
       <View style={styles.container}>
@@ -40,8 +20,14 @@ const ClientHeader = () => {
           </View>
         </View>
         <View style={styles.addressContainer}>
-          <Text style={styles.addressText}><Text style={styles.bold}>{clientData.direccion.calle}, {clientData.direccion.comuna}, {clientData.direccion.region}</Text></Text>
-          <Text style={styles.addressText}>Cliente N° <Text style={styles.bold}>{clientData.direccion.numeroCliente}</Text></Text>
+          <Text style={styles.addressText}>
+            <Text style={styles.bold}>
+              {direccion.calle}, {direccion.comuna}, {direccion.region}
+            </Text>
+          </Text>
+          <Text style={styles.addressText}>
+            Cliente N° <Text style={styles.bold}>{direccion.numeroCliente}</Text>
+          </Text>
         </View>
       </View>
     </View>

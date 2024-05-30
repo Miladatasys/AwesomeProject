@@ -5,6 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const HistorialClienteScreen = () => {
     const [historial, setHistorial] = useState([]);
+    const [activeYear, setActiveYear] = useState('2024'); // Estado para el año activo
     const navigation = useNavigation();
 
     // Simulación de llamada al backend
@@ -18,6 +19,11 @@ const HistorialClienteScreen = () => {
         // Dejar los datos vacíos hasta que se integre con el backend
     }, []);
 
+    const handleYearPress = (year) => {
+        setActiveYear(year);
+        // Aquí puedes añadir la lógica para actualizar los datos según el año seleccionado
+    };
+
     return (
         <ScrollView style={styles.container}>
             <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButtonContainer}>
@@ -26,15 +32,15 @@ const HistorialClienteScreen = () => {
             </TouchableOpacity>
             <Text style={styles.title}>Historial del medidor</Text>
             <View style={styles.tabsContainer}>
-                <TouchableOpacity style={styles.tab}>
-                    <Text style={styles.tabText}>2022</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.tab}>
-                    <Text style={styles.tabText}>2023</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.tab, styles.activeTab]}>
-                    <Text style={[styles.tabText, styles.activeTabText]}>2024</Text>
-                </TouchableOpacity>
+                {['2022', '2023', '2024'].map((year) => (
+                    <TouchableOpacity
+                        key={year}
+                        style={[styles.tab, activeYear === year && styles.activeTab]}
+                        onPress={() => handleYearPress(year)}
+                    >
+                        <Text style={[styles.tabText, activeYear === year && styles.activeTabText]}>{year}</Text>
+                    </TouchableOpacity>
+                ))}
             </View>
             <View style={styles.tableHeader}>
                 <Text style={styles.tableHeaderText}>Fecha lectura</Text>

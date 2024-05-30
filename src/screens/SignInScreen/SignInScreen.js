@@ -4,6 +4,7 @@ import axios from "axios";
 import Logo from "../../../assets/images/Enel.png";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignInScreen = () => {
     const [rut, setRut] = useState('');
@@ -53,10 +54,11 @@ const SignInScreen = () => {
                 rut,
                 password
             };
-
-            axios.post('http://10.0.2.2:8080/auth/login', user)
-                .then((response) => {
+    
+            axios.post('http://192.168.1.90:8080/auth/login', user)
+                .then(async (response) => {
                     if (response.data.success) {
+                        await AsyncStorage.setItem('userToken', response.data.token);
                         navigation.navigate('HomeScreen');
                     } else {
                         Alert.alert('Error', response.data.message || 'Error en la respuesta del servidor');
@@ -77,6 +79,7 @@ const SignInScreen = () => {
                 });
         }
     };
+    
 
     const onForgotPasswordPressed = () => {
         navigation.navigate('ForgotPassword');
