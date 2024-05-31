@@ -1,53 +1,66 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const ClientProfileScreen = () => {
   const navigation = useNavigation();
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [pressedButton, setPressedButton] = useState(null);
 
-  // Simulación de la llamada a la API del backend
   useEffect(() => {
-    // Aquí se debería realizar la llamada a la API para obtener los datos del perfil
-    // Ejemplo:
-    // fetch('http://tu-backend-api/perfil/usuario-id')
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     setProfileData(data);
-    //     setLoading(false);
-    //   })
-    //   .catch(error => {
-    //     console.error(error);
-    //     setLoading(false);
-    //   });
+    const fetchProfileData = async () => {
+      try {
+        const token = await AsyncStorage.getItem('userToken');
+        if (!token) {
+          throw new Error('No token found');
+        }
 
-    // Simulación de un retraso en la llamada a la API
-    setTimeout(() => {
-      // Datos de ejemplo genéricos
-      setProfileData({
-        nombre: 'Nombre de Usuario',
-        email: 'email@ejemplo.com'
-      });
-      setLoading(false);
-    }, 2000);
+        const response = await axios.get('http://192.168.1.90:8080/cliente/user/profile', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        if (response.data) {
+          setProfileData(response.data);
+          console.log('Fetched Client Data:', response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching profile data', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfileData();
   }, []);
 
   const handleNavigate = (screen) => {
-    navigation.navigate(screen);
+    setPressedButton(screen);
+    setTimeout(() => {
+      setPressedButton(null);
+      navigation.navigate(screen);
+    }, 200);
   };
 
   const handleLogout = () => {
-    Alert.alert(
-      'Cerrar Sesión',
-      '¿Estás seguro de que deseas cerrar sesión?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        { text: 'Aceptar', onPress: () => navigation.navigate('SignIn') }
-      ],
-      { cancelable: false }
-    );
+    setPressedButton('logout');
+    setTimeout(() => {
+      setPressedButton(null);
+      Alert.alert(
+        'Cerrar Sesión',
+        '¿Estás seguro de que deseas cerrar sesión?',
+        [
+          { text: 'Cancelar', style: 'cancel' },
+          { text: 'Aceptar', onPress: () => navigation.navigate('SignIn') }
+        ],
+        { cancelable: false }
+      );
+    }, 200);
   };
 
   if (loading) {
@@ -66,16 +79,21 @@ const ClientProfileScreen = () => {
       </TouchableOpacity>
       <Text style={styles.title}>Perfil</Text>
       <View style={styles.profileContainer}>
-        <Text style={styles.profileName}>{profileData?.nombre || 'Nombre del usuario'}</Text>
+        <Text style={styles.profileName}>{profileData?.firstname || 'Nombre del usuario'}</Text>
         <Text style={styles.profileEmail}>{profileData?.email || 'Correo del usuario'}</Text>
       </View>
-      <TouchableOpacity style={styles.button} onPress={() => handleNavigate('EditProfileScreen')}>
+      <TouchableOpacity
+        style={[styles.button, pressedButton === 'EditProfileScreen' && styles.buttonActive]}
+        onPress={() => handleNavigate('EditProfileScreen')}
+        activeOpacity={0.7}
+      >
         <Text style={styles.buttonText}>Editar Perfil</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => handleNavigate('ClientSettings')}>
-        <Text style={styles.buttonText}>Configuraciones</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handleLogout}>
+      <TouchableOpacity
+        style={[styles.button, pressedButton === 'logout' && styles.buttonActive]}
+        onPress={handleLogout}
+        activeOpacity={0.7}
+      >
         <Text style={styles.buttonText}>Cerrar Sesión</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -130,7 +148,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Regular',
   },
   button: {
-    backgroundColor: '#5C6BC0',
+    backgroundColor: '#CCCCCC',
     borderRadius: 10,
     paddingVertical: 15,
     paddingHorizontal: 20,
@@ -144,9 +162,12 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 18,
-    color: '#FFFFFF',
+    color: '#333333',
     fontWeight: 'bold',
     fontFamily: 'Roboto-Regular',
+  },
+  buttonActive: {
+    backgroundColor: '#FE0F64',
   },
 });
 

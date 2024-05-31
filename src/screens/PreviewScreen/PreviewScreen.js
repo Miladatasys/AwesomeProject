@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, Image, Pressable, StyleSheet, Alert } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 const PreviewScreen = () => {
@@ -11,30 +11,6 @@ const PreviewScreen = () => {
   console.log('PreviewScreen recognizedText:', recognizedText);
 
   const handleSubmit = () => {
-    // Aquí se agregaría la lógica de integración con el backend para guardar la foto en la base de datos
-    // Ejemplo:
-    // axios.post('https://el-backend-endpoint.com/save-image', {
-    //   imageUri,
-    //   recognizedText,
-    // }).then(response => {
-    //   console.log('Image saved successfully:', response.data);
-    //   Alert.alert(
-    //     'Lectura Enviada',
-    //     'Su lectura se ha enviado',
-    //     [
-    //       {
-    //         text: 'OK',
-    //         onPress: () => navigation.navigate('HomeScreen'),
-    //       },
-    //     ],
-    //     { cancelable: false }
-    //   );
-    // }).catch(error => {
-    //   console.error('Error saving image:', error);
-    //   Alert.alert('Error', 'Failed to save image');
-    // });
-
-    // Simulación de la lógica de envío y alerta
     Alert.alert(
       'Lectura Enviada',
       'Su lectura se ha enviado',
@@ -48,20 +24,46 @@ const PreviewScreen = () => {
     );
   };
 
+  // Extraer solo los números detectados
+  const detectedNumbers = recognizedText.body ? JSON.parse(recognizedText.body).detectedNumbers : [];
+  const uniqueDetectedNumbers = [...new Set(detectedNumbers)];
+
   return (
     <View style={styles.container}>
+      <Text style={styles.headerTitle}>Previsualización</Text>
+      <View style={styles.textContainer}>
+        <Text style={styles.textTitle}>Lectura Reconocida:</Text>
+        {uniqueDetectedNumbers.length > 0 ? (
+          <Text style={styles.numberText}>
+            {uniqueDetectedNumbers.join(', ')}
+          </Text>
+        ) : (
+          <Text style={styles.numberText}>No se detectaron números.</Text>
+        )}
+      </View>
       {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
-      {recognizedText && (
-        <Text style={styles.text}>
-          {typeof recognizedText === 'object' ? JSON.stringify(recognizedText, null, 2) : recognizedText}
-        </Text>
-      )}
-      <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
+      <Pressable
+        style={({ pressed }) => [
+          {
+            backgroundColor: pressed ? '#FF1493' : '#CCCCCC',
+          },
+          styles.button,
+        ]}
+        onPress={() => navigation.goBack()}
+      >
         <Text style={styles.buttonText}>Retomar</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+      </Pressable>
+      <Pressable
+        style={({ pressed }) => [
+          {
+            backgroundColor: pressed ? '#FF1493' : '#CCCCCC',
+          },
+          styles.button,
+        ]}
+        onPress={handleSubmit}
+      >
         <Text style={styles.buttonText}>Enviar imagen</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 };
@@ -69,27 +71,50 @@ const PreviewScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#FFFFFF',
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333333',
+    marginBottom: 20,
   },
   image: {
-    width: 200,
-    height: 200,
+    width: 350, // Ajustar el tamaño de la imagen
+    height: 250,
     marginBottom: 20,
+    borderRadius: 10,
   },
-  text: {
+  textContainer: {
     marginBottom: 20,
+    padding: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    width: '100%',
+  },
+  textTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: '#333333',
+  },
+  numberText: {
+    fontSize: 24,
+    color: '#FF1493',
+    fontWeight: 'bold',
   },
   button: {
     width: '80%',
     padding: 15,
     borderRadius: 10,
-    backgroundColor: '#FF1493',
     alignItems: 'center',
     marginBottom: 10,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: '#333333',
     fontSize: 16,
     fontWeight: 'bold',
   },

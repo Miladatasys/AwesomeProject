@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import axios from 'axios';
 
 const EditProfileScreen = () => {
   const navigation = useNavigation();
@@ -50,20 +49,6 @@ const EditProfileScreen = () => {
     }
 
     try {
-      // const response = await axios.put('http://10.0.2.2:8080/auth/updateProfile', {
-      //   email: profileData.email,
-      //   phoneNumber: profileData.phoneNumber,
-      //   password: profileData.password,
-      // });
-
-      // if (response.data.success) {
-      //   await AsyncStorage.setItem('userProfile', JSON.stringify(response.data.user));
-      //   Alert.alert('Éxito', 'Perfil actualizado correctamente');
-      //   navigation.goBack();
-      // } else {
-      //   Alert.alert('Error', response.data.message);
-      // }
-
       // Simulación de éxito en la actualización del perfil
       const updatedUser = {
         email: profileData.email,
@@ -87,53 +72,55 @@ const EditProfileScreen = () => {
     );
   }
 
+  const InputField = ({ label, value, onChangeText, placeholder, keyboardType = 'default', secureTextEntry = false }) => (
+    <View style={styles.inputContainer}>
+      <Text style={styles.label}>{label}</Text>
+      <TextInput
+        style={styles.input}
+        placeholder={placeholder}
+        value={value}
+        onChangeText={onChangeText}
+        keyboardType={keyboardType}
+        secureTextEntry={secureTextEntry}
+      />
+    </View>
+  );
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButtonContainer}>
         <Text style={styles.backButton}>Volver</Text>
       </TouchableOpacity>
       <Text style={styles.title}>Editar Perfil</Text>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Correo Electrónico:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Correo Electrónico"
-          value={profileData.email}
-          onChangeText={(value) => handleInputChange('email', value)}
-          keyboardType="email-address"
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Número de Teléfono:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Número de Teléfono"
-          value={profileData.phoneNumber}
-          onChangeText={(value) => handleInputChange('phoneNumber', value)}
-          keyboardType="phone-pad"
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Contraseña:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Contraseña"
-          value={profileData.password}
-          onChangeText={(value) => handleInputChange('password', value)}
-          secureTextEntry
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Confirmar Contraseña:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Confirmar Contraseña"
-          value={profileData.confirmPassword}
-          onChangeText={(value) => handleInputChange('confirmPassword', value)}
-          secureTextEntry
-        />
-      </View>
-      <TouchableOpacity style={styles.button} onPress={handleSave}>
+      <InputField
+        label="Correo Electrónico:"
+        value={profileData.email}
+        onChangeText={(value) => handleInputChange('email', value)}
+        placeholder="Correo Electrónico"
+        keyboardType="email-address"
+      />
+      <InputField
+        label="Número de Teléfono:"
+        value={profileData.phoneNumber}
+        onChangeText={(value) => handleInputChange('phoneNumber', value)}
+        placeholder="Número de Teléfono"
+        keyboardType="phone-pad"
+      />
+      <InputField
+        label="Contraseña:"
+        value={profileData.password}
+        onChangeText={(value) => handleInputChange('password', value)}
+        placeholder="Contraseña"
+        secureTextEntry
+      />
+      <InputField
+        label="Confirmar Contraseña:"
+        value={profileData.confirmPassword}
+        onChangeText={(value) => handleInputChange('confirmPassword', value)}
+        placeholder="Confirmar Contraseña"
+        secureTextEntry
+      />
+      <TouchableOpacity style={styles.button} onPress={handleSave} activeOpacity={0.7}>
         <Text style={styles.buttonText}>Guardar</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -188,10 +175,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     color: '#2F2F2F',
+    backgroundColor: '#FFFFFF',
     fontFamily: 'Roboto-Regular',
   },
   button: {
-    backgroundColor: '#5C6BC0',
+    backgroundColor: '#CCCCCC',
     borderRadius: 10,
     paddingVertical: 15,
     paddingHorizontal: 20,
@@ -205,9 +193,12 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 18,
-    color: '#FFFFFF',
+    color: '#333333',
     fontWeight: 'bold',
     fontFamily: 'Roboto-Regular',
+  },
+  buttonActive: {
+    backgroundColor: '#FE0F64',
   },
 });
 
