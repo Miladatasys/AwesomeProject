@@ -74,10 +74,10 @@ const NewPasswordScreen = () => {
             const payload = { email, newPassword };
             console.log('Payload:', payload); // Log payload for debugging
     
-            axios.put('http://172.20.10.2:8080/auth/update-password', payload)
+            axios.put('http://192.168.102.2:8080/auth/update-password', payload)
                 .then(response => {
                     if (response.data.success) {
-                        navigation.navigate('HomeScreen');
+                        navigation.navigate('SignIn');
                     } else {
                         Alert.alert('Error', response.data.message || 'Error en la respuesta del servidor');
                     }

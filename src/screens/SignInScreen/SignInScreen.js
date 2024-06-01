@@ -55,7 +55,7 @@ const SignInScreen = () => {
                 password
             };
     
-            axios.post('http://192.168.1.104:8080/auth/login', user)
+            axios.post('http://192.168.102.2:8080/auth/login', user)
                 .then(async (response) => {
                     if (response.data.success) {
                         await AsyncStorage.setItem('userToken', response.data.token);

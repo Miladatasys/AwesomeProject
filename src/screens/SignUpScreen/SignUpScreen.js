@@ -162,10 +162,10 @@ const SignUpScreen = () => {
                 //userType: 'PERSONA' // Valor por defecto ya que eliminamos la selección
             };
 
-            axios.post('http://172.20.10.2:8080/auth/register', user)
+            axios.post('http://192.168.102.2:8080/auth/register', user)
             .then((response) => {
                 if (response.data.success) {
-                    navigation.navigate('HomeScreen');
+                    navigation.navigate('SingIn');
                 } else {
                     Alert.alert('Error', response.data.message);
                 }

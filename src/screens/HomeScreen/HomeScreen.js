@@ -20,7 +20,7 @@ const HomeScreen = () => {
                     throw new Error('No token found');
                 }
 
-                const response = await axios.get('http://192.168.1.104:8080/cliente/user/profile', {
+                const response = await axios.get('http://192.168.102.2:8080/cliente/user/profile', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -80,7 +80,7 @@ const HomeScreen = () => {
                     <Text style={styles.backButtonText}>Volver</Text>
                 </TouchableOpacity>
                 <View style={styles.greetingContainer}>
-                    <Text style={styles.greeting}>Hola {clientData.firstname}{clientData.lastname},</Text>
+                    <Text style={styles.greeting}>Hola {clientData.firstname} {clientData.lastname},</Text>
                     <Text style={styles.revisandoText}>estás revisando:</Text>
                 </View>
                 <ScrollView contentContainerStyle={styles.scrollViewContainer}>
