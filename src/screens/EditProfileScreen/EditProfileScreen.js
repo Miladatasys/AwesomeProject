@@ -7,8 +7,6 @@ import axios from 'axios';
 const EditProfileScreen = () => {
   const navigation = useNavigation();
   const [profileData, setProfileData] = useState({
-    firstname: '',
-    lastname: '',
     email: '',
     phoneNumber: '',
     password: '',
@@ -24,8 +22,6 @@ const EditProfileScreen = () => {
           const parsedData = JSON.parse(data);
           setProfileData((prevState) => ({
             ...prevState,
-            firstname: parsedData.firstname || '',
-            lastname: parsedData.lastname || '',
             email: parsedData.email || '',
             phoneNumber: parsedData.phoneNumber || '',
           }));
@@ -60,8 +56,6 @@ const EditProfileScreen = () => {
       }
 
       const response = await axios.patch('http://10.0.2.2:8080/cliente/profile/update', {
-        firstname: profileData.firstname,
-        lastname: profileData.lastname,
         email: profileData.email,
         phoneNumber: profileData.phoneNumber,
         password: profileData.password,
@@ -71,7 +65,7 @@ const EditProfileScreen = () => {
         },
       });
 
-      if (response.data.success) {
+      if (response.data) {
         const updatedUser = response.data;
         await AsyncStorage.setItem('userProfile', JSON.stringify(updatedUser));
         Alert.alert('Éxito', 'Perfil actualizado correctamente');
@@ -99,24 +93,6 @@ const EditProfileScreen = () => {
         <Text style={styles.backButton}>Volver</Text>
       </TouchableOpacity>
       <Text style={styles.title}>Editar Perfil</Text>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Nombre:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Nombre"
-          value={profileData.firstname}
-          onChangeText={(value) => handleInputChange('firstname', value)}
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Apellido:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Apellido"
-          value={profileData.lastname}
-          onChangeText={(value) => handleInputChange('lastname', value)}
-        />
-      </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Correo Electrónico:</Text>
         <TextInput
