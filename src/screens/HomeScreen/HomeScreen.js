@@ -79,6 +79,10 @@ const HomeScreen = () => {
                 <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
                     <Text style={styles.backButtonText}>Volver</Text>
                 </TouchableOpacity>
+                <View style={styles.greetingContainer}>
+                    <Text style={styles.greeting}>Hola {clientData.firstname}{clientData.lastname},</Text>
+                    <Text style={styles.revisandoText}>estás revisando:</Text>
+                </View>
                 <ScrollView contentContainerStyle={styles.scrollViewContainer}>
                     {clientData.medidores && clientData.medidores.length > 0 ? (
                         clientData.medidores.map((medidor, index) => (
@@ -100,10 +104,10 @@ const HomeScreen = () => {
                     ) : (
                         <Text>No hay medidores disponibles</Text>
                     )}
-                    <TouchableOpacity style={styles.button} onPress={handleNavigateToAddMeter}>
-                        <Text style={styles.buttonText}>Ingrese su medidor</Text>
-                    </TouchableOpacity>
                 </ScrollView>
+                <TouchableOpacity style={styles.button} onPress={handleNavigateToAddMeter}>
+                    <Text style={styles.buttonText}>Ingrese su medidor</Text>
+                </TouchableOpacity>
             </View>
             <BottomBar />
         </>
@@ -111,6 +115,22 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
+    greetingContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 10,
+      },
+      greeting: {
+        fontSize: 18,
+        alignSelf: 'start',
+        marginLeft: 5,
+        fontWeight: 'bold',
+      },
+      revisandoText: {
+        fontSize: 18, 
+        alignSelf: 'start',
+        marginLeft: 5,
+      },
     container: {
         flex: 1,
         padding: 20,
@@ -128,6 +148,7 @@ const styles = StyleSheet.create({
     },
     scrollViewContainer: {
         flexGrow: 1,
+        paddingBottom: 100, // Para asegurar espacio para el botón fijo
     },
     headerContainer: {
         flexDirection: 'row',
@@ -139,6 +160,10 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     button: {
+        position: 'absolute',
+        bottom: 80, // Ajusta esta propiedad según la altura de tu BottomBar
+        left: 20,
+        right: 20,
         backgroundColor: '#FFFFFF',
         borderColor: '#4271d4',
         borderWidth: 2,
@@ -146,7 +171,6 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 20,
         alignItems: 'center',
-        marginTop: 10,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
