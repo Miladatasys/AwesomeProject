@@ -150,12 +150,6 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         paddingBottom: 100, // Para asegurar espacio para el botón fijo
     },
-    headerContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 20,
-    },
     iconButton: {
         padding: 10,
     },
