@@ -10,11 +10,13 @@ const ClientHeader = ({ direccion }) => {
   return (
     <View>
       <View style={styles.container}>
+
         <View style={styles.iconContainer}>
           <View style={styles.iconCircle}>
             <Icon name="map-marker" size={30} color="#fff" style={styles.icon} /> 
           </View>
         </View>
+
         <View style={styles.addressContainer}>
           <Text style={styles.addressText}>
             <Text style={styles.bold}>
@@ -25,6 +27,7 @@ const ClientHeader = ({ direccion }) => {
             Cliente N° <Text style={styles.bold}>{direccion.numeroCliente}</Text>
           </Text>
         </View>
+        
       </View>
     </View>
   );
