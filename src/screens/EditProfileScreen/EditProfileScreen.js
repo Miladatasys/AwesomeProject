@@ -55,7 +55,14 @@ const EditProfileScreen = () => {
         throw new Error('No token found');
       }
 
-      const response = await axios.patch('http://10.0.2.2:8080/cliente/profile/update', {
+      // Log the data before sending the request
+      console.log('Data being sent:', {
+        email: profileData.email,
+        phoneNumber: profileData.phoneNumber,
+        password: profileData.password,
+      });
+
+      const response = await axios.patch('http://192.168.1.104:8080/cliente/profile/update', {
         email: profileData.email,
         phoneNumber: profileData.phoneNumber,
         password: profileData.password,
@@ -68,8 +75,19 @@ const EditProfileScreen = () => {
       if (response.data) {
         const updatedUser = response.data;
         await AsyncStorage.setItem('userProfile', JSON.stringify(updatedUser));
+        console.log('updated user: ', updatedUser);
+        
+        // Update the state with the updated user data
+        setProfileData((prevState) => ({
+          ...prevState,
+          email: updatedUser.email || '',
+          phoneNumber: updatedUser.phoneNumber || '',
+          password: '',  // Clear the password fields
+          confirmPassword: '',  // Clear the password fields
+        }));
+
         Alert.alert('Éxito', 'Perfil actualizado correctamente');
-        navigation.goBack();
+        navigation.navigate('HomeScreen');
       } else {
         Alert.alert('Error', response.data.message);
       }
