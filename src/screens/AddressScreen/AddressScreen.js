@@ -70,17 +70,17 @@ const AddressScreen = () => {
     }
 
     // Descomentar esta sección cuando integres con el backend
-    // try {
-    //   const response = await axios.post('https://la-backend.com/saveDireccion', clientData);
-    //   if (response.status === 200) {
-    //     navigation.navigate('ClientNumberScreen', { clientNumber });
-    //   } else {
-    //     Alert.alert('Error', 'Hubo un problema al guardar los datos.');
-    //   }
-    // } catch (error) {
-    //   Alert.alert('Error', 'Hubo un problema al conectar con el servidor.');
-    //   console.error('Error connecting to server', error);
-    // }
+      try {
+       const response = await axios.post('http://localhost:8080/cliente/medidores', clientData);
+       if (response.status === 200) {
+         navigation.navigate('ClientNumberScreen', { clientNumber });
+       } else {
+         Alert.alert('Error', 'Hubo un problema al guardar los datos.');
+       }
+     } catch (error) {
+       Alert.alert('Error', 'Hubo un problema al conectar con el servidor.');
+       console.error('Error connecting to server', error);
+     }
   };
 
   return (
