@@ -58,7 +58,16 @@ const AddressScreen = () => {
       },
     };
 
-    console.log('Client Data to Save:', clientData);
+    console.log(clientData.numeroCliente);
+
+    const datatoSend = {
+      region: clientData.direccion.region,
+      comuna: clientData.direccion.comuna,
+      direccion: clientData.direccion.calle,
+      numcliente: clientData.direccion.numeroCliente,
+    };
+    console.log('Client Data to Send:', datatoSend);
+
 
     try {
       await AsyncStorage.setItem('clientData', JSON.stringify(clientData));
@@ -70,17 +79,36 @@ const AddressScreen = () => {
     }
 
     // Descomentar esta sección cuando integres con el backend
-      try {
-       const response = await axios.post('http://localhost:8080/cliente/medidores', clientData);
-       if (response.status === 200) {
-         navigation.navigate('ClientNumberScreen', { clientNumber });
-       } else {
-         Alert.alert('Error', 'Hubo un problema al guardar los datos.');
-       }
-     } catch (error) {
-       Alert.alert('Error', 'Hubo un problema al conectar con el servidor.');
-       console.error('Error connecting to server', error);
-     }
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      if (!token) {
+        throw new Error('No token found');
+      }
+
+      console.log('token: ' + token);
+      console.log('Client Data to Send:', datatoSend);
+
+
+      const response = await axios.post('http://192.168.1.104:8080/cliente/medidores', 
+      datatoSend, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+
+
+      console.log('token: ' + token);
+
+      if (response.status === 200) {
+        navigation.navigate('ClientNumberScreen', { clientNumber });
+      } else {
+        Alert.alert('Error', 'Hubo un problema al guardar los datos.');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Hubo un problema al conectar con el servidor.');
+      console.error('Error connecting to server', error);
+    }
   };
 
   return (

@@ -48,22 +48,29 @@ const ClientProfileScreen = () => {
     }, 200);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setPressedButton('logout');
-    setTimeout(() => {
+    setTimeout(async () => {
       setPressedButton(null);
       Alert.alert(
         'Cerrar Sesión',
         '¿Estás seguro de que deseas cerrar sesión?',
         [
           { text: 'Cancelar', style: 'cancel' },
-          { text: 'Aceptar', onPress: () => navigation.navigate('SignIn') }
+          {
+            text: 'Aceptar',
+            onPress: async () => {
+              await AsyncStorage.setItem('userToken', ''); // O puedes usar removeItem para borrar el token
+              navigation.navigate('SignIn');
+            }
+          }
         ],
         { cancelable: false }
       );
     }, 200);
   };
 
+  
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
