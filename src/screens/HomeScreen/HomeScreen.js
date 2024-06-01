@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert, ScrollView } from "react-native";
 import BottomBar from "../../components/CustomBottomBar.js/BottomBar";
 import ClientHeader from "../../components/CustomHeader/ClientHeader";
 import { useNavigation } from "@react-navigation/native";
@@ -73,31 +73,37 @@ const HomeScreen = () => {
         return <Text>No client data available</Text>;
     }
 
-    const medidor = clientData.medidores && clientData.medidores.length > 0 ? clientData.medidores[0] : {};
-
     return (
         <>
             <View style={styles.container}>
                 <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
                     <Text style={styles.backButtonText}>Volver</Text>
                 </TouchableOpacity>
-                <View style={styles.headerContainer}>
-                    <ClientHeader 
-                        nombreCliente={`${clientData.firstname} ${clientData.lastname}`} 
-                        direccion={{
-                            calle: medidor.direccion,
-                            comuna: medidor.comuna,
-                            region: medidor.region,
-                            numeroCliente: medidor.numcliente
-                        }} 
-                    />
-                    <TouchableOpacity onPress={handleNavigateToHistorialCliente} style={styles.iconButton}>
-                        <Icon name="arrow-forward" size={24} color="#FE0F64" />
+                <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+                    {clientData.medidores && clientData.medidores.length > 0 ? (
+                        clientData.medidores.map((medidor, index) => (
+                            <View key={index} style={styles.headerContainer}>
+                                <ClientHeader 
+                                    nombreCliente={`${clientData.firstname} ${clientData.lastname}`} 
+                                    direccion={{
+                                        calle: medidor.direccion,
+                                        comuna: medidor.comuna,
+                                        region: medidor.region,
+                                        numeroCliente: medidor.numcliente
+                                    }} 
+                                />
+                                <TouchableOpacity onPress={handleNavigateToHistorialCliente} style={styles.iconButton}>
+                                    <Icon name="arrow-forward" size={24} color="#FE0F64" />
+                                </TouchableOpacity>
+                            </View>
+                        ))
+                    ) : (
+                        <Text>No hay medidores disponibles</Text>
+                    )}
+                    <TouchableOpacity style={styles.button} onPress={handleNavigateToAddMeter}>
+                        <Text style={styles.buttonText}>Ingrese su medidor</Text>
                     </TouchableOpacity>
-                </View>
-                <TouchableOpacity style={styles.button} onPress={handleNavigateToAddMeter}>
-                    <Text style={styles.buttonText}>Ingrese su medidor</Text>
-                </TouchableOpacity>
+                </ScrollView>
             </View>
             <BottomBar />
         </>
@@ -120,10 +126,14 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontFamily: 'Roboto-Regular',
     },
+    scrollViewContainer: {
+        flexGrow: 1,
+    },
     headerContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        marginBottom: 20,
     },
     iconButton: {
         padding: 10,
@@ -136,7 +146,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 20,
         alignItems: 'center',
-        marginTop: -10,
+        marginTop: 10,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
