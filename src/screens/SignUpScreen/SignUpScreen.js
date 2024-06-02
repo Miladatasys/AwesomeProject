@@ -162,7 +162,7 @@ const SignUpScreen = () => {
                 //userType: 'PERSONA' // Valor por defecto ya que eliminamos la selección
             };
 
-            axios.post('http://192.168.102.2:8080/auth/register', user)
+            axios.post('http://ec2-34-236-149-118.compute-1.amazonaws.com:8080/auth/register', user)
             .then((response) => {
                 if (response.data.success) {
                     navigation.navigate('SingIn');

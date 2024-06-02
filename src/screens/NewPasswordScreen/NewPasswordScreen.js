@@ -74,7 +74,7 @@ const NewPasswordScreen = () => {
             const payload = { email, newPassword };
             console.log('Payload:', payload); // Log payload for debugging
     
-            axios.put('http://192.168.102.2:8080/auth/update-password', payload)
+            axios.put('http://ec2-34-236-149-118.compute-1.amazonaws.com:8080/auth/update-password', payload)
                 .then(response => {
                     if (response.data.success) {
                         navigation.navigate('SignIn');

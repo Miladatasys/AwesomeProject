@@ -62,7 +62,7 @@ const EditProfileScreen = () => {
         password: profileData.password,
       });
 
-      const response = await axios.patch('http://192.168.102.2:8080/cliente/profile/update', {
+      const response = await axios.patch('http://ec2-34-236-149-118.compute-1.amazonaws.com:8080/cliente/profile/update', {
         email: profileData.email,
         phoneNumber: profileData.phoneNumber,
         password: profileData.password,
