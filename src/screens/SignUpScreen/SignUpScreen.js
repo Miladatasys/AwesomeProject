@@ -47,31 +47,48 @@ const SignUpScreen = () => {
         if (!rut.trim()) {
             newErrors.rut = 'Ingrese su RUT';
         }
-        const rutRegex = /^[0-9]+-[0-9kK]{1}$/;
+        const rutRegex = /^\d{7,8}-[0-9Kk]$/;
         if (!rutRegex.test(rut)) {
-            newErrors.rut = 'RUT no válido';
+            newErrors.rut = 'El campo rut debe tener entre 7 y 8 dígitos, un guión y un dígito verificador';
         }
 
+
+
+        const firstnameRegex =  /^[a-zA-Z]{2,40}$/;
         if (!firstname.trim()) {
             newErrors.firstname = 'Ingrese su nombre';
+        }else if(!firstnameRegex.test(firstname)){
+            newErrors.firstname = 'El campo nombre solo puede contener letras y una longitud entre 2 y 40 caracteres';
         }
 
+
+        const lastnameRegex =  /^[a-zA-Z]{2,40}$/;
         if (!lastname.trim()) {
             newErrors.lastname = 'Ingrese su apellido';
+        }else if(!lastnameRegex.test(lastname)){
+            newErrors.lastname = 'El campo apellido solo puede contener letras y una longitud entre 2 y 40 caracteres';
         }
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+        const emailRegex = /^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]{1,50}@[a-zA-Z0-9.-]{1,50}\.[a-zA-Z]{2,3}$/;;
         if (!email.trim()) {
             newErrors.email = 'Ingrese su correo electrónico';
         } else if (!emailRegex.test(email)) {
             newErrors.email = 'Correo electrónico no válido';
         }
+                if (!email.trim()) {
+            newErrors.email = 'Ingrese su correo electrónico';
+        } else if (!emailRegex.test(email)) {
+            newErrors.email = 'El campo email es invalido. Debe tener una longitud entre 4 y 50 caracteres, un @ y un dominio';
+        }
 
-        const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+
+        const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}$/;
         if (!password.trim()) {
             newErrors.password = 'Ingrese su contraseña';
         } else if (!passwordRegex.test(password)) {
-            newErrors.password = 'La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número';
+            newErrors.password = 'La contraseña debe tener al menos 8 caracteres y maximo 15, una letra mayúscula, una letra minúscula y un número';
         }
 
         if (!confirmPassword.trim()) {
@@ -80,14 +97,15 @@ const SignUpScreen = () => {
             newErrors.confirmPassword = 'Las contraseñas no coinciden';
         }
 
-        const phoneRegex = /^[0-9]{8}$/;
+        const phoneRegex = /^\d{8}$/;
         if (!phoneNumber.trim()) {
             newErrors.phoneNumber = 'Ingrese su número de teléfono';
         } else if (!phoneRegex.test(phoneNumber.trim())) {
-            newErrors.phoneNumber = 'Número de teléfono no válido';
+            newErrors.phoneNumber = 'El campo celular es invalido. Debe tener solo numeros con una longitud de 8 digitos, sin el prefijo +569';
         }
 
         setErrors(newErrors);
+
 
         return Object.keys(newErrors).length === 0;
     };
@@ -107,8 +125,9 @@ const SignUpScreen = () => {
                 .then((response) => {
                     if (response.data.success) {
                         navigation.navigate('SignIn');
+                        Alert.alert('Registro existoso', 'Su usuario se ha registrado con exito');
                     } else {
-                        Alert.alert('Error', response.data.token || 'Error en la respuesta del servidor');
+                        Alert.alert('Error', response.data.token);
                     }
                 })
                 .catch((error) => {

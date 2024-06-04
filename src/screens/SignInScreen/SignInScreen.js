@@ -15,12 +15,12 @@ const SignInScreen = () => {
     const navigation = useNavigation();
 
     const validateRut = () => {
-        const rutRegex = /^[0-9]+-[0-9kK]{1}$/;
+        const rutRegex = /^\d{7,8}-[0-9Kk]$/;
         if (!rut.trim()) {
             setRutError('Ingrese su rut');
             return false;
         } else if (!rutRegex.test(rut)) {
-            setRutError('Rut no válido');
+            setRutError('El campo rut debe tener entre 7 y 8 dígitos, un guión y un dígito verificador');
             return false;
         } else {
             setRutError('');
@@ -28,19 +28,22 @@ const SignInScreen = () => {
         }
     };
 
+
     const validatePassword = () => {
-        const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+        const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}$/;
+
         if (!password.trim()) {
             setPasswordError('Ingrese su contraseña');
             return false;
         } else if (!passwordRegex.test(password)) {
-            setPasswordError('La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número');
+            setPasswordError('La contraseña debe tener al menos 8 caracteres y maximo 15, una letra mayúscula, una letra minúscula y un número');
             return false;
         } else {
             setPasswordError('');
             return true;
         }
     };
+
 
     const validateFields = () => {
         let valid = true;
@@ -62,7 +65,7 @@ const SignInScreen = () => {
                         await AsyncStorage.setItem('userToken', response.data.token);
                         navigation.navigate('HomeScreen');
                     } else {
-                        Alert.alert('Error', response.data.message || 'Error en la respuesta del servidor');
+                        Alert.alert('Error', response.data.token);
                     }
                 })
                 .catch((error) => {
