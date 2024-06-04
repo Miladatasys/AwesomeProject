@@ -12,6 +12,13 @@ const PreviewScreen = () => {
     console.log('PreviewScreen imageUri:', imageUri);
     console.log('PreviewScreen recognizedText:', recognizedText);
 
+    const getCurrentDate = () => {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = (`0${date.getMonth() + 1}`).slice(-2); // Months are 0-based, so add 1
+        const day = (`0${date.getDate()}`).slice(-2);
+        return `${year}-${month}-${day}`;
+    };
 
     const handleSubmit = async () => {
         try {
@@ -20,21 +27,25 @@ const PreviewScreen = () => {
                 throw new Error('No token found');
             }
 
-            const lectura = uniqueDetectedNumbers.join(', '); 
-            const medidorId = meterId; //esta weno
+            const lectura = uniqueDetectedNumbers.join(''); 
+            const fecha = getCurrentDate();
 
-            console.log('medidorId:', medidorId);
+            console.log('medidorId:', meterId);
             console.log('lectura:', lectura);
+            console.log('fecha:', fecha);
 
-            console.log('Lectura:', lectura); 
-            const response = await axios.post(`http://ec2-54-147-32-66.compute-1.amazonaws.com:8080/cliente/medidores/${medidorId}/consumos`, 
-            { 
-                lectura 
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`
+            const response = await axios.post(
+                `http://ec2-54-147-32-66.compute-1.amazonaws.com:8080/cliente/medidores/${meterId}/consumos`, 
+                { 
+                    lectura,
+                    fecha
+                }, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 }
-            });
+            );
             console.log('Response from backend:', response.data);
             Alert.alert('Lectura Enviada', 'Su lectura se ha enviado', [
                 {

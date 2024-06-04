@@ -6,12 +6,13 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HistorialClienteScreen = () => {
-    const [historial, setHistorial] = useState([]);
+    const [consumos, setConsumos] = useState([]);
+    const [filteredConsumos, setFilteredConsumos] = useState([]);
+    const [availableYears, setAvailableYears] = useState([]);
     const [activeYear, setActiveYear] = useState('2024'); // Estado para el año activo
     const navigation = useNavigation();
     const route = useRoute();
     const { medidorId } = route.params;
-    const lectura = 'consumo'; 
 
     useEffect(() => {
         const fetchHistorial = async () => {
@@ -26,32 +27,13 @@ const HistorialClienteScreen = () => {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
-                console.log('Response:', response.data.medidores) // Verificar la respuesta
-                const meters = response.data.medidores.map(({ id }) => id); // extrae solo la propiedad id
-                const filteredMeterId = meters.filter(id => id === medidorId); // Filtra por id
-                
-                
-                if (filteredMeterId.length > 0) {
-                    const filteredMeter = response.data.medidores.find(meter => meter.id === filteredMeterId[0]); // Buscar por el match con id
-                    console.log("Found meter with ID:", filteredMeterId[0]);
-                    if (filteredMeter) {
-
-                    //funciona, aca se renderizan los consumos del medidor seleccionado
-                      const consumos = filteredMeter.consumos; 
-                      console.log("Consumos:", consumos); //consumos estan guardados en const consumos
-                    
-                    } else {
-                      console.error("Meter data not found for ID:", filteredMeterId[0]);
-                    }
-                  } else {
-                    console.error("Meter with ID", medidorId, "not found");
-                  }
-
-                if (Array.isArray(response.data)) {
-                    setHistorial(response.data);
+                const medidor = response.data.medidores.find(medidor => medidor.id === medidorId);
+                if (medidor) {
+                    setConsumos(medidor.consumos);
+                    const years = medidor.consumos.map(consumo => consumo.fechaLectura.split('-')[0]);
+                    setAvailableYears([...new Set(years)]);
                 } else {
-                    console.error('Unexpected response format:', response.data);
-                    setHistorial([]); // O maneja el error de la forma que consideres adecuada
+                    console.error('Medidor no encontrado');
                 }
             } catch (error) {
                 console.error('Error fetching historial', error);
@@ -61,9 +43,17 @@ const HistorialClienteScreen = () => {
         fetchHistorial();
     }, [medidorId]);
 
+    useEffect(() => {
+        const filterByYear = () => {
+            const filtered = consumos.filter(consumo => consumo.fechaLectura.startsWith(activeYear));
+            setFilteredConsumos(filtered);
+        };
+
+        filterByYear();
+    }, [activeYear, consumos]);
+
     const handleYearPress = (year) => {
         setActiveYear(year);
-        // Aquí añadir la lógica para actualizar los datos según el año seleccionado
     };
 
     return (
@@ -74,7 +64,7 @@ const HistorialClienteScreen = () => {
             </TouchableOpacity>
             <Text style={styles.title}>Historial del medidor</Text>
             <View style={styles.tabsContainer}>
-                {['2022', '2023', '2024'].map((year) => (
+                {availableYears.map((year) => (
                     <TouchableOpacity
                         key={year}
                         style={[styles.tab, activeYear === year && styles.activeTab]}
@@ -85,18 +75,16 @@ const HistorialClienteScreen = () => {
                 ))}
             </View>
             <View style={styles.tableHeader}>
-                <Text style={styles.tableHeaderText}>Fecha lectura</Text>
-                <Text style={styles.tableHeaderText}>Estado medidor</Text>
-                <Text style={styles.tableHeaderText}>Consumo kW</Text>
+                <Text style={styles.tableHeaderText}>Fecha Lectura</Text>
+                <Text style={styles.tableHeaderText}>Lectura</Text>
             </View>
-            {historial.length === 0 ? (
+            {filteredConsumos.length === 0 ? (
                 <Text style={styles.noDataText}>No hay datos disponibles</Text>
             ) : (
-                historial.map((item, index) => (
+                filteredConsumos.map((item, index) => (
                     <View key={index} style={styles.tableRow}>
                         <Text style={styles.tableRowText}>{item.fechaLectura}</Text>
-                        <Text style={styles.tableRowText}>{item.estadoMedidor}</Text>
-                        <Text style={styles.tableRowText}>{item.consumoKw}</Text>
+                        <Text style={styles.tableRowText}>{item.lectura}</Text>
                     </View>
                 ))
             )}
