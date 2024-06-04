@@ -20,7 +20,7 @@ const HomeScreen = () => {
                     throw new Error('No token found');
                 }
 
-                const response = await axios.get('http://ec2-34-236-149-118.compute-1.amazonaws.com:8080/cliente/user/profile', {
+                const response = await axios.get('http://ec2-54-147-32-66.compute-1.amazonaws.com:8080/cliente/user/profile', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -79,16 +79,22 @@ const HomeScreen = () => {
                 <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
                     <Text style={styles.backButtonText}>Volver</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity style={styles.button} onPress={handleNavigateToAddMeter}>
+                    <Text style={styles.buttonText}>Ingrese su medidor</Text>
+                </TouchableOpacity>
+                
                 <View style={styles.greetingContainer}>
                     <Text style={styles.greeting}>Hola {clientData.firstname} {clientData.lastname},</Text>
                     <Text style={styles.revisandoText}>estás revisando:</Text>
                 </View>
-                <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-                    {clientData.medidores && clientData.medidores.length > 0 ? (
-                        clientData.medidores.map((medidor, index) => (
+
+                {/* Colocar el ClientHeader aquí */}
+                {clientData.medidores && clientData.medidores.length > 0 ? (
+                    <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+                        {clientData.medidores.map((medidor, index) => (
                             <View key={index} style={styles.headerContainer}>
                                 <ClientHeader 
-                                    nombreCliente={`${clientData.firstname} ${clientData.lastname}`} 
                                     direccion={{
                                         calle: medidor.direccion,
                                         comuna: medidor.comuna,
@@ -100,14 +106,11 @@ const HomeScreen = () => {
                                     <Icon name="arrow-forward" size={24} color="#FE0F64" />
                                 </TouchableOpacity>
                             </View>
-                        ))
-                    ) : (
-                        <Text>No hay medidores disponibles</Text>
-                    )}
-                </ScrollView>
-                <TouchableOpacity style={styles.button} onPress={handleNavigateToAddMeter}>
-                    <Text style={styles.buttonText}>Ingrese su medidor</Text>
-                </TouchableOpacity>
+                        ))}
+                    </ScrollView>
+                ) : (
+                    <Text>No hay medidores disponibles</Text>
+                )}
             </View>
             <BottomBar />
         </>
@@ -119,18 +122,18 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
-      },
-      greeting: {
+    },
+    greeting: {
         fontSize: 18,
         alignSelf: 'start',
         marginLeft: 5,
         fontWeight: 'bold',
-      },
-      revisandoText: {
+    },
+    revisandoText: {
         fontSize: 18, 
         alignSelf: 'start',
         marginLeft: 5,
-      },
+    },
     container: {
         flex: 1,
         padding: 20,
@@ -154,10 +157,6 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     button: {
-        position: 'absolute',
-        bottom: 80, // Ajusta esta propiedad según la altura de tu BottomBar
-        left: 20,
-        right: 20,
         backgroundColor: '#FFFFFF',
         borderColor: '#4271d4',
         borderWidth: 2,
@@ -170,6 +169,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 2,
         elevation: 5,
+        marginVertical: 10, // Añadir un margen vertical para separar el botón del texto
     },
     buttonText: {
         fontSize: 16,

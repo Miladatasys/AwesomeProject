@@ -29,11 +29,12 @@ const SignInScreen = () => {
     };
 
     const validatePassword = () => {
+        const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
         if (!password.trim()) {
             setPasswordError('Ingrese su contraseña');
             return false;
-        } else if (password.length < 8) {
-            setPasswordError('La contraseña debe tener al menos 8 caracteres');
+        } else if (!passwordRegex.test(password)) {
+            setPasswordError('La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número');
             return false;
         } else {
             setPasswordError('');
@@ -55,7 +56,7 @@ const SignInScreen = () => {
                 password
             };
     
-            axios.post('http://ec2-34-236-149-118.compute-1.amazonaws.com:8080/auth/login', user)
+            axios.post('http://ec2-54-147-32-66.compute-1.amazonaws.com:8080/auth/login', user)
                 .then(async (response) => {
                     if (response.data.success) {
                         await AsyncStorage.setItem('userToken', response.data.token);

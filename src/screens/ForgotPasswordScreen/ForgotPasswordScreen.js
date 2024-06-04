@@ -34,7 +34,7 @@ const ForgotPasswordScreen = () => {
     const onSendPressed = () => {
         if (validateEmail()) {
             console.log(email);
-            axios.post('http://ec2-34-236-149-118.compute-1.amazonaws.com:8080/auth/getEmail', {email }) 
+            axios.post('http://http://ec2-54-147-32-66.compute-1.amazonaws.com:8080/auth/getEmail', {email }) 
                            .then((response) => {
                     console.log("respuesta get recibida");
                     if (response.data.success){
@@ -53,7 +53,7 @@ const ForgotPasswordScreen = () => {
         }
     };
     const sendRecoveryEmail = () => {
-            const code = generatedCode.join("");
+            const code = generatedCode.join(""); //url del ses
             axios.post('https://lsd49dkuof.execute-api.us-east-1.amazonaws.com/api-ses/enel', { email, code })
                 .then(response => {
                  console.log('Respuesta recibida:', JSON.stringify(response, null, 2));
