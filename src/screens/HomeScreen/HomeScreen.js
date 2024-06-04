@@ -70,7 +70,7 @@ const HomeScreen = () => {
     }
 
     if (!clientData) {
-        return <Text>No client data available</Text>;
+        return <Text>No hay datos disponibles, ingresa un medidor</Text>;
     }
 
     return (
