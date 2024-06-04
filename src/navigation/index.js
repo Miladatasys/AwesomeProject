@@ -27,6 +27,7 @@ import EditProfileScreen from '../screens/EditProfileScreen/EditProfileScreen';
 import ClientSettings from '../screens/ClientSettings/ClientSettings';
 import VerMedidor from '../components/VerMedidor/VerMedidor';
 import MedidoresScreen from '../screens/MedidoresScreen/MedidoresScreen';
+import MeterListScreen from '../screens/MeterListScreen/MeterListScreen'; 
 
 const Stack = createNativeStackNavigator();
 
@@ -60,7 +61,7 @@ const Navigation = () => {
                 <Stack.Screen name="ClientSettings" component={ClientSettings} />
                 <Stack.Screen name="VerMedidor" component={VerMedidor} />
                 <Stack.Screen name="MedidoresScreen" component={MedidoresScreen} />
-
+                <Stack.Screen name="MeterListScreen" component={MeterListScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );

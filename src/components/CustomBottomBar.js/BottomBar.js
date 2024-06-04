@@ -74,10 +74,10 @@ const BottomBar = () => {
         if (Platform.OS === 'android') {
           const hasPermissions = await requestPermissions();
           if (hasPermissions) {
-            navigation.navigate('CameraScreen');
+            navigation.navigate('MeterListScreen'); // Cambia aquí para navegar a la lista de medidores
           }
         } else {
-          navigation.navigate('CameraScreen');
+          navigation.navigate('MeterListScreen'); // Cambia aquí para navegar a la lista de medidores
         }
         break;
       case 'profile':
