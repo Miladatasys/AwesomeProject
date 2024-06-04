@@ -3,6 +3,8 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'reac
 import DropDownPicker from 'react-native-dropdown-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HelpScreen = () => {
     const cliente = {
@@ -27,7 +29,7 @@ const HelpScreen = () => {
         { label: 'Solicitud', value: 'Solicitud' },
     ];
 
-    const handleEnviar = () => {
+    const handleEnviar = async () => {
         if (!motivo) {
             Alert.alert('Error', 'Por favor, seleccione un motivo.');
             return;
@@ -36,16 +38,45 @@ const HelpScreen = () => {
             Alert.alert('Error', 'Por favor, ingrese un comentario.');
             return;
         }
-        Alert.alert(
-            'Éxito',
-            'Mensaje enviado con éxito.',
-            [
+
+        try {
+            const token = await AsyncStorage.getItem('userToken');
+            if (!token) {
+                throw new Error('No token found');
+            }
+
+            const medidorId = cliente.direccion.numeroCliente;
+            const data = {
+                motivo,
+                comentario
+            };
+
+            const response = await axios.post(
+                `https://ec2-3-83-252-66.compute-1.amazonaws.com/cliente/medidores/${medidorId}/suministro`,
+                data,
                 {
-                    text: 'OK',
-                    onPress: () => navigation.navigate('HomeScreen'),
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 }
-            ]
-        );
+            );
+
+            if (response.status === 200) {
+                Alert.alert(
+                    'Éxito',
+                    'Mensaje enviado con éxito.',
+                    [
+                        {
+                            text: 'OK',
+                            onPress: () => navigation.navigate('HomeScreen'),
+                        }
+                    ]
+                );
+            }
+        } catch (error) {
+            console.error('Error enviando el mensaje', error);
+            Alert.alert('Error', 'Hubo un problema al enviar el mensaje.');
+        }
     };
 
     const handleBackPress = () => {
