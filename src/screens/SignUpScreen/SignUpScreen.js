@@ -121,7 +121,7 @@ const SignUpScreen = () => {
                 phoneNumber,
             };
 
-            axios.post('http://ec2-54-147-32-66.compute-1.amazonaws.com:8080/auth/register', user)
+            axios.post('http://ec2-3-83-252-66.compute-1.amazonaws.com:8080/auth/register', user)
                 .then((response) => {
                     if (response.data.success) {
                         navigation.navigate('SignIn');

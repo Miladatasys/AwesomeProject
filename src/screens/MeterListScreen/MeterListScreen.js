@@ -16,7 +16,7 @@ const MeterListScreen = () => {
                 if (!token) {
                     throw new Error('No token found');
                 }
-                const response = await axios.get('http://ec2-54-147-32-66.compute-1.amazonaws.com:8080/cliente/user/profile', {
+                const response = await axios.get('http://ec2-3-83-252-66.compute-1.amazonaws.com:8080/cliente/user/profile', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 if (response.data && response.data.medidores) {
