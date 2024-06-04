@@ -23,18 +23,18 @@ const PreviewScreen = () => {
             const lectura = uniqueDetectedNumbers.join(', '); 
             const medidorId = meterId; //esta weno
 
-            console.log('mededorId:', medidorId);
+            console.log('medidorId:', medidorId);
             console.log('lectura:', lectura);
 
-            const response = await axios.post(
-                'http://localhost:8080/cliente/medidores/${medidorId}/consumos',
-                {
-                    lectura
-                },
-                {
-                    headers: { Authorization: `Bearer ${token}` },
+            console.log('Lectura:', lectura); 
+            const response = await axios.post(`http://ec2-54-147-32-66.compute-1.amazonaws.com:8080/cliente/medidores/${medidorId}/consumos`, 
+            { 
+                lectura 
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
-            );
+            });
             console.log('Response from backend:', response.data);
             Alert.alert('Lectura Enviada', 'Su lectura se ha enviado', [
                 {

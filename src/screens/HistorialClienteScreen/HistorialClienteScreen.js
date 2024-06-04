@@ -23,7 +23,7 @@ const HistorialClienteScreen = () => {
                     throw new Error('No token found');
                 }
                 console.log('Lectura:', lectura); 
-                const response = await axios.post(`http://ec2-54-147-32-66.compute-1.amazonaws.com:8080/cliente/medidores/${medidorId}/consumos`, 
+                const response = await axios.post(`localhost:8080/cliente/medidores/${medidorId}/consumos`, 
                 { 
                     lectura 
                 }, {
