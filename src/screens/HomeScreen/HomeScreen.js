@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from "react-native";
 import BottomBar from "../../components/CustomBottomBar.js/BottomBar";
-import VerMedidor from "../../components/VerMedidor/VerMedidor"; // Asegúrate de importar el componente VerMedidor
+import VerMedidor from "../../components/VerMedidor/VerMedidor";
 import { useNavigation } from "@react-navigation/native";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';

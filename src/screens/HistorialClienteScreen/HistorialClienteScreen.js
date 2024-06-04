@@ -11,23 +11,33 @@ const HistorialClienteScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const { medidorId } = route.params;
+    const lectura = 'consumo'; 
 
     useEffect(() => {
         const fetchHistorial = async () => {
             try {
                 const token = await AsyncStorage.getItem('userToken');
+                console.log('Token:', token); // Verificar el token
+                console.log('medidorId:', medidorId); // Verificar medidorId
                 if (!token) {
                     throw new Error('No token found');
                 }
-
-                const response = await axios.get(`http://ec2-54-147-32-66.compute-1.amazonaws.com:8080/medidor/${medidorId}/historial`, {
+                console.log('Lectura:', lectura); 
+                const response = await axios.post(`http://ec2-54-147-32-66.compute-1.amazonaws.com:8080/cliente/medidores/${medidorId}/consumos`, 
+                { 
+                    lectura 
+                }, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 });
 
-                if (response.data) {
+                console.log('Response:', response.data); // Verificar la respuesta
+                if (Array.isArray(response.data)) {
                     setHistorial(response.data);
+                } else {
+                    console.error('Unexpected response format:', response.data);
+                    setHistorial([]); // O maneja el error de la forma que consideres adecuada
                 }
             } catch (error) {
                 console.error('Error fetching historial', error);
@@ -168,4 +178,3 @@ const styles = StyleSheet.create({
 });
 
 export default HistorialClienteScreen;
-

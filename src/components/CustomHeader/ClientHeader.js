@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 
 const ClientHeader = ({ direccion, medidorId }) => {
@@ -35,7 +35,7 @@ const ClientHeader = ({ direccion, medidorId }) => {
         </View>
 
         <TouchableOpacity onPress={handleNavigateToHistorialCliente} style={styles.iconButton}>
-          <Icon name="arrow-forward" size={24} color="#FE0F64" />
+          <Icon name="arrow-right" size={24} color="#FE0F64" />
         </TouchableOpacity>
       </View>
     </View>
