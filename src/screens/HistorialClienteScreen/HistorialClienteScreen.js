@@ -22,17 +22,31 @@ const HistorialClienteScreen = () => {
                 if (!token) {
                     throw new Error('No token found');
                 }
-                console.log('Lectura:', lectura); 
-                const response = await axios.post(`localhost:8080/cliente/medidores/${medidorId}/consumos`, 
-                { 
-                    lectura 
-                }, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+                const response = await axios.get('http://ec2-54-147-32-66.compute-1.amazonaws.com:8080/cliente/user/profile', {
+                    headers: { Authorization: `Bearer ${token}` }
                 });
 
-                console.log('Response:', response.data); // Verificar la respuesta
+                console.log('Response:', response.data.medidores) // Verificar la respuesta
+                const meters = response.data.medidores.map(({ id }) => id); // extrae solo la propiedad id
+                const filteredMeterId = meters.filter(id => id === medidorId); // Filtra por id
+                
+                
+                if (filteredMeterId.length > 0) {
+                    const filteredMeter = response.data.medidores.find(meter => meter.id === filteredMeterId[0]); // Buscar por el match con id
+                    console.log("Found meter with ID:", filteredMeterId[0]);
+                    if (filteredMeter) {
+
+                    //funciona, aca se renderizan los consumos del medidor seleccionado
+                      const consumos = filteredMeter.consumos; 
+                      console.log("Consumos:", consumos); //consumos estan guardados en const consumos
+                    
+                    } else {
+                      console.error("Meter data not found for ID:", filteredMeterId[0]);
+                    }
+                  } else {
+                    console.error("Meter with ID", medidorId, "not found");
+                  }
+
                 if (Array.isArray(response.data)) {
                     setHistorial(response.data);
                 } else {
