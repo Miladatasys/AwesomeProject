@@ -12,17 +12,24 @@ const PreviewScreen = () => {
     console.log('PreviewScreen imageUri:', imageUri);
     console.log('PreviewScreen recognizedText:', recognizedText);
 
+
     const handleSubmit = async () => {
         try {
             const token = await AsyncStorage.getItem('userToken');
             if (!token) {
                 throw new Error('No token found');
             }
+
+            const lectura = uniqueDetectedNumbers.join(', '); 
+            const medidorId = meterId; //esta weno
+
+            console.log('mededorId:', medidorId);
+            console.log('lectura:', lectura);
+
             const response = await axios.post(
-                'http://ec2-54-147-32-66.compute-1.amazonaws.com:8080/cliente/user/consumo',
+                'http://localhost:8080/cliente/medidores/${medidorId}/consumos',
                 {
-                    meterId,
-                    consumption: recognizedText.detectedNumbers.join(''),
+                    lectura
                 },
                 {
                     headers: { Authorization: `Bearer ${token}` },
