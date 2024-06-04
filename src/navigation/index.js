@@ -25,6 +25,8 @@ import CameraScreen from '../screens/CamaraScreen/CamaraScreen';
 import PreviewScreen from '../screens/PreviewScreen/PreviewScreen';
 import EditProfileScreen from '../screens/EditProfileScreen/EditProfileScreen';
 import ClientSettings from '../screens/ClientSettings/ClientSettings';
+import VerMedidor from '../components/VerMedidor/VerMedidor';
+import MedidoresScreen from '../screens/MedidoresScreen/MedidoresScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -56,6 +58,8 @@ const Navigation = () => {
                 <Stack.Screen name="PreviewScreen" component={PreviewScreen} />
                 <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
                 <Stack.Screen name="ClientSettings" component={ClientSettings} />
+                <Stack.Screen name="VerMedidor" component={VerMedidor} />
+                <Stack.Screen name="MedidoresScreen" component={MedidoresScreen} />
 
             </Stack.Navigator>
         </NavigationContainer>

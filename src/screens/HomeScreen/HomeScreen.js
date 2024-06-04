@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert, ScrollView } from "react-native";
 import BottomBar from "../../components/CustomBottomBar.js/BottomBar";
-import ClientHeader from "../../components/CustomHeader/ClientHeader";
+import VerMedidor from "../../components/VerMedidor/VerMedidor"; // Asegúrate de importar el componente VerMedidor
 import { useNavigation } from "@react-navigation/native";
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -42,10 +41,6 @@ const HomeScreen = () => {
 
     const handleNavigateToAddMeter = () => {
         navigation.navigate('AddressScreen');
-    };
-
-    const handleNavigateToHistorialCliente = () => {
-        navigation.navigate('HistorialClienteScreen');
     };
 
     const handleBackPress = () => {
@@ -89,28 +84,8 @@ const HomeScreen = () => {
                     <Text style={styles.revisandoText}>estás revisando:</Text>
                 </View>
 
-                {/* Colocar el ClientHeader aquí */}
-                {clientData.medidores && clientData.medidores.length > 0 ? (
-                    <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-                        {clientData.medidores.map((medidor, index) => (
-                            <View key={index} style={styles.headerContainer}>
-                                <ClientHeader 
-                                    direccion={{
-                                        calle: medidor.direccion,
-                                        comuna: medidor.comuna,
-                                        region: medidor.region,
-                                        numeroCliente: medidor.numcliente
-                                    }} 
-                                />
-                                <TouchableOpacity onPress={handleNavigateToHistorialCliente} style={styles.iconButton}>
-                                    <Icon name="arrow-forward" size={24} color="#FE0F64" />
-                                </TouchableOpacity>
-                            </View>
-                        ))}
-                    </ScrollView>
-                ) : (
-                    <Text>No hay medidores disponibles</Text>
-                )}
+                {/* Mostrar el componente VerMedidor */}
+                <VerMedidor />
             </View>
             <BottomBar />
         </>
@@ -148,10 +123,6 @@ const styles = StyleSheet.create({
         color: '#4271d4',
         fontWeight: 'bold',
         fontFamily: 'Roboto-Regular',
-    },
-    scrollViewContainer: {
-        flexGrow: 1,
-        paddingBottom: 100, // Para asegurar espacio para el botón fijo
     },
     iconButton: {
         padding: 10,

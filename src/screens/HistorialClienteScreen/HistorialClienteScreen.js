@@ -1,27 +1,45 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HistorialClienteScreen = () => {
     const [historial, setHistorial] = useState([]);
     const [activeYear, setActiveYear] = useState('2024'); // Estado para el año activo
     const navigation = useNavigation();
+    const route = useRoute();
+    const { medidorId } = route.params;
 
-    // Simulación de llamada al backend
     useEffect(() => {
-        // Aquí hacer la llamada a la API para obtener los datos
-        // fetch('http://el-backend-api/historial')
-        //   .then(response => response.json())
-        //   .then(data => setHistorial(data))
-        //   .catch(error => console.error(error));
-        
-        // Dejar los datos vacíos hasta que se integre con el backend
-    }, []);
+        const fetchHistorial = async () => {
+            try {
+                const token = await AsyncStorage.getItem('userToken');
+                if (!token) {
+                    throw new Error('No token found');
+                }
+
+                const response = await axios.get(`http://ec2-54-147-32-66.compute-1.amazonaws.com:8080/medidor/${medidorId}/historial`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                if (response.data) {
+                    setHistorial(response.data);
+                }
+            } catch (error) {
+                console.error('Error fetching historial', error);
+            }
+        };
+
+        fetchHistorial();
+    }, [medidorId]);
 
     const handleYearPress = (year) => {
         setActiveYear(year);
-        // Aquí puedes añadir la lógica para actualizar los datos según el año seleccionado
+        // Aquí añadir la lógica para actualizar los datos según el año seleccionado
     };
 
     return (
@@ -150,3 +168,4 @@ const styles = StyleSheet.create({
 });
 
 export default HistorialClienteScreen;
+
