@@ -18,9 +18,8 @@ const ClientProfileScreen = () => {
         if (!token) {
           throw new Error('No token found');
         }
-
         console.log('userToken', token);
-        const response = await axios.get('http://ec2-3-83-252-66.compute-1.amazonaws.com:8080/cliente/user/profile', {
+        const response = await axios.get('http://172.20.10.2:8080/cliente/user/profile', {
           headers: {
             Authorization: `Bearer ${token}`
           }

@@ -59,7 +59,7 @@ const SignInScreen = () => {
                 password
             };
     
-            axios.post('http://ec2-3-83-252-66.compute-1.amazonaws.com:8080/auth/login', user)
+            axios.post('http://172.20.10.2:8080/auth/login', user)
                 .then(async (response) => {
                     if (response.data.success) {
                         await AsyncStorage.setItem('userToken', response.data.token);

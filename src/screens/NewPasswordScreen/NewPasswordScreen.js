@@ -32,6 +32,10 @@ const NewPasswordScreen = () => {
         } else {
             setPasswordError('');
         }
+
+        
+
+
         if (!confirmNewPassword.trim()) {
             setConfirmPasswordError('Confirme la nueva contraseña');
             isValid = false;

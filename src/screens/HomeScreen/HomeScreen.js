@@ -19,16 +19,20 @@ const HomeScreen = () => {
                     throw new Error('No token found');
                 }
 
-                const response = await axios.get('http://ec2-3-83-252-66.compute-1.amazonaws.com:8080/cliente/user/profile', {
+                const response = await axios.get('http://172.20.10.2:8080/cliente/user/profile', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 });
+                console.log("reponse: ",response);
+                console.log("response.data: ",response.data);
+                console.log("response.data.object: ",response.data.object);
 
-                if (response.data) {
-                    setClientData(response.data);
-                    console.log('Fetched Client Data:', response.data);
+                if (response.data.object) {
+                    setClientData(response.data.object);
+                    console.log('Fetched Client Data:', response.data.object);
                 }
+
             } catch (error) {
                 console.error('Error fetching data', error);
             } finally {

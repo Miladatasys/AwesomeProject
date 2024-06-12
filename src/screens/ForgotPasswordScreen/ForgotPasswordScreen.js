@@ -34,7 +34,7 @@ const ForgotPasswordScreen = () => {
     const onSendPressed = () => {
         if (validateEmail()) {
             console.log(email);
-            axios.post('http://http://ec2-3-83-252-66.compute-1.amazonaws.com:8080/auth/getEmail', {email }) 
+            axios.post('http://172.20.10.2:8080/auth/getEmail', {email}) 
                            .then((response) => {
                     console.log("respuesta get recibida");
                     if (response.data.success){

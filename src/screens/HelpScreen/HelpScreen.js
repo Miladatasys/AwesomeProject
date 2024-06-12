@@ -45,14 +45,18 @@ const HelpScreen = () => {
                 throw new Error('No token found');
             }
 
+            const numcliente= '1234'
             const medidorId = cliente.direccion.numeroCliente;
             const data = {
                 motivo,
-                comentario
+                comentario,
+                numcliente,
             };
-
+            console.log('Token: ' + token);
+            console.log('medidorID: ' +medidorId);
+            console.log('data motivo: ' +data.motivo+ 'comentario: ' + data.comentario + ' numcliente: ' + data.numcliente);
             const response = await axios.post(
-                `https://ec2-3-83-252-66.compute-1.amazonaws.com/cliente/medidores/${medidorId}/suministro`,
+                `https://172.20.10.2/cliente/medidores/${medidorId}/suministro`,
                 data,
                 {
                     headers: {

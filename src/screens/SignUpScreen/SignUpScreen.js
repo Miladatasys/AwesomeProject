@@ -75,11 +75,6 @@ const SignUpScreen = () => {
         if (!email.trim()) {
             newErrors.email = 'Ingrese su correo electrónico';
         } else if (!emailRegex.test(email)) {
-            newErrors.email = 'Correo electrónico no válido';
-        }
-                if (!email.trim()) {
-            newErrors.email = 'Ingrese su correo electrónico';
-        } else if (!emailRegex.test(email)) {
             newErrors.email = 'El campo email es invalido. Debe tener una longitud entre 4 y 50 caracteres, un @ y un dominio';
         }
 

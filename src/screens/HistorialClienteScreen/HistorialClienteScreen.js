@@ -23,9 +23,9 @@ const HistorialClienteScreen = () => {
                 if (!token) {
                     throw new Error('No token found');
                 }
-                const response = await axios.get('http://ec2-54-147-32-66.compute-1.amazonaws.com:8080/cliente/user/profile', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                //const response = await axios.get('http://172.20.10.2:8080/cliente/user/profile', {
+                  //  headers: { Authorization: `Bearer ${token}` }
+               // });
 
                 const medidor = response.data.medidores.find(medidor => medidor.id === medidorId);
                 if (medidor) {

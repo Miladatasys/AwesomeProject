@@ -15,14 +15,18 @@ const MedidoresScreen = () => {
           throw new Error('No token found');
         }
 
-        const response = await axios.get('http://ec2-3-83-252-66.compute-1.amazonaws.com:8080/cliente/user/profile', {
+        const response = await axios.get('http://172.20.10.2:8080/cliente/userMedidores/profile', {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
 
-        if (response.data) {
-          setMedidores(response.data.medidores);
+        console.log("reponse: ",response);
+        console.log("response.data: ",response.data);
+        console.log("response.data.object: ",response.data.object);
+
+        if (response.data.object) {
+          setMedidores(response.data.object);
         }
       } catch (error) {
         console.error('Error fetching data', error);

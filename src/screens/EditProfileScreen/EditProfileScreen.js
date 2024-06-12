@@ -44,10 +44,21 @@ const EditProfileScreen = () => {
   };
 
   const handleSave = async () => {
+    const emailRegex = /^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]{1,50}@[a-zA-Z0-9.-]{1,50}\.[a-zA-Z]{2,3}$/;;
+    if(!emailRegex.test(profileData.email)) {
+      Alert.alert('El campo email es invalido. Debe tener una longitud entre 4 y 50 caracteres, un @ y un dominio');
+      return;
+    }
     if (profileData.password !== profileData.confirmPassword) {
       Alert.alert('Error', 'Las contraseñas no coinciden');
       return;
     }
+    const phoneRegex = /^\d{8}$/;
+    if(!phoneRegex.test(profileData.phoneNumber)){
+      Alert.alert('El campo celular es invalido. Debe tener solo numeros con una longitud de 8 digitos, sin el prefijo +569');
+      return;
+    }
+
 
     try {
       const token = await AsyncStorage.getItem('userToken');
@@ -62,7 +73,7 @@ const EditProfileScreen = () => {
         password: profileData.password,
       });
 
-      const response = await axios.patch('http://ec2-3-83-252-66.compute-1.amazonaws.com:8080/cliente/profile/update', {
+      const response = await axios.patch('http://172.20.10.2:8080/cliente/profile/update', {
         email: profileData.email,
         phoneNumber: profileData.phoneNumber,
         password: profileData.password,
