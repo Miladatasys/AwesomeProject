@@ -22,7 +22,7 @@ const MedidoresScreen = () => {
           throw new Error('No token found');
         }
 
-        const response = await axios.get('http://192.168.1.91:8080/cliente/userMedidores/profile', {
+        const response = await axios.get('http://172.20.10.2:8080/cliente/userMedidores/profile', {
           headers: {
             Authorization: `Bearer ${token}`
           }
