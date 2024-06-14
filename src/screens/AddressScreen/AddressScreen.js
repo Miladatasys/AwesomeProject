@@ -89,7 +89,7 @@ const AddressScreen = () => {
       console.log('Client Data to Send:', datatoSend);
 
 
-      const response = await axios.post('http://ec2-3-83-252-66.compute-1.amazonaws.com:8080/cliente/medidores', 
+      const response = await axios.post('http://192.168.1.91:8080/cliente/medidores', 
       datatoSend, {
         headers: {
           Authorization: `Bearer ${token}`,

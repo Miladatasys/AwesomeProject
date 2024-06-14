@@ -28,6 +28,7 @@ import ClientSettings from '../screens/ClientSettings/ClientSettings';
 import VerMedidor from '../components/VerMedidor/VerMedidor';
 import MedidoresScreen from '../screens/MedidoresScreen/MedidoresScreen';
 import MeterListScreen from '../screens/MeterListScreen/MeterListScreen'; 
+import AdminVerificationScreen from '../screens/AdminVerificationScreen/AdminVerificationScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -62,6 +63,7 @@ const Navigation = () => {
                 <Stack.Screen name="VerMedidor" component={VerMedidor} />
                 <Stack.Screen name="MedidoresScreen" component={MedidoresScreen} />
                 <Stack.Screen name="MeterListScreen" component={MeterListScreen} />
+                <Stack.Screen name="AdminVerificationScreen" component={AdminVerificationScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );

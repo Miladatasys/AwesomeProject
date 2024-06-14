@@ -1,23 +1,24 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Image, Alert } from "react-native";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 
 const AdminForgotPasswordScreen = () => {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
-
     const navigation = useNavigation();
+    const [generatedCode, setGeneratedCode] = useState(generateRandomCode());
+    const [emailExists, setEmailExists] = useState(false);
 
     const validateEmail = () => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expresión regular para validar formato de correo electrónico
-
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!email.trim()) {
             setEmailError('Ingrese su correo electrónico');
             return false;
         } else if (!emailRegex.test(email.trim())) {
-            setEmailError('Ingrese un correo electrónico válido');
+            setEmailError('Correo electrónico no válido');
             return false;
         } else {
             setEmailError('');
@@ -25,11 +26,51 @@ const AdminForgotPasswordScreen = () => {
         }
     };
 
+    function generateRandomCode() {
+        const randomCode = Math.floor(1000 + Math.random() * 9000).toString();
+        return randomCode.split("");
+    }
+
     const onSendPressed = () => {
         if (validateEmail()) {
-            // Aquí enviar la solicitud de recuperación de contraseña por correo electrónico
-            navigation.navigate('AdminNewPassword');
+            console.log(email);
+            axios.post('http://192.168.1.91:8080/auth/getEmail', {email}) 
+                           .then((response) => {
+                    console.log("respuesta get recibida");
+                    if (response.data.success){
+                        setEmailExists(true);
+                        console.log('hay respuesta en if get:', response.data);
+                        sendRecoveryEmail();
+                    } else {
+                        console.log('hay respuesta en else get:', response.data);
+                        Alert.alert('Error', 'El correo electrónico no existe en nuestra base de datos.');
+                    }
+                })
+                .catch(error => {
+                    Alert.alert('Error', 'Hubo un problema al verificar el correo electrónico. Inténtelo de nuevo.');
+                    console.error('Error al verificar el correo electrónico:', error);
+                });
         }
+    };
+
+    const sendRecoveryEmail = () => {
+        const code = generatedCode.join("");
+        axios.post('https://lsd49dkuof.execute-api.us-east-1.amazonaws.com/api-ses/enel', { email, code })
+            .then(response => {
+                console.log('Respuesta recibida:', JSON.stringify(response, null, 2));
+                const responseData = JSON.parse(response.data.body);
+                if (responseData.success) {
+                    console.log('hay respuesta en if:', JSON.stringify(responseData, null, 2));
+                    navigation.navigate('AdminVerificationScreen', { email, generatedCode });
+                } else {
+                    console.log('hay respuesta en else:', JSON.stringify(responseData, null, 2));
+                    Alert.alert('Error', responseData.message);
+                }
+            })
+            .catch(error => {
+                Alert.alert('Error', 'Hubo un problema al enviar el correo de recuperación. Inténtelo de nuevo. Error: ' + error.message);
+                console.error('Error al enviar el correo de recuperación:', error);
+            });
     };
 
     const onSignInPressed = () => {
@@ -49,8 +90,8 @@ const AdminForgotPasswordScreen = () => {
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>Ingrese su correo electrónico</Text>
                     <CustomInput
-                        placeholder="Correo electrónico" 
-                        value={email} 
+                        placeholder="Correo electrónico"
+                        value={email}
                         setValue={setEmail}
                         onBlur={validateEmail}
                         error={emailError}
@@ -58,7 +99,7 @@ const AdminForgotPasswordScreen = () => {
                     {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
                 </View>
 
-                <CustomButton text="Enviar" onPress={onSendPressed} style={styles.button}/>
+                <CustomButton text="Enviar" onPress={onSendPressed} style={styles.button} />
 
                 <CustomButton 
                     text="Volver a iniciar sesión como administrador" 

@@ -2,32 +2,33 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from '@react-navigation/native';
+import axios from 'axios'; 
+import { Alert } from "react-native";
 
 const AdminNewPasswordScreen = () => {
-    const [code, setCode] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
-    const [codeError, setCodeError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [confirmPasswordError, setConfirmPasswordError] = useState('');
+    const [passwordStrength, setPasswordStrength] = useState(0);
+    const route = useRoute();
+    const email = route.params.email;
 
     const navigation = useNavigation();
 
     const validateInputs = () => {
         let isValid = true;
-        if (!code.trim()) {
-            setCodeError('Ingrese el código de verificación');
-            isValid = false;
-        } else {
-            setCodeError('');
-        }
         if (!newPassword.trim()) {
             setPasswordError('Ingrese la nueva contraseña');
+            isValid = false;
+        } else if (newPassword.length < 8) {
+            setPasswordError('La contraseña debe tener al menos 8 caracteres');
             isValid = false;
         } else {
             setPasswordError('');
         }
+
         if (!confirmNewPassword.trim()) {
             setConfirmPasswordError('Confirme la nueva contraseña');
             isValid = false;
@@ -40,23 +41,57 @@ const AdminNewPasswordScreen = () => {
         return isValid;
     };
 
-    const calculateStrength = () => {
-        // Verifica si la contraseña cumple con los requisitos
-        const hasNumber = /\d/.test(newPassword);
-        const hasLowerCase = /[a-z]/.test(newPassword);
-        const hasUpperCase = /[A-Z]/.test(newPassword);
-        const hasMinLength = newPassword.length >= 8;
+    const calculatePasswordStrength = (password) => {
+        let strength = 0;
+        if (password.length >= 8) {
+            strength += 1;
+        }
+        if (/[a-z]/.test(password)) {
+            strength += 1;
+        }
+        if (/[A-Z]/.test(password)) {
+            strength += 1;
+        }
+        if (/\d/.test(password)) {
+            strength += 1;
+        }
+        return (strength / 4) * 100;
+    };
 
-        // Calcula la fuerza de la contraseña
-        const strength = (hasNumber + hasLowerCase + hasUpperCase + hasMinLength) / 4 * 100;
-
-        return strength;
+    const handlePasswordChange = (text) => {
+        setNewPassword(text);
+        const strength = calculatePasswordStrength(text);
+        setPasswordStrength(strength);
     };
 
     const onSubmitPressed = () => {
         if (validateInputs()) {
-            // Enviar la solicitud para cambiar la contraseña del administrador
-            navigation.navigate('AdminHomeScreen'); 
+            console.log(email);
+            console.log(newPassword);
+            const payload = { email, newPassword };
+            console.log('Payload:', payload); // Log payload for debugging
+
+            axios.put('http://192.168.1.91:8080/auth/update-password', payload)
+                .then(response => {
+                    if (response.data.success) {
+                        navigation.navigate('AdminHomeScreen');
+                    } else {
+                        Alert.alert('Error', response.data.message || 'Error en la respuesta del servidor');
+                    }
+                })
+                .catch(error => {
+                    if (error.response) {
+                        console.error('Respuesta del servidor:', error.response.data);
+                        Alert.alert('Error', error.response.data.message || 'Error en la respuesta del servidor');
+                    } else if (error.request) {
+                        console.error('Solicitud realizada, sin respuesta:', error.request);
+                        Alert.alert('Error', 'No se recibió respuesta del servidor');
+                    } else {
+                        console.error('Error al configurar la solicitud:', error.message);
+                        Alert.alert('Error', 'Error al configurar la solicitud: ' + error.message);
+                    }
+                    console.error('Detalles del error:', error.config);
+                });
         }
     };
 
@@ -64,37 +99,34 @@ const AdminNewPasswordScreen = () => {
         navigation.navigate('AdminSignIn');
     };
 
-    const strength = calculateStrength();
-
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.root}>
-                <Text style={styles.title}>Cambia tu contraseña de administrador</Text>
-
-                <CustomInput
-                    placeholder="Código de verificación" 
-                    value={code} 
-                    setValue={setCode}
-                    error={codeError}
-                />
-                {codeError ? <Text style={styles.errorText}>{codeError}</Text> : null}
+                <Text style={styles.title}>Cambia tu contraseña</Text>
 
                 <CustomInput
                     placeholder="Nueva contraseña" 
                     value={newPassword} 
-                    setValue={setNewPassword}
+                    setValue={handlePasswordChange}
                     secureTextEntry
                     error={passwordError}
                 />
                 {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
 
-                <View style={styles.strengthIndicatorContainer}>
+                <View style={styles.passwordStrengthContainer}>
                     <View
-                        style={{
-                            ...styles.strengthIndicator,
-                            width: `${strength}%`,
-                            backgroundColor: strength < 50 ? 'gray' : strength < 75 ? 'yellow' : 'green',
-                        }}
+                        style={[
+                            styles.passwordStrengthIndicator,
+                            {
+                                width: `${passwordStrength}%`,
+                                backgroundColor:
+                                    passwordStrength < 50
+                                        ? 'gray'
+                                        : passwordStrength < 75
+                                        ? 'yellow'
+                                        : 'green',
+                            },
+                        ]}
                     />
                 </View>
 
@@ -107,10 +139,10 @@ const AdminNewPasswordScreen = () => {
                 />
                 {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
 
-                <CustomButton text="Enviar" onPress={onSubmitPressed} style={styles.button}/>
+                <CustomButton text="Enviar" onPress={onSubmitPressed} style={styles.button} disabled={passwordError || !passwordStrength}/>
 
                 <CustomButton 
-                    text="Volver a iniciar sesión como administrador" 
+                    text="Volver a iniciar sesión" 
                     onPress={onSignInPressed} 
                     type="TERTIARY"
                 />
@@ -139,15 +171,14 @@ const styles = StyleSheet.create({
     button: {
         marginTop: 20,
     },
-    strengthIndicatorContainer: {
+    passwordStrengthContainer: {
         width: '100%',
-        height: 5,
-        backgroundColor: 'lightgray',
+        height: 10,
+        backgroundColor: '#F6F6F6',
         borderRadius: 5,
-        marginTop: 5,
         marginBottom: 10,
     },
-    strengthIndicator: {
+    passwordStrengthIndicator: {
         height: '100%',
         borderRadius: 5,
     },

@@ -56,7 +56,7 @@ const HelpScreen = () => {
             console.log('medidorID: ' +medidorId);
             console.log('data motivo: ' +data.motivo+ 'comentario: ' + data.comentario + ' numcliente: ' + data.numcliente);
             const response = await axios.post(
-                `https://172.20.10.2/cliente/medidores/${medidorId}/suministro`,
+                `https://192.168.1.91/cliente/medidores/${medidorId}/suministro`,
                 data,
                 {
                     headers: {
