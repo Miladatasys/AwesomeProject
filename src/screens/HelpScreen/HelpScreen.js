@@ -75,6 +75,8 @@ const HelpScreen = () => {
                         }
                     ]
                 );
+            } else {
+                Alert.alert('Error', 'Error en la respuesta del servidor.');
             }
         } catch (error) {
             console.log("respuesta no cae en if response 200")
@@ -84,6 +86,7 @@ const HelpScreen = () => {
     };
 
     const handleBackPress = () => {
+        console.log('Navigating back to HelpMeterListScreen');
         navigation.navigate('HelpMeterListScreen');
     };
 
