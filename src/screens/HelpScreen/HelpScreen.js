@@ -2,20 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HelpScreen = () => {
-    const cliente = {
-        nombre: "Juan Pérez",
-        direccion: {
-            calle: "Calle Principal",
-            numero: "123",
-            comuna: "Santiago",
-            numeroCliente: "0001"
-        }
-    };
+    const route = useRoute();
+    const medidor = route.params.medidor;
 
     const [motivo, setMotivo] = useState(null);
     const [comentario, setComentario] = useState('');
@@ -34,8 +27,12 @@ const HelpScreen = () => {
             Alert.alert('Error', 'Por favor, seleccione un motivo.');
             return;
         }
-        if (!comentario) {
+        if (!comentario.trim()) {
             Alert.alert('Error', 'Por favor, ingrese un comentario.');
+            return;
+        }
+        if (comentario.length > 500) {
+            Alert.alert('Error', 'El comentario no puede exceder los 500 caracteres.');
             return;
         }
 
@@ -45,16 +42,16 @@ const HelpScreen = () => {
                 throw new Error('No token found');
             }
 
-            const numcliente= '1234'
-            const medidorId = cliente.direccion.numeroCliente;
+            const numcliente = medidor.numcliente;
+            const medidorId = medidor.id;
             const data = {
                 motivo,
                 comentario,
                 numcliente,
             };
             console.log('Token: ' + token);
-            console.log('medidorID: ' +medidorId);
-            console.log('data motivo: ' +data.motivo+ 'comentario: ' + data.comentario + ' numcliente: ' + data.numcliente);
+            console.log('medidorID: ' + medidorId);
+            console.log('data motivo: ' + data.motivo + ' comentario: ' + data.comentario + ' numcliente: ' + data.numcliente);
             const response = await axios.post(
                 `https://192.168.1.91/cliente/medidores/${medidorId}/suministro`,
                 data,
@@ -84,20 +81,7 @@ const HelpScreen = () => {
     };
 
     const handleBackPress = () => {
-        Alert.alert(
-            "¿Estás seguro?",
-            "¿Quieres volver al inicio?",
-            [
-                {
-                    text: "No",
-                    style: "cancel"
-                },
-                {
-                    text: "Sí",
-                    onPress: () => navigation.navigate('HomeScreen')
-                }
-            ]
-        );
+        navigation.navigate('HelpMeterListScreen');
     };
 
     return (
@@ -108,9 +92,9 @@ const HelpScreen = () => {
                 </TouchableOpacity>
                 <Text style={styles.title}>Suministro del Cliente</Text>
                 <View style={styles.clientInfo}>
-                    <Text style={styles.infoText}>Nombre: {cliente.nombre}</Text>
-                    <Text style={styles.infoText}>Dirección: {cliente.direccion.calle} {cliente.direccion.numero}, {cliente.direccion.comuna}</Text>
-                    <Text style={styles.infoText}>Número de Cliente: {cliente.direccion.numeroCliente}</Text>
+                    <Text style={styles.infoText}>Nombre: {medidor.nombre}</Text>
+                    <Text style={styles.infoText}>Dirección: {medidor.direccion}</Text>
+                    <Text style={styles.infoText}>Número de Cliente: {medidor.numcliente}</Text>
                 </View>
                 <Text style={styles.label}>Motivo:</Text>
                 <DropDownPicker
@@ -131,6 +115,7 @@ const HelpScreen = () => {
                     value={comentario}
                     onChangeText={setComentario}
                     multiline
+                    maxLength={500}
                 />
                 <TouchableOpacity style={styles.button} onPress={handleEnviar}>
                     <Text style={styles.buttonText}>Enviar</Text>
@@ -215,6 +200,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 2,
         elevation: 5,
+        marginBottom: 10,
     },
     buttonText: {
         fontSize: 16,

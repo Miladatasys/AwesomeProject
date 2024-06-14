@@ -62,7 +62,7 @@ const BottomBar = () => {
         navigation.navigate('HomeScreen');
         break;
       case 'help':
-        navigation.navigate('HelpScreen');
+        navigation.navigate('HelpMeterListScreen'); // Navigate to HelpMeterListScreen
         break;
       case 'faq':
         navigation.navigate('FAQScreen');
@@ -74,10 +74,10 @@ const BottomBar = () => {
         if (Platform.OS === 'android') {
           const hasPermissions = await requestPermissions();
           if (hasPermissions) {
-            navigation.navigate('MeterListScreen'); // Cambia aquí para navegar a la lista de medidores
+            navigation.navigate('MeterListScreen');
           }
         } else {
-          navigation.navigate('MeterListScreen'); // Cambia aquí para navegar a la lista de medidores
+          navigation.navigate('MeterListScreen');
         }
         break;
       case 'profile':
