@@ -47,13 +47,17 @@ const HelpScreen = () => {
             const data = {
                 motivo,
                 comentario,
+                numcliente,
             };
-            console.log('Token: ' + token);
-            console.log('medidorID: ' + medidorId);
-            console.log('data motivo: ' + data.motivo + ' comentario: ' + data.comentario + ' numcliente: ' + data.numcliente);
-            console.log('antes del envio de post')
+            
+            console.log('Token:', token);
+            console.log('medidorID:', medidorId);
+            console.log('Data motivo:', data.motivo);
+            console.log('Comentario:', data.comentario);
+            console.log('Numcliente:', data.numcliente);
+
             const response = await axios.post(
-                `https://172.20.10.2:8080/cliente/medidores/${medidorId}/suministro`,
+                `http://192.168.1.91:8080/cliente/medidores/${medidorId}/suministro`,
                 data,
                 {
                     headers: {
@@ -61,10 +65,11 @@ const HelpScreen = () => {
                     }
                 }
             );
-            console.log('despues del envio de post')
 
-            if (response.status === 200) {
-                console.log("respuesta cae en if response 200")
+            console.log('Response status:', response.status);
+            console.log('Response data:', response.data);
+
+            if (response.status === 200 && response.data.success) {
                 Alert.alert(
                     'Éxito',
                     'Mensaje enviado con éxito.',
@@ -79,7 +84,6 @@ const HelpScreen = () => {
                 Alert.alert('Error', 'Error en la respuesta del servidor.');
             }
         } catch (error) {
-            console.log("respuesta no cae en if response 200")
             console.error('Error enviando el mensaje', error);
             Alert.alert('Error', 'Hubo un problema al enviar el mensaje.');
         }
