@@ -57,7 +57,7 @@ const HelpScreen = () => {
             console.log('Numcliente:', data.numcliente);
 
             const response = await axios.post(
-                `http://192.168.1.91:8080/cliente/medidores/${medidorId}/suministro`,
+                `http://192.168.1.100:8080/cliente/medidores/${medidorId}/suministro`,
                 data,
                 {
                     headers: {

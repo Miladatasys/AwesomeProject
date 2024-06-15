@@ -16,11 +16,11 @@ const MeterListScreen = () => {
                 if (!token) {
                     throw new Error('No token found');
                 }
-                const response = await axios.get('http://192.168.1.91:8080/cliente/user/profile', {
+                const response = await axios.get('http://192.168.1.100:8080/cliente/userMedidores/profile', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                if (response.data && response.data.medidores) {
-                    setMeters(response.data.medidores);
+                if (response.data && response.data.object) {
+                    setMeters(response.data.object);
                 } else {
                     console.error('No medidores found in response data');
                 }
