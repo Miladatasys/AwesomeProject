@@ -23,38 +23,36 @@ const HistorialClienteScreen = () => {
                 if (!token) {
                     throw new Error('No token found');
                 }
-                //const response = await axios.get('http://192.168.1.91:8080/cliente/user/profile', {
-                  //  headers: { Authorization: `Bearer ${token}` }
-               // });
+                const response = await axios.get(`http://192.168.1.100:8080/cliente/medidores/${medidorId}/getConsumos`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
 
-                const medidor = response.data.medidores.find(medidor => medidor.id === medidorId);
-                if (medidor) {
-                    setConsumos(medidor.consumos);
-                    const years = medidor.consumos.map(consumo => consumo.fechaLectura.split('-')[0]);
-                    setAvailableYears([...new Set(years)]);
+                if (response.data.object) {
+                    setConsumos(response.data.object);
+                    console.log('Fetched Client Data:', response.data.object);
                 } else {
-                    console.error('Medidor no encontrado');
+                    console.log('consumo no encontrado');
                 }
             } catch (error) {
-                console.error('Error fetching historial', error);
+                console.error('Error fetching profile data', error);
             }
         };
 
         fetchHistorial();
     }, [medidorId]);
 
-    useEffect(() => {
-        const filterByYear = () => {
-            const filtered = consumos.filter(consumo => consumo.fechaLectura.startsWith(activeYear));
-            setFilteredConsumos(filtered);
-        };
+    // useEffect(() => {
+    //     const filterByYear = () => {
+    //         const filtered = consumos.filter(consumo => consumo.fechaLectura.startsWith(activeYear));
+    //         setFilteredConsumos(filtered);
+    //     };
 
-        filterByYear();
-    }, [activeYear, consumos]);
+    //     filterByYear();
+    // }, [activeYear, consumos]);
 
-    const handleYearPress = (year) => {
-        setActiveYear(year);
-    };
+    // const handleYearPress = (year) => {
+    //     setActiveYear(year);
+    // };
 
     return (
         <ScrollView style={styles.container}>
@@ -68,7 +66,7 @@ const HistorialClienteScreen = () => {
                     <TouchableOpacity
                         key={year}
                         style={[styles.tab, activeYear === year && styles.activeTab]}
-                        onPress={() => handleYearPress(year)}
+                        // onPress={() => handleYearPress(year)}
                     >
                         <Text style={[styles.tabText, activeYear === year && styles.activeTabText]}>{year}</Text>
                     </TouchableOpacity>
