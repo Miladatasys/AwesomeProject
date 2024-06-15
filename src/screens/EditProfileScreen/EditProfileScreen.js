@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert, ActivityIndicator } from 'react-native';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
@@ -13,40 +13,33 @@ const EditProfileScreen = () => {
     confirmPassword: '',
   });
   const [loading, setLoading] = useState(true);
+  const [emailError, setEmailError] = useState('');
+  const [phoneError, setPhoneError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
 
-  useFocusEffect(
-    useCallback(() => {
-      const fetchProfileData = async () => {
-        try {
-          const data = await AsyncStorage.getItem('userProfile');
-          if (data) {
-            const parsedData = JSON.parse(data);
-            setProfileData({
-              email: parsedData.email || '',
-              phoneNumber: parsedData.phoneNumber || '',
-              password: '',
-              confirmPassword: '',
-            });
-          }
-          setLoading(false);
-        } catch (error) {
-          console.error('Error fetching profile data', error);
-          setLoading(false);
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const data = await AsyncStorage.getItem('userProfile');
+        if (data) {
+          const parsedData = JSON.parse(data);
+          setProfileData({
+            email: parsedData.email || '',
+            phoneNumber: parsedData.phoneNumber || '',
+            password: '',
+            confirmPassword: '',
+          });
         }
-      };
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching profile data', error);
+        setLoading(false);
+      }
+    };
 
-      fetchProfileData();
-
-      return () => {
-        setProfileData({
-          email: '',
-          phoneNumber: '',
-          password: '',
-          confirmPassword: '',
-        });
-      };
-    }, [])
-  );
+    fetchProfileData();
+  }, []);
 
   const handleInputChange = (name, value) => {
     setProfileData((prevState) => ({
@@ -55,37 +48,51 @@ const EditProfileScreen = () => {
     }));
   };
 
+  const validateEmail = () => {
+    const emailRegex = /^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]{1,50}@[a-zA-Z0-9.-]{1,50}\.[a-zA-Z]{2,3}$/;
+    if (profileData.email && !emailRegex.test(profileData.email)) {
+      setEmailError('El campo email es inválido. Debe tener una longitud entre 4 y 50 caracteres, un @ y un dominio');
+      return false;
+    } else {
+      setEmailError('');
+      return true;
+    }
+  };
+
+  const validatePhone = () => {
+    const phoneRegex = /^\d{8}$/;
+    if (profileData.phoneNumber && !phoneRegex.test(profileData.phoneNumber)) {
+      setPhoneError('El campo celular es inválido. Debe tener solo números con una longitud de 8 dígitos, sin el prefijo +569');
+      return false;
+    } else {
+      setPhoneError('');
+      return true;
+    }
+  };
+
+  const validatePassword = () => {
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}$/;
+    if (profileData.password && !passwordRegex.test(profileData.password)) {
+      setPasswordError('La contraseña debe tener al menos 8 caracteres y máximo 15, una letra mayúscula, una letra minúscula y un número');
+      return false;
+    } else {
+      setPasswordError('');
+      return true;
+    }
+  };
+
+  const validateConfirmPassword = () => {
+    if (profileData.confirmPassword && profileData.confirmPassword !== profileData.password) {
+      setConfirmPasswordError('Las contraseñas no coinciden');
+      return false;
+    } else {
+      setConfirmPasswordError('');
+      return true;
+    }
+  };
+
   const handleSave = async () => {
-    const updates = {};
-
-    if (profileData.email) {
-      const emailRegex = /^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]{1,50}@[a-zA-Z0-9.-]{1,50}\.[a-zA-Z]{2,3}$/;
-      if (!emailRegex.test(profileData.email)) {
-        Alert.alert('El campo email es invalido. Debe tener una longitud entre 4 y 50 caracteres, un @ y un dominio');
-        return;
-      }
-      updates.email = profileData.email;
-    }
-
-    if (profileData.phoneNumber) {
-      const phoneRegex = /^\d{8}$/;
-      if (!phoneRegex.test(profileData.phoneNumber)) {
-        Alert.alert('El campo celular es invalido. Debe tener solo numeros con una longitud de 8 digitos, sin el prefijo +569');
-        return;
-      }
-      updates.phoneNumber = profileData.phoneNumber;
-    }
-
-    if (profileData.password) {
-      if (profileData.password !== profileData.confirmPassword) {
-        Alert.alert('Error', 'Las contraseñas no coinciden');
-        return;
-      }
-      updates.password = profileData.password;
-    }
-
-    if (Object.keys(updates).length === 0) {
-      Alert.alert('Error', 'No hay cambios para guardar');
+    if (!validateEmail() || !validatePhone() || !validatePassword() || !validateConfirmPassword()) {
       return;
     }
 
@@ -95,6 +102,13 @@ const EditProfileScreen = () => {
         throw new Error('No token found');
       }
 
+      // Crear un objeto con solo los campos no vacíos y válidos
+      const updates = {};
+      if (profileData.email) updates.email = profileData.email;
+      if (profileData.phoneNumber) updates.phoneNumber = profileData.phoneNumber;
+      if (profileData.password) updates.password = profileData.password;
+
+      // Log the data before sending the request
       console.log('Data being sent:', updates);
 
       const response = await axios.patch('http://192.168.1.100:8080/cliente/profile/update', updates, {
@@ -106,13 +120,14 @@ const EditProfileScreen = () => {
       if (response.data) {
         const updatedUser = response.data;
         await AsyncStorage.setItem('userProfile', JSON.stringify(updatedUser));
-        console.log('updated user: ', updatedUser);
+        console.log('Updated user:', updatedUser);
 
+        // Update the state with the updated user data
         setProfileData({
           email: updatedUser.email || '',
           phoneNumber: updatedUser.phoneNumber || '',
-          password: '',
-          confirmPassword: '',
+          password: '',  // Clear the password fields
+          confirmPassword: '',  // Clear the password fields
         });
 
         Alert.alert('Éxito', 'Perfil actualizado correctamente');
@@ -149,6 +164,7 @@ const EditProfileScreen = () => {
           onChangeText={(value) => handleInputChange('email', value)}
           keyboardType="email-address"
         />
+        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Número de Teléfono:</Text>
@@ -159,6 +175,7 @@ const EditProfileScreen = () => {
           onChangeText={(value) => handleInputChange('phoneNumber', value)}
           keyboardType="phone-pad"
         />
+        {phoneError ? <Text style={styles.errorText}>{phoneError}</Text> : null}
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Contraseña:</Text>
@@ -169,6 +186,7 @@ const EditProfileScreen = () => {
           onChangeText={(value) => handleInputChange('password', value)}
           secureTextEntry
         />
+        {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Confirmar Contraseña:</Text>
@@ -179,6 +197,7 @@ const EditProfileScreen = () => {
           onChangeText={(value) => handleInputChange('confirmPassword', value)}
           secureTextEntry
         />
+        {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
       </View>
       <TouchableOpacity style={styles.button} onPress={handleSave}>
         <Text style={styles.buttonText}>Guardar</Text>
@@ -236,6 +255,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     color: '#2F2F2F',
     backgroundColor: '#FFFFFF',
+    fontFamily: 'Roboto-Regular',
+  },
+  errorText: {
+    color: '#FE0F64',
+    fontSize: 12,
     fontFamily: 'Roboto-Regular',
   },
   button: {
