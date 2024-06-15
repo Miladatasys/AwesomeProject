@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -43,6 +44,10 @@ const MeterListScreen = () => {
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')} style={styles.backButtonContainer}>
+                <Icon name="arrow-back" size={24} color="#4271d4" />
+                <Text style={styles.backButtonText}>Volver</Text>
+            </TouchableOpacity>
             <Text style={styles.title}>Seleccione un Medidor</Text>
             <FlatList
                 data={meters}
@@ -78,6 +83,18 @@ const styles = StyleSheet.create({
     meterText: {
         fontSize: 18,
         color: '#333333',
+    },
+    backButtonContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    backButtonText: {
+        fontSize: 16,
+        color: '#4271d4',
+        marginLeft: 5,
+        fontWeight: 'bold',
+        fontFamily: 'Roboto-Regular',
     },
 });
 
