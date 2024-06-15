@@ -111,13 +111,13 @@ const EditProfileScreen = () => {
       // Log the data before sending the request
       console.log('Data being sent:', updates);
 
-      const response = await axios.patch('http://192.168.1.100:8080/cliente/profile/update', updates, {
+      const response = await axios.patch('http://172.20.10.2:8080/cliente/profile/update', updates, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      if (response.data) {
+      if (response.data.success) {
         const updatedUser = response.data;
         await AsyncStorage.setItem('userProfile', JSON.stringify(updatedUser));
         console.log('Updated user:', updatedUser);
@@ -133,7 +133,7 @@ const EditProfileScreen = () => {
         Alert.alert('Éxito', 'Perfil actualizado correctamente');
         navigation.navigate('HomeScreen');
       } else {
-        Alert.alert('Error', response.data.message);
+        Alert.alert('Error', response.data.token);
       }
     } catch (error) {
       console.error('Error updating profile', error);

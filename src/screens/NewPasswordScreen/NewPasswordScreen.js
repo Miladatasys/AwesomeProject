@@ -74,19 +74,19 @@ const NewPasswordScreen = () => {
             const payload = { email, newPassword };
             console.log('Payload:', payload);
 
-            axios.put('http://192.168.1.100:8080/auth/update-password', payload)
+            axios.put('http://172.20.10.2:8080/auth/update-password', payload)
                 .then(response => {
                     if (response.data.success) {
                         Alert.alert('Éxito', 'Su contraseña ha sido actualizada correctamente');
                         navigation.navigate('SignIn');
                     } else {
-                        Alert.alert('Error', response.data.message || 'Error en la respuesta del servidor');
+                        Alert.alert('Error', response.data.token);
                     }
                 })
                 .catch(error => {
                     if (error.response) {
                         console.error('Respuesta del servidor:', error.response.data);
-                        Alert.alert('Error', error.response.data.message || 'Error en la respuesta del servidor');
+                        Alert.alert('Error', error.response.data.token );
                     } else if (error.request) {
                         console.error('Solicitud realizada, sin respuesta:', error.request);
                         Alert.alert('Error', 'No se recibió respuesta del servidor');
