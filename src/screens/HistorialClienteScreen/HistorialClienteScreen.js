@@ -23,7 +23,7 @@ const HistorialClienteScreen = () => {
                 if (!token) {
                     throw new Error('No token found');
                 }
-                const response = await axios.get(`http://192.168.1.100:8080/cliente/medidores/${medidorId}/getConsumos`, {
+                const response = await axios.get(`http://192.168.1.91:8080/cliente/medidores/${medidorId}/getConsumos`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
@@ -73,8 +73,10 @@ const HistorialClienteScreen = () => {
                 ))}
             </View>
             <View style={styles.tableHeader}>
-                <Text style={styles.tableHeaderText}>Fecha Lectura</Text>
+                <Text style={styles.tableHeaderText}>Fecha</Text>
                 <Text style={styles.tableHeaderText}>Lectura</Text>
+                <Text style={styles.tableHeaderText}>Consumo</Text>
+                <Text style={styles.tableHeaderText}>Valor Estimado</Text>
             </View>
             {filteredConsumos.length === 0 ? (
                 <Text style={styles.noDataText}>No hay datos disponibles</Text>
@@ -83,6 +85,8 @@ const HistorialClienteScreen = () => {
                     <View key={index} style={styles.tableRow}>
                         <Text style={styles.tableRowText}>{item.fechaLectura}</Text>
                         <Text style={styles.tableRowText}>{item.lectura}</Text>
+                        <Text style={styles.tableRowText}>{item.consumo}</Text>
+                        <Text style={styles.tableRowText}>{item.valorEstimado}</Text>
                     </View>
                 ))
             )}
@@ -94,12 +98,12 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        padding: 20,
+        padding: 10,
     },
     backButtonContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: 10,
     },
     backButtonText: {
         fontSize: 16,
@@ -111,13 +115,13 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginBottom: 10,
         fontFamily: 'Roboto-Bold',
         color: '#000',
     },
     tabsContainer: {
         flexDirection: 'row',
-        marginBottom: 20,
+        marginBottom: 10,
     },
     tab: {
         marginRight: 10,
@@ -146,7 +150,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
     },
     tableHeaderText: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: 'bold',
         fontFamily: 'Roboto-Bold',
         color: '#000',
@@ -162,7 +166,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
     },
     tableRowText: {
-        fontSize: 16,
+        fontSize: 14,
         fontFamily: 'Roboto-Regular',
         color: '#000',
         flex: 1,
