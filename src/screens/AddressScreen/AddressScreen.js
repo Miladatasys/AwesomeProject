@@ -92,12 +92,12 @@ const AddressScreen = () => {
 
       console.log('token: ' + token);
 
-      if (response.status === 200) {
+      if (response.data.success) {
         Alert.alert('Éxito', 'Registro de medidor exitoso', [
           { text: 'OK', onPress: () => navigation.navigate('ClientNumberScreen', { clientNumber }) }
         ]);
       } else {
-        Alert.alert('Error', 'Intenta nuevamente');
+        Alert.alert('Error',response.data.token);
       }
     } catch (error) {
       Alert.alert('Error', 'Hubo un problema al conectar con el servidor.');
