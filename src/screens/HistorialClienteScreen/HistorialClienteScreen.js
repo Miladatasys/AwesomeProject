@@ -30,6 +30,10 @@ const HistorialClienteScreen = () => {
                 if (response.data.object) {
                     setConsumos(response.data.object);
                     console.log('Fetched Client Data:', response.data.object);
+
+                    const years = response.data.object.map(consumo => consumo.fecha.split('-')[0]);
+                    setAvailableYears([...new Set(years)]);
+                    setFilteredConsumos(response.data.object.filter(consumo => consumo.fecha.startsWith(activeYear)));
                 } else {
                     console.log('consumo no encontrado');
                 }
@@ -39,20 +43,12 @@ const HistorialClienteScreen = () => {
         };
 
         fetchHistorial();
-    }, [medidorId]);
+    }, [medidorId, activeYear]);
 
-    // useEffect(() => {
-    //     const filterByYear = () => {
-    //         const filtered = consumos.filter(consumo => consumo.fechaLectura.startsWith(activeYear));
-    //         setFilteredConsumos(filtered);
-    //     };
-
-    //     filterByYear();
-    // }, [activeYear, consumos]);
-
-    // const handleYearPress = (year) => {
-    //     setActiveYear(year);
-    // };
+    const handleYearPress = (year) => {
+        setActiveYear(year);
+        setFilteredConsumos(consumos.filter(consumo => consumo.fecha.startsWith(year)));
+    };
 
     return (
         <ScrollView style={styles.container}>
@@ -66,7 +62,7 @@ const HistorialClienteScreen = () => {
                     <TouchableOpacity
                         key={year}
                         style={[styles.tab, activeYear === year && styles.activeTab]}
-                        // onPress={() => handleYearPress(year)}
+                        onPress={() => handleYearPress(year)}
                     >
                         <Text style={[styles.tabText, activeYear === year && styles.activeTabText]}>{year}</Text>
                     </TouchableOpacity>
@@ -83,10 +79,10 @@ const HistorialClienteScreen = () => {
             ) : (
                 filteredConsumos.map((item, index) => (
                     <View key={index} style={styles.tableRow}>
-                        <Text style={styles.tableRowText}>{item.fechaLectura}</Text>
+                        <Text style={styles.tableRowText}>{item.fecha}</Text>
                         <Text style={styles.tableRowText}>{item.lectura}</Text>
                         <Text style={styles.tableRowText}>{item.consumo}</Text>
-                        <Text style={styles.tableRowText}>{item.valorEstimado}</Text>
+                        <Text style={styles.tableRowText}>{item.total}</Text>
                     </View>
                 ))
             )}
