@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Alert, ActivityIndicator } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
@@ -14,27 +14,39 @@ const EditProfileScreen = () => {
   });
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchProfileData = async () => {
-      try {
-        const data = await AsyncStorage.getItem('userProfile');
-        if (data) {
-          const parsedData = JSON.parse(data);
-          setProfileData((prevState) => ({
-            ...prevState,
-            email: parsedData.email || '',
-            phoneNumber: parsedData.phoneNumber || '',
-          }));
+  useFocusEffect(
+    useCallback(() => {
+      const fetchProfileData = async () => {
+        try {
+          const data = await AsyncStorage.getItem('userProfile');
+          if (data) {
+            const parsedData = JSON.parse(data);
+            setProfileData({
+              email: parsedData.email || '',
+              phoneNumber: parsedData.phoneNumber || '',
+              password: '',
+              confirmPassword: '',
+            });
+          }
+          setLoading(false);
+        } catch (error) {
+          console.error('Error fetching profile data', error);
+          setLoading(false);
         }
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching profile data', error);
-        setLoading(false);
-      }
-    };
+      };
 
-    fetchProfileData();
-  }, []);
+      fetchProfileData();
+
+      return () => {
+        setProfileData({
+          email: '',
+          phoneNumber: '',
+          password: '',
+          confirmPassword: '',
+        });
+      };
+    }, [])
+  );
 
   const handleInputChange = (name, value) => {
     setProfileData((prevState) => ({
@@ -44,21 +56,38 @@ const EditProfileScreen = () => {
   };
 
   const handleSave = async () => {
-    const emailRegex = /^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]{1,50}@[a-zA-Z0-9.-]{1,50}\.[a-zA-Z]{2,3}$/;;
-    if(!emailRegex.test(profileData.email)) {
-      Alert.alert('El campo email es invalido. Debe tener una longitud entre 4 y 50 caracteres, un @ y un dominio');
-      return;
-    }
-    if (profileData.password !== profileData.confirmPassword) {
-      Alert.alert('Error', 'Las contraseñas no coinciden');
-      return;
-    }
-    const phoneRegex = /^\d{8}$/;
-    if(!phoneRegex.test(profileData.phoneNumber)){
-      Alert.alert('El campo celular es invalido. Debe tener solo numeros con una longitud de 8 digitos, sin el prefijo +569');
-      return;
-    }
+    const updates = {};
 
+    if (profileData.email) {
+      const emailRegex = /^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]{1,50}@[a-zA-Z0-9.-]{1,50}\.[a-zA-Z]{2,3}$/;
+      if (!emailRegex.test(profileData.email)) {
+        Alert.alert('El campo email es invalido. Debe tener una longitud entre 4 y 50 caracteres, un @ y un dominio');
+        return;
+      }
+      updates.email = profileData.email;
+    }
+
+    if (profileData.phoneNumber) {
+      const phoneRegex = /^\d{8}$/;
+      if (!phoneRegex.test(profileData.phoneNumber)) {
+        Alert.alert('El campo celular es invalido. Debe tener solo numeros con una longitud de 8 digitos, sin el prefijo +569');
+        return;
+      }
+      updates.phoneNumber = profileData.phoneNumber;
+    }
+
+    if (profileData.password) {
+      if (profileData.password !== profileData.confirmPassword) {
+        Alert.alert('Error', 'Las contraseñas no coinciden');
+        return;
+      }
+      updates.password = profileData.password;
+    }
+
+    if (Object.keys(updates).length === 0) {
+      Alert.alert('Error', 'No hay cambios para guardar');
+      return;
+    }
 
     try {
       const token = await AsyncStorage.getItem('userToken');
@@ -66,18 +95,9 @@ const EditProfileScreen = () => {
         throw new Error('No token found');
       }
 
-      // Log the data before sending the request
-      console.log('Data being sent:', {
-        email: profileData.email,
-        phoneNumber: profileData.phoneNumber,
-        password: profileData.password,
-      });
+      console.log('Data being sent:', updates);
 
-      const response = await axios.patch('http://192.168.1.91:8080/cliente/profile/update', {
-        email: profileData.email,
-        phoneNumber: profileData.phoneNumber,
-        password: profileData.password,
-      }, {
+      const response = await axios.patch('http://192.168.1.91:8080/cliente/profile/update', updates, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -87,15 +107,13 @@ const EditProfileScreen = () => {
         const updatedUser = response.data;
         await AsyncStorage.setItem('userProfile', JSON.stringify(updatedUser));
         console.log('updated user: ', updatedUser);
-        
-        // Update the state with the updated user data
-        setProfileData((prevState) => ({
-          ...prevState,
+
+        setProfileData({
           email: updatedUser.email || '',
           phoneNumber: updatedUser.phoneNumber || '',
-          password: '',  // Clear the password fields
-          confirmPassword: '',  // Clear the password fields
-        }));
+          password: '',
+          confirmPassword: '',
+        });
 
         Alert.alert('Éxito', 'Perfil actualizado correctamente');
         navigation.navigate('HomeScreen');

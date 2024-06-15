@@ -1,12 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Alert } from "react-native";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation, useRoute } from '@react-navigation/native';
-import axios from 'axios'; //  importar axios
-import { Alert} from "react-native";
-
-
+import axios from 'axios';
 
 const NewPasswordScreen = () => {
     const [newPassword, setNewPassword] = useState('');
@@ -16,10 +13,9 @@ const NewPasswordScreen = () => {
     const [passwordStrength, setPasswordStrength] = useState(0);
     const route = useRoute();
     const email = route.params.email;
-    
-
-
     const navigation = useNavigation();
+
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}$/;
 
     const validateInputs = () => {
         let isValid = true;
@@ -29,12 +25,12 @@ const NewPasswordScreen = () => {
         } else if (newPassword.length < 8) {
             setPasswordError('La contraseña debe tener al menos 8 caracteres');
             isValid = false;
+        } else if (!passwordRegex.test(newPassword)) {
+            setPasswordError('La contraseña debe tener al menos 8 caracteres y máximo 15, una letra mayúscula, una letra minúscula y un número');
+            isValid = false;
         } else {
             setPasswordError('');
         }
-
-        
-
 
         if (!confirmNewPassword.trim()) {
             setConfirmPasswordError('Confirme la nueva contraseña');
@@ -59,7 +55,7 @@ const NewPasswordScreen = () => {
         if (/[A-Z]/.test(password)) {
             strength += 1;
         }
-        if (/\d/.test(password)) {
+        if (passwordRegex.test(password)) {
             strength += 1;
         }
         return (strength / 4) * 100;
@@ -76,11 +72,12 @@ const NewPasswordScreen = () => {
             console.log(email);
             console.log(newPassword);
             const payload = { email, newPassword };
-            console.log('Payload:', payload); // Log payload for debugging
-    
+            console.log('Payload:', payload);
+
             axios.put('http://192.168.1.91:8080/auth/update-password', payload)
                 .then(response => {
                     if (response.data.success) {
+                        Alert.alert('Éxito', 'Su contraseña ha sido actualizada correctamente');
                         navigation.navigate('SignIn');
                     } else {
                         Alert.alert('Error', response.data.message || 'Error en la respuesta del servidor');
@@ -101,7 +98,6 @@ const NewPasswordScreen = () => {
                 });
         }
     };
-    
 
     const onSignInPressed = () => {
         navigation.navigate('SignIn');
@@ -121,7 +117,6 @@ const NewPasswordScreen = () => {
                 />
                 {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
 
-                {/* Barra de progreso para mostrar la fortaleza de la contraseña */}
                 <View style={styles.passwordStrengthContainer}>
                     <View
                         style={[
@@ -132,8 +127,8 @@ const NewPasswordScreen = () => {
                                     passwordStrength < 50
                                         ? 'gray'
                                         : passwordStrength < 75
-                                        ? 'yellow'
-                                        : 'green',
+                                            ? 'yellow'
+                                            : 'green',
                             },
                         ]}
                     />
@@ -148,7 +143,7 @@ const NewPasswordScreen = () => {
                 />
                 {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
 
-                <CustomButton text="Enviar" onPress={onSubmitPressed} style={styles.button} disabled={passwordError || !passwordStrength}/>
+                <CustomButton text="Enviar" onPress={onSubmitPressed} style={styles.button} disabled={!!passwordError || !passwordStrength} />
 
                 <CustomButton 
                     text="Volver a iniciar sesión" 

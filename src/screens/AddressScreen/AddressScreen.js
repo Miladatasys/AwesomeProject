@@ -49,7 +49,6 @@ const AddressScreen = () => {
     console.log('Generated Client Number:', clientNumber);
 
     const clientData = {
-      nombreCliente: 'Don Gonzalo', // Puedes reemplazar esto con el nombre real del usuario
       direccion: {
         region,
         comuna,
@@ -68,17 +67,14 @@ const AddressScreen = () => {
     };
     console.log('Client Data to Send:', datatoSend);
 
-
     try {
       await AsyncStorage.setItem('clientData', JSON.stringify(clientData));
       console.log('Client Data Saved Successfully');
-      navigation.navigate('ClientNumberScreen', { clientNumber });
     } catch (error) {
       Alert.alert('Error', 'Hubo un problema al guardar los datos.');
       console.error('Error saving data', error);
     }
 
-    // Descomentar esta sección cuando integres con el backend
     try {
       const token = await AsyncStorage.getItem('userToken');
       if (!token) {
@@ -88,22 +84,20 @@ const AddressScreen = () => {
       console.log('token: ' + token);
       console.log('Client Data to Send:', datatoSend);
 
-
-      const response = await axios.post('http://192.168.1.91:8080/cliente/medidores', 
-      datatoSend, {
+      const response = await axios.post('http://192.168.1.91:8080/cliente/medidores', datatoSend, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-
-
       console.log('token: ' + token);
 
       if (response.status === 200) {
-        navigation.navigate('ClientNumberScreen', { clientNumber });
+        Alert.alert('Éxito', 'Registro de medidor exitoso', [
+          { text: 'OK', onPress: () => navigation.navigate('ClientNumberScreen', { clientNumber }) }
+        ]);
       } else {
-        Alert.alert('Error', 'Hubo un problema al guardar los datos.');
+        Alert.alert('Error', 'Intenta nuevamente');
       }
     } catch (error) {
       Alert.alert('Error', 'Hubo un problema al conectar con el servidor.');

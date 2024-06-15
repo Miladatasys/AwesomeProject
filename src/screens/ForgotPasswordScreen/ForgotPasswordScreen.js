@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, Image, Alert } from "react-native";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
@@ -11,6 +11,12 @@ const ForgotPasswordScreen = () => {
     const navigation = useNavigation();
     const [generatedCode, setGeneratedCode] = useState(generateRandomCode());
     const [emailExists, setEmailExists] = useState(false);
+
+    useEffect(() => {
+        // Limpiar los campos al montar la pantalla de recuperación de contraseña
+        setEmail('');
+        setEmailError('');
+    }, []);
 
     const validateEmail = () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -35,7 +41,7 @@ const ForgotPasswordScreen = () => {
         if (validateEmail()) {
             console.log(email);
             axios.post('http://192.168.1.91:8080/auth/getEmail', {email}) 
-                           .then((response) => {
+                .then((response) => {
                     console.log("respuesta get recibida");
                     if (response.data.success){
                         setEmailExists(true);
@@ -52,25 +58,31 @@ const ForgotPasswordScreen = () => {
                 });
         }
     };
-    const sendRecoveryEmail = () => {
-            const code = generatedCode.join(""); //url del ses
-            axios.post('https://lsd49dkuof.execute-api.us-east-1.amazonaws.com/api-ses/enel', { email, code })
-                .then(response => {
-                 console.log('Respuesta recibida:', JSON.stringify(response, null, 2));
-                 const responseData = JSON.parse(response.data.body); // Parsear el cuerpo de la respuesta
-                   if (responseData.success) {
-                        console.log('hay respuesta en if:', JSON.stringify(responseData, null, 2));
-                        navigation.navigate('VerificacionCodigoScreen', { email, generatedCode });
-                    } else {
-                        console.log('hay respuesta en else:', JSON.stringify(responseData, null, 2));
-                        Alert.alert('Error', responseData.message);
-                    }
-                })
-                .catch(error => {
-                    Alert.alert('Error', 'Hubo un problema al enviar el correo de recuperación. Inténtelo de nuevo. Error: ' + error.message);
-                    console.error('Error al enviar el correo de recuperación:', error);
-                });
 
+    const sendRecoveryEmail = () => {
+        const code = generatedCode.join(""); //url del ses
+        axios.post('https://lsd49dkuof.execute-api.us-east-1.amazonaws.com/api-ses/enel', { email, code })
+            .then(response => {
+                console.log('Respuesta recibida:', JSON.stringify(response, null, 2));
+                const responseData = JSON.parse(response.data.body); // Parsear el cuerpo de la respuesta
+                if (responseData.success) {
+                    console.log('hay respuesta en if:', JSON.stringify(responseData, null, 2));
+                    setEmail(''); // Limpiar el campo email después del envío exitoso
+                    Alert.alert('Éxito', 'Se ha enviado un código de verificación a su email.', [
+                        {
+                            text: 'OK',
+                            onPress: () => navigation.navigate('VerificacionCodigoScreen', { email, generatedCode })
+                        }
+                    ]);
+                } else {
+                    console.log('hay respuesta en else:', JSON.stringify(responseData, null, 2));
+                    Alert.alert('Error', responseData.message);
+                }
+            })
+            .catch(error => {
+                Alert.alert('Error', 'Hubo un problema al enviar el correo de recuperación. Inténtelo de nuevo. Error: ' + error.message);
+                console.error('Error al enviar el correo de recuperación:', error);
+            });
     }
 
     const onSignInPressed = () => {

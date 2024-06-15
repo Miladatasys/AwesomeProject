@@ -21,13 +21,13 @@ const ClientProfileScreen = () => {
         console.log('userToken', token);
         const response = await axios.get('http://192.168.1.91:8080/cliente/user/profile', {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}` 
           }
         });
 
-        if (response.data) {
-          setProfileData(response.data);
-          console.log('Fetched Client Data:', response.data);
+        if (response.data.object) {
+          setProfileData(response.data.object);
+          console.log('Fetched Client Data:', response.data.object);
         }
       } catch (error) {
         console.error('Error fetching profile data', error);
@@ -69,7 +69,6 @@ const ClientProfileScreen = () => {
     }, 200);
   };
 
-  
   if (loading) {
     return (
       <View style={styles.loadingContainer}>

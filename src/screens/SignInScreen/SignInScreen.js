@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TextInput, TouchableOpacity, Alert } from "react-native";
 import axios from "axios";
 import Logo from "../../../assets/images/Enel.png";
@@ -14,6 +14,12 @@ const SignInScreen = () => {
     const { width } = useWindowDimensions();
     const navigation = useNavigation();
 
+    useEffect(() => {
+        // Limpiar los campos al montar la pantalla de inicio de sesión
+        setRut('');
+        setPassword('');
+    }, []);
+
     const validateRut = () => {
         const rutRegex = /^\d{7,8}-[0-9Kk]$/;
         if (!rut.trim()) {
@@ -27,7 +33,6 @@ const SignInScreen = () => {
             return true;
         }
     };
-
 
     const validatePassword = () => {
         const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}$/;
@@ -44,7 +49,6 @@ const SignInScreen = () => {
         }
     };
 
-
     const validateFields = () => {
         let valid = true;
         if (!validateRut()) valid = false;
@@ -58,11 +62,13 @@ const SignInScreen = () => {
                 rut,
                 password
             };
-    
+
             axios.post('http://192.168.1.91:8080/auth/login', user)
                 .then(async (response) => {
                     if (response.data.success) {
                         await AsyncStorage.setItem('userToken', response.data.token);
+                        setRut(''); // Limpiar campo rut
+                        setPassword(''); // Limpiar campo password
                         navigation.navigate('HomeScreen');
                     } else {
                         Alert.alert('Error', response.data.token);
@@ -83,7 +89,6 @@ const SignInScreen = () => {
                 });
         }
     };
-    
 
     const onForgotPasswordPressed = () => {
         navigation.navigate('ForgotPassword');

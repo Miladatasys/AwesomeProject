@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert, useWindowDimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
@@ -41,6 +41,18 @@ const SignUpScreen = () => {
     const { width } = useWindowDimensions();
     const navigation = useNavigation();
 
+    useEffect(() => {
+        // Limpiar los campos al montar la pantalla de registro
+        setRut('');
+        setFirstname('');
+        setLastname('');
+        setEmail('');
+        setPassword('');
+        setConfirmPassword('');
+        setPhoneNumber('');
+        setErrors({});
+    }, []);
+
     const validateFields = () => {
         const newErrors = {};
         
@@ -52,32 +64,26 @@ const SignUpScreen = () => {
             newErrors.rut = 'El campo rut debe tener entre 7 y 8 dígitos, un guión y un dígito verificador';
         }
 
-
-
-        const firstnameRegex =  /^[a-zA-Z]{2,40}$/;
+        const firstnameRegex =  /^[a-zA-ZÁÉÍÓÚáéíóúÑñ\s]{2,40}$/;
         if (!firstname.trim()) {
             newErrors.firstname = 'Ingrese su nombre';
         }else if(!firstnameRegex.test(firstname)){
             newErrors.firstname = 'El campo nombre solo puede contener letras y una longitud entre 2 y 40 caracteres';
         }
 
-
-        const lastnameRegex =  /^[a-zA-Z]{2,40}$/;
+        const lastnameRegex =  /^[a-zA-ZÁÉÍÓÚáéíóúÑñ\s]{2,40}$/;
         if (!lastname.trim()) {
             newErrors.lastname = 'Ingrese su apellido';
         }else if(!lastnameRegex.test(lastname)){
             newErrors.lastname = 'El campo apellido solo puede contener letras y una longitud entre 2 y 40 caracteres';
         }
 
-
-
-        const emailRegex = /^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]{1,50}@[a-zA-Z0-9.-]{1,50}\.[a-zA-Z]{2,3}$/;;
+        const emailRegex = /^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]{1,50}@[a-zA-Z0-9.-]{1,50}\.[a-zA-Z]{2,3}$/;
         if (!email.trim()) {
             newErrors.email = 'Ingrese su correo electrónico';
         } else if (!emailRegex.test(email)) {
             newErrors.email = 'El campo email es invalido. Debe tener una longitud entre 4 y 50 caracteres, un @ y un dominio';
         }
-
 
         const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}$/;
         if (!password.trim()) {
@@ -101,7 +107,6 @@ const SignUpScreen = () => {
 
         setErrors(newErrors);
 
-
         return Object.keys(newErrors).length === 0;
     };
 
@@ -119,8 +124,21 @@ const SignUpScreen = () => {
             axios.post('http://192.168.1.91:8080/auth/register', user)
                 .then((response) => {
                     if (response.data.success) {
-                        navigation.navigate('SignIn');
-                        Alert.alert('Registro existoso', 'Su usuario se ha registrado con exito');
+                        Alert.alert('Registro existoso', 'Su usuario se ha registrado con exito', [
+                            {
+                                text: 'OK',
+                                onPress: () => {
+                                    setRut('');
+                                    setFirstname('');
+                                    setLastname('');
+                                    setEmail('');
+                                    setPassword('');
+                                    setConfirmPassword('');
+                                    setPhoneNumber('');
+                                    navigation.navigate('SignIn');
+                                }
+                            }
+                        ]);
                     } else {
                         Alert.alert('Error', response.data.token);
                     }
@@ -235,7 +253,7 @@ const SignUpScreen = () => {
                     <Text style={styles.label}>Teléfono:</Text>
                     <TextInput
                         style={[styles.input, errors.phoneNumber && styles.inputError]}
-                        placeholder="Número de teléfono"
+                        placeholder="21212121"
                         value={phoneNumber}
                         onChangeText={(text) => setPhoneNumber(text)}
                         onBlur={validateFields}
