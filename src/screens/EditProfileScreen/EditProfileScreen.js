@@ -111,7 +111,7 @@ const EditProfileScreen = () => {
       // Log the data before sending the request
       console.log('Data being sent:', updates);
 
-      const response = await axios.patch('http://172.20.10.2:8080/cliente/profile/update', updates, {
+      const response = await axios.patch('http://192.168.1.91:8080/cliente/profile/update', updates, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

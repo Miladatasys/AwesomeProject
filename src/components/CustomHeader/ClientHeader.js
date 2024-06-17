@@ -15,30 +15,24 @@ const ClientHeader = ({ direccion, medidorId }) => {
   };
 
   return (
-    <View>
-      <View style={styles.container}>
-        <View style={styles.iconContainer}>
-          <View style={styles.iconCircle}>
-            <Icon name="map-marker" size={30} color="#fff" style={styles.icon} />
-          </View>
+    <TouchableOpacity onPress={handleNavigateToHistorialCliente} style={styles.container}>
+      <View style={styles.iconContainer}>
+        <View style={styles.iconCircle}>
+          <Icon name="map-marker" size={18} color="#fff" />
         </View>
-
-        <View style={styles.addressContainer}>
-          <Text style={styles.addressText}>
-            <Text style={styles.bold}>
-              {direccion.calle}, {direccion.comuna}, {direccion.region}
-            </Text>
-          </Text>
-          <Text style={styles.addressText}>
-            Cliente N° <Text style={styles.bold}>{direccion.numeroCliente}</Text>
-          </Text>
-        </View>
-
-        <TouchableOpacity onPress={handleNavigateToHistorialCliente} style={styles.iconButton}>
-          <Icon name="arrow-right" size={24} color="#FE0F64" />
-        </TouchableOpacity>
       </View>
-    </View>
+
+      <View style={styles.addressContainer}>
+        <Text style={styles.addressText}>
+          <Text style={styles.bold}>
+            {direccion.calle}, {direccion.comuna}, {direccion.region}
+          </Text>
+        </Text>
+        <Text style={styles.addressText}>
+          Cliente N° <Text style={styles.bold}>{direccion.numeroCliente}</Text>
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -46,20 +40,18 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#F2F2F2',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    borderBottomEndRadius: 10,
-    marginRight: 40,
+    padding: 10,
+    backgroundColor: '#FE0F64',
+    borderRadius: 10,
+    flex: 1, // Permite que el contenedor tome el espacio disponible
   },
   iconContainer: {
-    marginRight: 15,
+    marginRight: 10,
   },
   iconCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 25,
+    height: 25,
+    borderRadius: 12.5,
     backgroundColor: '#4271d4',
     justifyContent: 'center',
     alignItems: 'center',
@@ -68,18 +60,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   addressText: {
-    fontSize: 16,
-    alignSelf: 'start',
+    fontSize: 12,
+    color: '#FFF',
   },
   bold: {
     fontWeight: 'bold',
   },
-  iconButton: {
-    padding: 10,
-  },
-  icon: {
-    padding: 5,
-  },
 });
 
 export default ClientHeader;
+
