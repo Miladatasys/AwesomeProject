@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert  } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
@@ -34,9 +34,54 @@ const MeterListScreen = () => {
         fetchMeters();
     }, []);
 
-    const handleMeterSelect = (meter) => {
-        navigation.navigate('CameraScreen', { meter });
+    const handleMeterSelect = async (meter) => {
+        try {
+            const token = await AsyncStorage.getItem('userToken');
+            if (!token) {
+                throw new Error('No token found');
+            }
+            const response = await axios.get(`http://172.20.10.2:8080/cliente/medidores/${meter.id}/getFechaConsumo`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            console.log('meter.id: ', meter.id);
+            console.log('Fecha Consumo Response:', response.data);
+            if (response.data && response.data.success) {
+                console.log('response.data.fecha:', response.data.fecha);
+                const responseFecha = response.data.fecha;
+                const diaObtenido = parseInt(responseFecha.split('-')[2]);
+                const diaAyer = diaObtenido -1;
+                const diaTomorrow = diaObtenido +1;
+
+                console.log('response', response.data.fecha);
+                console.log('diaObtenido: ', diaObtenido);
+                console.log('diaAyer: ', diaAyer);
+                console.log('diaTomorrow: ', diaTomorrow);
+
+                const fecha_actual =new Date().toISOString().split('T')[0];
+                console.log('Fecha de hoy',fecha_actual);
+
+                const diaActual = parseInt(fecha_actual.split('-')[2]);
+                console.log('diaActual: ', diaActual);
+
+                const diaHoy = parseInt(fecha_actual.split('-')[2]);
+                console.log('dia hoy',diaHoy)
+
+                if (diaActual === diaAyer || diaActual === diaTomorrow || diaActual === diaObtenido) {
+                  console.log('Navigating to CameraScreen');
+                  navigation.navigate('CameraScreen', { meter, fecha: response.data.fecha });
+                } else {
+                  console.log('Date mismatch, showing alert');
+                  Alert.alert('Aviso', `No corresponde la fecha para tomar la foto. Su fecha es el día ${diaObtenido} de cada mes`);
+                }
+              } else {
+                Alert.alert('Aviso', response.data.message || 'No corresponde la fecha para tomar la foto.');
+              }
+        } catch (error) {
+            console.error('Error checking fecha consumo', error);
+            Alert.alert('Error', 'Hubo un problema al verificar la fecha de consumo');
+        }
     };
+
 
     if (loading) {
         return <Text>Cargando...</Text>;
