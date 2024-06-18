@@ -3,8 +3,18 @@ import { View } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 
 const MyGiftedChart = ({ data }) => {
+  // Nombres abreviados de los meses
+  const monthNames = [
+    'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+    'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
+  ];
+
   // Obtener los meses y los kWh consumidos
-  const months = data.map(consumo => consumo.fecha.split('-')[1]); // Obtener los meses
+  const months = data.map(consumo => {
+    const monthNumber = parseInt(consumo.fecha.split('-')[1]); // Obtener el número del mes
+    return monthNames[monthNumber - 1]; // Obtener el nombre abreviado del mes
+  });
+
   const consumption = data.map(consumo => consumo.consumo); // Obtener los kWh consumidos
 
   // Crear los objetos de datos para el gráfico
