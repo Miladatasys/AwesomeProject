@@ -4,6 +4,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import MyGiftedChart from "../../components/MyGiftedChart/MyGiftedChart";
+
 
 const HistorialClienteScreen = () => {
     const [consumos, setConsumos] = useState([]);
@@ -51,7 +53,7 @@ const HistorialClienteScreen = () => {
     };
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButtonContainer}>
                 <Icon name="arrow-back" size={24} color="#4271d4" />
                 <Text style={styles.backButtonText}>Volver</Text>
@@ -86,6 +88,9 @@ const HistorialClienteScreen = () => {
                     </View>
                 ))
             )}
+            <View style={styles.chartContainer}>
+                <MyGiftedChart data={filteredConsumos} />
+            </View>
         </ScrollView>
     );
 };
@@ -152,6 +157,12 @@ const styles = StyleSheet.create({
         color: '#000',
         flex: 1,
         textAlign: 'center',
+    },
+    contentContainer: {
+        paddingBottom: 100, // Margen inferior para el gráfico
+    },
+    chartContainer: {
+        marginTop: 20, // Margen superior para el gráfico
     },
     tableRow: {
         flexDirection: 'row',
