@@ -16,25 +16,41 @@ const MedidoresScreen = () => {
   };
 
   const handleDelete = async (medidorId) => {
-    try {
-      const token = await AsyncStorage.getItem('userToken');
-      if (!token) {
-        throw new Error('No token found');
-      }
-
-      await axios.delete(`http://192.168.1.88:8080/cliente/medidores/${medidorId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
+    Alert.alert(
+      'Confirmar eliminación',
+      '¿Estás seguro de que deseas eliminar este medidor?',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel'
+        },
+        {
+          text: 'Eliminar',
+          onPress: async () => {
+            try {
+              const token = await AsyncStorage.getItem('userToken');
+              if (!token) {
+                throw new Error('No token found');
+              }
+    
+              await axios.delete(`http://192.168.1.88:8080/cliente/medidores/${medidorId}`, {
+                headers: {
+                  Authorization: `Bearer ${token}`
+                }
+              });
+    
+              // Actualizar la lista de medidores después de la eliminación
+              setMedidores(medidores.filter(medidor => medidor.id !== medidorId));
+            } catch (error) {
+              console.error('Error deleting medidor', error);
+              Alert.alert('Error', 'No se pudo eliminar el medidor. Por favor, inténtelo de nuevo.');
+            }
+          }
         }
-      });
-
-      // Actualizar la lista de medidores después de la eliminación
-      setMedidores(medidores.filter(medidor => medidor.id !== medidorId));
-    } catch (error) {
-      console.error('Error deleting medidor', error);
-      Alert.alert('Error', 'No se pudo eliminar el medidor. Por favor, inténtelo de nuevo.');
-    }
+      ]
+    );
   };
+  
 
   useEffect(() => {
     const fetchMedidores = async () => {
