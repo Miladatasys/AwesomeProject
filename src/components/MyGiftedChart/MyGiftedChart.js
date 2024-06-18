@@ -21,6 +21,7 @@ const MyGiftedChart = ({ data }) => {
   const chartData = months.map((month, index) => ({
     value: consumption[index], // Valor del kWh consumido
     label: month, // Mes
+    dataPointColor: '#00BFFF', // Color del punto de datos
   }));
 
   return (
@@ -29,18 +30,18 @@ const MyGiftedChart = ({ data }) => {
         data={chartData}
         height={200}
         width={300}
-        color="#00BFFF" // Azul claro
+        color="#00BFFF" // Celeste fuerte
         lineConfig={{
           color: '#00BFFF',
-          width: 2,
+          width: 4, // Aumentar el grosor de la línea
         }}
         areaChart
-        startFillColor="rgba(0, 191, 255, 0.3)" // Azul claro con transparencia
+        startFillColor="rgba(135, 206, 235, 0.3)" // Celeste claro con transparencia
         endFillColor="rgba(255, 255, 255, 0.3)" // Blanco con transparencia
         showDataPoints
         dataPointsConfig={{
-          color: '#00BFFF', // Azul claro
-          size: 6,
+          color: '#00BFFF', // Celeste fuerte para los puntos de datos
+          size: 6, // Tamaño de los puntos de datos
         }}
         curved
         noOfSections={4}
