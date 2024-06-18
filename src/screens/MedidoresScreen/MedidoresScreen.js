@@ -107,7 +107,7 @@ const MedidoresScreen = () => {
                   />
                 </View>
                 <TouchableOpacity onPress={() => handleDelete(medidor.id)} style={styles.trashButton}>
-                  <Icon name="trash" size={20} color="#000" />
+                  <Icon name="trash" size={20} color="#FF5789" />
                 </TouchableOpacity>
               </View>
             ))
