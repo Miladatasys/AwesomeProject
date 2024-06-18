@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 
 const MyGiftedChart = ({ data }) => {
@@ -9,23 +9,35 @@ const MyGiftedChart = ({ data }) => {
     'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
   ];
 
-  // Obtener los meses y los kWh consumidos
-  const months = data.map(consumo => {
+  // Crear un mapa de consumos por mes
+  const consumptionMap = data.reduce((acc, consumo) => {
     const monthNumber = parseInt(consumo.fecha.split('-')[1]); // Obtener el número del mes
-    return monthNames[monthNumber - 1]; // Obtener el nombre abreviado del mes
-  });
+    acc[monthNumber - 1] = consumo.consumo; // Asociar el consumo al mes correspondiente
+    return acc;
+  }, {});
 
-  const consumption = data.map(consumo => consumo.consumo); // Obtener los kWh consumidos
-
-  // Crear los objetos de datos para el gráfico
-  const chartData = months.map((month, index) => ({
-    value: consumption[index], // Valor del kWh consumido
+  // Crear los objetos de datos para el gráfico con todos los meses
+  const chartData = monthNames.map((month, index) => ({
+    value: consumptionMap[index] !== undefined ? consumptionMap[index] : 0, // Usar el consumo si está disponible, sino 0
     label: month, // Mes
     dataPointColor: '#00BFFF', // Color del punto de datos
   }));
 
+  // Función para formatear etiquetas del eje y
+  const yAxisLabel = (value) => `${value} kWh`;
+
   return (
-    <View style={{ marginTop: 20 }}>
+    <View style={{ marginTop: 20, flexDirection: 'row' }}>
+      <View style={{ justifyContent: 'space-between', height: 200, marginRight: 10 }}>
+        {Array.from({ length: 5 }).map((_, index) => {
+          const value = Math.round((Math.max(...chartData.map(d => d.value)) / 4) * (4 - index)); // Ajuste de orden para que sea de mayor a menor
+          return (
+            <Text key={index} style={{ textAlign: 'right' }}>
+              {yAxisLabel(value)}
+            </Text>
+          );
+        })}
+      </View>
       <LineChart
         data={chartData}
         height={200}
@@ -45,7 +57,7 @@ const MyGiftedChart = ({ data }) => {
         }}
         curved
         noOfSections={4}
-        yAxisLabelWidth={40}
+        yAxisLabelWidth={0} // Ajustado para no mostrar etiquetas predeterminadas del eje y
         yAxisColor={'#ccc'}
         xAxisColor={'#ccc'}
         initialSpacing={10}

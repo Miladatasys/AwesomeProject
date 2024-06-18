@@ -74,7 +74,7 @@ const NewPasswordScreen = () => {
             const payload = { email, newPassword };
             console.log('Payload:', payload);
 
-            axios.put('http://192.168.1.88:8080/auth/update-password', payload)
+            axios.put('http://172.20.10.2:8080/auth/update-password', payload)
                 .then(response => {
                     if (response.data.success) {
                         Alert.alert('Éxito', 'Su contraseña ha sido actualizada correctamente');

@@ -6,7 +6,6 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyGiftedChart from "../../components/MyGiftedChart/MyGiftedChart";
 
-
 const HistorialClienteScreen = () => {
     const [consumos, setConsumos] = useState([]);
     const [filteredConsumos, setFilteredConsumos] = useState([]);
@@ -25,7 +24,7 @@ const HistorialClienteScreen = () => {
                 if (!token) {
                     throw new Error('No token found');
                 }
-                const response = await axios.get(`http://192.168.1.88:8080/cliente/medidores/${medidorId}/getConsumos`, {
+                const response = await axios.get(`http://172.20.10.2:8080/cliente/medidores/${medidorId}/getConsumos`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
@@ -58,7 +57,9 @@ const HistorialClienteScreen = () => {
                 <Icon name="arrow-back" size={24} color="#4271d4" />
                 <Text style={styles.backButtonText}>Volver</Text>
             </TouchableOpacity>
+
             <Text style={styles.title}>Historial del medidor</Text>
+
             <View style={styles.tabsContainer}>
                 {availableYears.map((year) => (
                     <TouchableOpacity
@@ -70,6 +71,14 @@ const HistorialClienteScreen = () => {
                     </TouchableOpacity>
                 ))}
             </View>
+
+
+            <View style={styles.chartContainer}>
+                <Text style={styles.chartTitle}>Consumo de Energía</Text>
+                <Text style={styles.chartSubtitle}>Histórico del año {activeYear}</Text>
+                <MyGiftedChart data={filteredConsumos} />
+            </View>
+
             <View style={styles.tableHeader}>
                 <Text style={styles.tableHeaderText}>Fecha</Text>
                 <Text style={styles.tableHeaderText}>Lectura</Text>
@@ -88,9 +97,6 @@ const HistorialClienteScreen = () => {
                     </View>
                 ))
             )}
-            <View style={styles.chartContainer}>
-                <MyGiftedChart data={filteredConsumos} />
-            </View>
         </ScrollView>
     );
 };
@@ -163,6 +169,22 @@ const styles = StyleSheet.create({
     },
     chartContainer: {
         marginTop: 20, // Margen superior para el gráfico
+        backgroundColor: '#f8f9fa', // Fondo blanco para el gráfico
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center', // Centrar el contenido
+        marginBottom: 40
+    },
+    chartTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 5,
+        color: '#000',
+    },
+    chartSubtitle: {
+        fontSize: 14,
+        color: '#6c757d',
+        marginBottom: 20,
     },
     tableRow: {
         flexDirection: 'row',
