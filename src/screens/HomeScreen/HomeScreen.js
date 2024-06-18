@@ -19,7 +19,7 @@ const HomeScreen = () => {
                     throw new Error('No token found');
                 }
 
-                const response = await axios.get('http://192.168.1.91:8080/cliente/user/profile', {
+                const response = await axios.get('http://192.168.1.88:8080/cliente/user/profile', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

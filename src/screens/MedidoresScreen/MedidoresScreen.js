@@ -22,7 +22,7 @@ const MedidoresScreen = () => {
         throw new Error('No token found');
       }
 
-      await axios.delete(`http://192.168.1.91:8080/cliente/medidores/${medidorId}`, {
+      await axios.delete(`http://192.168.1.88:8080/cliente/medidores/${medidorId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -44,7 +44,7 @@ const MedidoresScreen = () => {
           throw new Error('No token found');
         }
 
-        const response = await axios.get('http://192.168.1.91:8080/cliente/userMedidores/profile', {
+        const response = await axios.get('http://192.168.1.88:8080/cliente/userMedidores/profile', {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -151,6 +151,11 @@ const styles = StyleSheet.create({
   },
   medidorContainer: {
     flex: 1,
+    backgroundColor: '#FFFFFF', // Fondo blanco
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
   },
   trashButton: {
     width: 50,

@@ -17,7 +17,7 @@ const MeterListScreen = () => {
                 if (!token) {
                     throw new Error('No token found');
                 }
-                const response = await axios.get('http://192.168.1.91:8080/cliente/userMedidores/profile', {
+                const response = await axios.get('http://192.168.1.88:8080/cliente/userMedidores/profile', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 if (response.data && response.data.object) {
@@ -40,7 +40,7 @@ const MeterListScreen = () => {
             if (!token) {
                 throw new Error('No token found');
             }
-            const response = await axios.get(`http://192.168.1.91:8080/cliente/medidores/${meter.id}/getFechaConsumo`, {
+            const response = await axios.get(`http://192.168.1.88:8080/cliente/medidores/${meter.id}/getFechaConsumo`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             console.log('meter.id: ', meter.id);

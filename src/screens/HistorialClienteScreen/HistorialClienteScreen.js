@@ -23,7 +23,7 @@ const HistorialClienteScreen = () => {
                 if (!token) {
                     throw new Error('No token found');
                 }
-                const response = await axios.get(`http://192.168.1.91:8080/cliente/medidores/${medidorId}/getConsumos`, {
+                const response = await axios.get(`http://192.168.1.88:8080/cliente/medidores/${medidorId}/getConsumos`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 

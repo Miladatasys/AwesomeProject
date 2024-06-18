@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: '#FE0F64',
+    backgroundColor: '#ffff', //Fondo del Client Header
     borderRadius: 10,
     flex: 1, // Permite que el contenedor tome el espacio disponible
   },
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   },
   addressText: {
     fontSize: 12,
-    color: '#FFF',
+    color: '#333',
   },
   bold: {
     fontWeight: 'bold',

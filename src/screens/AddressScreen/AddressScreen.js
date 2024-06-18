@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
+
 const AddressScreen = () => {
   const [region, setRegion] = useState(null);
   const [comuna, setComuna] = useState(null);
@@ -84,7 +85,7 @@ const AddressScreen = () => {
       console.log('token: ' + token);
       console.log('Client Data to Send:', datatoSend);
 
-      const response = await axios.post('http://192.168.1.91:8080/cliente/medidores', datatoSend, {
+      const response = await axios.post('http://192.168.1.88:8080/cliente/medidores', datatoSend, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
