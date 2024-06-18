@@ -36,7 +36,7 @@ const MyGiftedChart = ({ data }) => {
         }}
         areaChart
         startFillColor="rgba(0, 191, 255, 0.3)" // Azul claro con transparencia
-        endFillColor="rgba(0, 191, 255, 0)" // Transparencia
+        endFillColor="rgba(255, 255, 255, 0.3)" // Blanco con transparencia
         showDataPoints
         dataPointsConfig={{
           color: '#00BFFF', // Azul claro
