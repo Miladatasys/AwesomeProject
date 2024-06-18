@@ -29,8 +29,33 @@ const MyGiftedChart = ({ data }) => {
         data={chartData}
         height={200}
         width={300}
-        color="#FE0F64"
-        lineConfig={{ strokeWidth: 2 }}
+        color="#00BFFF" // Azul claro
+        lineConfig={{
+          color: '#00BFFF',
+          width: 2,
+        }}
+        areaChart
+        startFillColor="rgba(0, 191, 255, 0.3)" // Azul claro con transparencia
+        endFillColor="rgba(0, 191, 255, 0)" // Transparencia
+        showDataPoints
+        dataPointsConfig={{
+          color: '#00BFFF', // Azul claro
+          size: 6,
+        }}
+        curved
+        noOfSections={4}
+        yAxisLabelWidth={40}
+        yAxisColor={'#ccc'}
+        xAxisColor={'#ccc'}
+        initialSpacing={10}
+        spacing={40}
+        rulesColor={'#ccc'}
+        rulesType={'solid'}
+        showXAxisIndices={true}
+        xAxisIndicesHeight={2}
+        xAxisIndicesColor={'#ccc'}
+        yAxisIndicesHeight={2}
+        yAxisIndicesColor={'#ccc'}
       />
     </View>
   );
