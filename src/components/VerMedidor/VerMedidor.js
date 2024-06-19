@@ -11,12 +11,10 @@ const VerMedidor = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={handleNavigateToMedidores}>
       <Text style={styles.text}>Ver mis medidores</Text>
-      <TouchableOpacity onPress={handleNavigateToMedidores} style={styles.iconButton}>
-        <MaterialIcons name="arrow-forward" size={24} color="#FE0F64" />
-      </TouchableOpacity>
-    </View>
+      <MaterialIcons name="arrow-forward" size={24} color="#FE0F64" />
+    </TouchableOpacity>
   );
 };
 
@@ -42,9 +40,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#2F2F2F',
     fontFamily: 'Roboto-Bold',
-  },
-  iconButton: {
-    padding: 10,
   },
 });
 

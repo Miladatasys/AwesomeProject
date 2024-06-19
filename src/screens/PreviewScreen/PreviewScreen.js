@@ -35,7 +35,7 @@ const PreviewScreen = () => {
             console.log('fecha:', fecha);
 
             const response = await axios.post(
-                `http://172.20.10.2:8080/cliente/medidores/${meterId}/consumos`, 
+                `http://192.168.1.91:8080/cliente/medidores/${meterId}/consumos`, 
                 { 
                     lectura,
                     fecha

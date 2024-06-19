@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert, Image, Dimensions } from "react-native";
 import BottomBar from "../../components/CustomBottomBar.js/BottomBar";
 import VerMedidor from "../../components/VerMedidor/VerMedidor";
 import { useNavigation } from "@react-navigation/native";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Logo from "../../../assets/images/Enel.png";
 
 const HomeScreen = () => {
     const navigation = useNavigation();
     const [clientData, setClientData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const { width } = Dimensions.get('window');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -19,14 +21,14 @@ const HomeScreen = () => {
                     throw new Error('No token found');
                 }
 
-                const response = await axios.get('http://172.20.10.2:8080/cliente/user/profile', {
+                const response = await axios.get('http://192.168.1.91:8080/cliente/user/profile', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 });
-                console.log("reponse: ",response);
-                console.log("response.data: ",response.data);
-                console.log("response.data.object: ",response.data.object);
+                console.log("response: ", response);
+                console.log("response.data: ", response.data);
+                console.log("response.data.object: ", response.data.object);
 
                 if (response.data.object) {
                     setClientData(response.data.object);
@@ -64,6 +66,11 @@ const HomeScreen = () => {
         );
     };
 
+    const handleNavigateToQuote = () => {
+        // Navegar a la pantalla de cotización
+        navigation.navigate('CotizacionScreen');
+    };
+
     if (loading) {
         return <ActivityIndicator size="large" color="#0000ff" />;
     }
@@ -75,6 +82,12 @@ const HomeScreen = () => {
     return (
         <>
             <View style={styles.container}>
+                <Image 
+                    source={Logo} 
+                    style={[styles.logo, { width: width * 0.7 }]} 
+                    resizeMode="contain" 
+                />
+                
                 <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
                     <Text style={styles.backButtonText}>Volver</Text>
                 </TouchableOpacity>
@@ -90,6 +103,11 @@ const HomeScreen = () => {
 
                 {/* Mostrar el componente VerMedidor */}
                 <VerMedidor />
+
+                {/* Nuevo botón elegante */}
+                <TouchableOpacity style={styles.quoteButton} onPress={handleNavigateToQuote}>
+                    <Text style={styles.quoteButtonText}>Cotizar cuenta de luz</Text>
+                </TouchableOpacity>
             </View>
             <BottomBar />
         </>
@@ -104,13 +122,13 @@ const styles = StyleSheet.create({
     },
     greeting: {
         fontSize: 18,
-        alignSelf: 'start',
+        alignSelf: 'flex-start',
         marginLeft: 5,
         fontWeight: 'bold',
     },
     revisandoText: {
         fontSize: 18, 
-        alignSelf: 'start',
+        alignSelf: 'flex-start',
         marginLeft: 5,
     },
     container: {
@@ -144,7 +162,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 2,
         elevation: 5,
-        marginVertical: 10, // Añadir un margen vertical para separar el botón del texto
+        marginVertical: 10,
     },
     buttonText: {
         fontSize: 16,
@@ -152,6 +170,31 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: 'bold',
         fontFamily: 'Roboto-Regular',
+    },
+    logo: {
+        alignSelf: 'center',
+        height: 100,
+        marginVertical: 20, // Ajuste para agregar espacio vertical alrededor del logo
+        marginBottom: 20,
+    },
+    quoteButton: {
+        backgroundColor: '#FE0F64',
+        borderRadius: 10,
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        elevation: 5,
+        marginVertical: 20,
+    },
+    quoteButtonText: {
+        fontSize: 18,
+        color: '#FFFFFF',
+        fontWeight: 'bold',
+        fontFamily: 'Roboto-Bold',
     },
 });
 
