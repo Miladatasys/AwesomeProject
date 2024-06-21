@@ -102,7 +102,6 @@ const HelpScreen = () => {
                 </TouchableOpacity>
                 <Text style={styles.title}>Suministro del Cliente</Text>
                 <View style={styles.clientInfo}>
-                    <Text style={styles.infoText}>Nombre: {medidor.nombre}</Text>
                     <Text style={styles.infoText}>Dirección: {medidor.direccion}</Text>
                     <Text style={styles.infoText}>Número de Cliente: {medidor.numcliente}</Text>
                 </View>

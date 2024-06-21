@@ -54,7 +54,7 @@ const AdminSignInScreen = () => {
             <Text style={styles.label}>Ingrese su correo:</Text>
             <TextInput
                 style={styles.input}
-                placeholder="ejemplo@enel.cl"
+                placeholder="ejemplo@gmail.com"
                 value={email}
                 onChangeText={setEmail}
             />
