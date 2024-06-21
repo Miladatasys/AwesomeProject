@@ -1,3 +1,4 @@
+// src/components/AdminBottomBar/AdminBottomBar.js
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -15,8 +16,8 @@ const AdminBottomBar = () => {
         case 'AdminHomeScreen':
           setActiveTab('home');
           break;
-        case 'EditAdminProfileScreen':
-          setActiveTab('editProfile');
+        case 'AdminProfileScreen':
+          setActiveTab('profile');
           break;
         default:
           setActiveTab('home');
@@ -31,8 +32,8 @@ const AdminBottomBar = () => {
       case 'home':
         navigation.navigate('AdminHomeScreen');
         break;
-      case 'editProfile':
-        navigation.navigate('EditAdminProfileScreen');
+      case 'profile':
+        navigation.navigate('AdminProfileScreen');
         break;
       default:
         navigation.navigate('AdminHomeScreen');
@@ -45,14 +46,14 @@ const AdminBottomBar = () => {
       <TouchableOpacity
         style={[styles.tab, activeTab === 'home' && styles.activeTab]}
         onPress={() => handleTabPress('home')}>
-        <Icon name="home" size={24} color={activeTab === 'home' ? '#FE0F64' : '#2F2F2F'} />
-        <Text style={[styles.tabText, activeTab === 'home' && styles.activeTabText]}>Inicio</Text>
+        <Icon name="bar-chart" size={24} color={activeTab === 'home' ? '#FE0F64' : '#2F2F2F'} />
+        <Text style={[styles.tabText, activeTab === 'home' && styles.activeTabText]}>Estadísticas</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={[styles.tab, activeTab === 'editProfile' && styles.activeTab]}
-        onPress={() => handleTabPress('editProfile')}>
-        <Icon name="user" size={24} color={activeTab === 'editProfile' ? '#FE0F64' : '#2F2F2F'} />
-        <Text style={[styles.tabText, activeTab === 'editProfile' && styles.activeTabText]}>Editar Perfil</Text>
+        style={[styles.tab, activeTab === 'profile' && styles.activeTab]}
+        onPress={() => handleTabPress('profile')}>
+        <Icon name="user" size={24} color={activeTab === 'profile' ? '#FE0F64' : '#2F2F2F'} />
+        <Text style={[styles.tabText, activeTab === 'profile' && styles.activeTabText]}>Perfil</Text>
       </TouchableOpacity>
     </View>
   );

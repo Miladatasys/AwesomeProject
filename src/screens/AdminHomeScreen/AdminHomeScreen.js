@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Alert, Image, Dimensions, Act
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Logo from "../../../assets/images/Tecnico.png";
+import AdminBottomBar from "../../components/AdminBottomBar/AdminBottomBar";
 
 const AdminHomeScreen = () => {
     const navigation = useNavigation();
@@ -60,11 +61,6 @@ const AdminHomeScreen = () => {
         return <ActivityIndicator size="large" color="#0000ff" />;
     }
 
-    // Este bloque es para cuando se implemente la integración
-    // if (!clientData) {
-    //     return <Text>No hay datos disponibles</Text>;
-    // }
-
     return (
         <>
             <View style={styles.container}>
@@ -82,6 +78,7 @@ const AdminHomeScreen = () => {
                     <Text style={styles.greeting}>Hola Admin,</Text>
                 </View>
             </View>
+            <AdminBottomBar />
         </>
     );
 };
