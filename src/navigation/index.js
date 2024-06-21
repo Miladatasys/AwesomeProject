@@ -31,6 +31,8 @@ import MeterListScreen from '../screens/MeterListScreen/MeterListScreen';
 import AdminVerificationScreen from '../screens/AdminVerificationScreen/AdminVerificationScreen';
 import HelpMeterListScreen from '../screens/HelpMeterListScreen/HelpMeterListScreen';
 import CotizacionScreen from '../screens/CotizacionScreen/CotizacionScreen';
+import EditAdminProfileScreen from '../screens/EditAdminProfileScreen/EditAdminProfileScreen';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -68,6 +70,7 @@ const Navigation = () => {
                 <Stack.Screen name="AdminVerificationScreen" component={AdminVerificationScreen} />
                 <Stack.Screen name="HelpMeterListScreen" component={HelpMeterListScreen} />
                 <Stack.Screen name="CotizacionScreen" component={CotizacionScreen} />
+                <Stack.Screen name="EditAdminProfileScreen" component={EditAdminProfileScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );

@@ -14,8 +14,8 @@ const AdminSignInScreen = () => {
 
     const validateFields = () => {
         let valid = true;
-        if (!email.trim() || !email.endsWith('@enel.cl')) {
-            setEmailError('Ingrese un correo electrónico válido de Enel');
+        if (!email.trim() || !email.endsWith('@gmail.com')) {
+            setEmailError('Ingrese un correo electrónico válido');
             valid = false;
         } else {
             setEmailError('');
