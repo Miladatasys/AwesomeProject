@@ -4,7 +4,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const PreviewScreen = () => {
+const CotizacionConsumoScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const { imageUri, recognizedText, meterId } = route.params;
@@ -20,6 +20,9 @@ const PreviewScreen = () => {
         return `${year}-${month}-${day}`;
     };
 
+    const detectedNumbers = recognizedText.body ? JSON.parse(recognizedText.body).detectedNumbers : [];
+    const uniqueDetectedNumbers = [...new Set(detectedNumbers)];
+
     const handleSubmit = async () => {
         try {
             const token = await AsyncStorage.getItem('userToken');
@@ -27,7 +30,7 @@ const PreviewScreen = () => {
                 throw new Error('No token found');
             }
 
-            const lectura = uniqueDetectedNumbers.join(''); 
+            const lectura = uniqueDetectedNumbers.join('');
             const fecha = getCurrentDate();
 
             console.log('medidorId:', meterId);
@@ -35,7 +38,7 @@ const PreviewScreen = () => {
             console.log('fecha:', fecha);
 
             const response = await axios.post(
-                `http://192.168.1.88:8080/cliente/medidores/${meterId}/consumos`, 
+                `http://192.168.1.88:8080/cliente/medidores/${meterId}/cotizarConsumo`, 
                 { 
                     lectura,
                     fecha
@@ -47,20 +50,20 @@ const PreviewScreen = () => {
                 }
             );
             console.log('Response from backend:', response.data);
-            Alert.alert('Lectura Enviada', 'Su lectura se ha enviado', [
+
+            const { subtotal, iva, total } = response.data.object;
+    
+            Alert.alert('Su cotización es:', `Subtotal: ${subtotal}\nIVA: ${iva}\nTotal: ${total}`, [
                 {
                     text: 'OK',
                     onPress: () => navigation.navigate('HomeScreen'),
                 },
             ]);
         } catch (error) {
+            Alert.alert('Error', 'Error cotizar la lectura');
             console.error('Error submitting data', error);
-            Alert.alert('Error', 'Error enviando la lectura');
         }
     };
-
-    const detectedNumbers = recognizedText.body ? JSON.parse(recognizedText.body).detectedNumbers : [];
-    const uniqueDetectedNumbers = [...new Set(detectedNumbers)];
 
     return (
         <View style={styles.container}>
@@ -117,7 +120,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     image: {
-        width: 350, // Ajustar el tamaño de la imagen
+        width: 350,
         height: 250,
         marginBottom: 20,
         borderRadius: 10,
@@ -154,4 +157,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default PreviewScreen;
+export default CotizacionConsumoScreen;

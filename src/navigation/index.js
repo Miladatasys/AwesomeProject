@@ -33,8 +33,9 @@ import HelpMeterListScreen from '../screens/HelpMeterListScreen/HelpMeterListScr
 import CotizacionScreen from '../screens/CotizacionScreen/CotizacionScreen';
 import AdminProfileScreen from '../screens/AdminProfileScreen/AdminProfileScreen';
 import EditAdminProfileScreen from '../screens/EditAdminProfileScreen/EditAdminProfileScreen';
-
-
+import CamaraCotizacionScreen from '../screens/CamaraCotizacionScreen/CamaraCotizacionScreen';
+import ListMedidoresCotScreen from '../screens/ListMedidoresCotScreen/ListMedidoresCotScreen';
+import CotizacionConsumoScreen from '../screens/CotizacionConsumoScreen/CotizacionConsumoScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -74,6 +75,9 @@ const Navigation = () => {
                 <Stack.Screen name="CotizacionScreen" component={CotizacionScreen} />
                 <Stack.Screen name="AdminProfileScreen" component={AdminProfileScreen} />
                 <Stack.Screen name="EditAdminProfileScreen" component={EditAdminProfileScreen} />
+                <Stack.Screen name="CamaraCotizacionScreen" component={CamaraCotizacionScreen} />
+                <Stack.Screen name="ListMedidoresCotScreen" component={ListMedidoresCotScreen} />
+                <Stack.Screen name="CotizacionConsumoScreen" component={CotizacionConsumoScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );

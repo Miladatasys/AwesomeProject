@@ -20,7 +20,7 @@ const AdminProfileScreen = () => {
           throw new Error('No token found');
         }
         console.log('adminToken', token);
-        // const response = await axios.get('http://192.168.1.91:8080/admin/user/profile', {
+        // const response = await axios.get('http://192.168.1.88:8080/admin/user/profile', {
         //   headers: {
         //     Authorization: `Bearer ${token}` 
         //   }

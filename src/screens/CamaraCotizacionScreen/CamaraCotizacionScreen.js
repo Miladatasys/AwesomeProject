@@ -7,7 +7,7 @@ import RNFS from 'react-native-fs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ClientHeader from '../../components/CustomHeader/ClientHeader';
 
-const CameraScreen = () => {
+const CamaraCotizacionScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const { meter } = route.params;
@@ -83,7 +83,7 @@ const CameraScreen = () => {
             );
             console.log('Response from Rekognition:', response.data);
             setRecognizedText(response.data);
-            navigation.navigate('PreviewScreen', { imageUri: uri, recognizedText: response.data, meterId: meter.id });
+            navigation.navigate('CotizacionConsumoScreen', { imageUri: uri, recognizedText: response.data, meterId: meter.id });
         } catch (error) {
             console.error('Error processing image:', error);
             Alert.alert('Error', 'Failed to process image');
@@ -100,7 +100,7 @@ const CameraScreen = () => {
     return (
         <ScrollView style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('MeterListScreen')}>
+                <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('ListMedidoresCotScreen')}>
                     <Text style={styles.backButtonText}>Volver atrás</Text>
                 </TouchableOpacity>
             </View>
@@ -190,4 +190,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default CameraScreen;
+export default CamaraCotizacionScreen;
