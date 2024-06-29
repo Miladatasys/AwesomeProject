@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, ScrollView, StyleSheet, Text, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import ClientHeader from '../../components/CustomHeader/ClientHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 const MedidoresScreen = () => {
   const [medidores, setMedidores] = useState([]);
@@ -32,13 +32,13 @@ const MedidoresScreen = () => {
               if (!token) {
                 throw new Error('No token found');
               }
-    
+
               await axios.delete(`http://192.168.1.88:8080/cliente/medidores/${medidorId}`, {
                 headers: {
                   Authorization: `Bearer ${token}`
                 }
               });
-    
+
               // Actualizar la lista de medidores después de la eliminación
               setMedidores(medidores.filter(medidor => medidor.id !== medidorId));
             } catch (error) {
@@ -50,7 +50,6 @@ const MedidoresScreen = () => {
       ]
     );
   };
-  
 
   useEffect(() => {
     const fetchMedidores = async () => {
@@ -97,9 +96,10 @@ const MedidoresScreen = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
-        <Text style={styles.backButtonText}>Volver</Text>
-      </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')} style={styles.backButtonContainer}>
+                <Text style={styles.backButtonText}>Volver</Text>
+            </TouchableOpacity>
+      <Text style={styles.title}>Seleccione un Medidor</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
@@ -139,16 +139,30 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
-  backButton: {
-    alignSelf: 'flex-start',
-    marginVertical: 10,
+
+  backButtonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
   },
+
   backButtonText: {
     fontSize: 16,
     color: '#4271d4',
+    marginLeft: 5,
     fontWeight: 'bold',
     fontFamily: 'Roboto-Regular',
   },
+
+  title: {
+    fontSize: 24, //18
+    fontWeight: 'bold',
+    marginBottom: 20, // Margen inferior ajustado
+    marginTop: 20, // Margen superior añadido para separación del botón de regreso
+    color: '#333333',
+  },
+  
+
   noMedidoresContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -167,7 +181,7 @@ const styles = StyleSheet.create({
   },
   medidorContainer: {
     flex: 1,
-    backgroundColor: '#FFFFFF', // Fondo blanco
+    backgroundColor: '#FFFFFF',
     padding: 10,
     borderRadius: 10,
     borderWidth: 1,

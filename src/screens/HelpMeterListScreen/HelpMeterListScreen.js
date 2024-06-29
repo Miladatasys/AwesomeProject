@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, StyleSheet, Text, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert  } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
 
 const HelpMeterListScreen = () => {
   const [medidores, setMedidores] = useState([]);
@@ -27,10 +28,6 @@ const HelpMeterListScreen = () => {
             Authorization: `Bearer ${token}`
           }
         });
-
-        console.log("response: ", response);
-        console.log("response.data: ", response.data);
-        console.log("response.data.object: ", response.data.object);
 
         if (response.data.object) {
           setMedidores(response.data.object);
@@ -65,109 +62,61 @@ const HelpMeterListScreen = () => {
     navigation.navigate('HelpScreen', { medidor });
   };
 
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
-        <Text style={styles.backButtonText}>Volver</Text>
-      </TouchableOpacity>
-      <Text style={styles.title}>Lista de Medidores</Text>
-      {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        <ScrollView>
-          {medidores.length === 0 ? (
-            <View style={styles.noMedidoresContainer}>
-              <Text style={styles.noMedidoresText}>No tienes medidores. Registra uno.</Text>
-            </View>
-          ) : (
-            medidores.map((medidor, index) => (
-              <View key={index} style={styles.meterContainer}>
-                <View style={styles.meterInfo}>
-                  <Text style={styles.meterText}>{medidor.direccion}</Text>
-                  <Text style={styles.meterText}>Cliente N° {medidor.numcliente}</Text>
-                </View>
-                <TouchableOpacity onPress={() => handleSelectMedidor(medidor)}>
-                  <Icon name="arrow-right" size={20} color="#FE0F64" />
+        <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')} style={styles.backButtonContainer}>
+            <Icon name="arrow-back" size={24} color="#4271d4" />
+            <Text style={styles.backButtonText}>Volver</Text>
+        </TouchableOpacity>
+        <Text style={styles.title}>Seleccione un Medidor</Text>
+        <FlatList
+            data={medidores}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+                <TouchableOpacity style={styles.meterItem} onPress={() => handleSelectMedidor(item)}>
+                    <Text style={styles.meterText}>{item.direccion}</Text>
                 </TouchableOpacity>
-              </View>
-            ))
-          )}
-        </ScrollView>
-      )}
+            )}
+        />
     </View>
-  );
+);
 };
 
 const styles = StyleSheet.create({
-  container: {
+container: {
     flex: 1,
     padding: 20,
-  },
-  backButton: {
-    alignSelf: 'flex-start',
-    marginVertical: 10,
-  },
-  backButtonText: {
-    fontSize: 16,
-    color: '#4271d4',
-    fontWeight: 'bold',
-    fontFamily: 'Roboto-Regular',
-  },
-  title: {
+    backgroundColor: '#FFFFFF',
+},
+title: {
     fontSize: 24,
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginVertical: 20,
-    color: '#2F2F2F',
-    fontFamily: 'Roboto-Bold',
-  },
-  meterContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#F6F6F6',
-    borderRadius: 5,
+    marginBottom: 20,
+    color: '#333333',
+},
+meterItem: {
+    padding: 15,
+    backgroundColor: '#F2F2F2',
+    borderRadius: 8,
     marginBottom: 10,
-  },
-  meterInfo: {
-    flex: 1,
-  },
-  meterText: {
-    fontSize: 16,
-    color: '#2F2F2F',
-    fontFamily: 'Roboto-Regular',
-  },
-  noMedidoresContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  noMedidoresText: {
+},
+meterText: {
     fontSize: 18,
-    color: '#FF0000',
-    textAlign: 'center',
-  },
-  button: {
-    backgroundColor: '#FE0F64',
-    borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    color: '#333333',
+},
+backButtonContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 5,
-    marginTop: 20,
-  },
-  buttonText: {
+    marginBottom: 10,
+},
+backButtonText: {
     fontSize: 16,
-    color: '#FFFFFF',
+    color: '#4271d4',
+    marginLeft: 5,
     fontWeight: 'bold',
     fontFamily: 'Roboto-Regular',
-  },
+},
 });
 
 export default HelpMeterListScreen;
