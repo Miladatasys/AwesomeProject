@@ -90,15 +90,18 @@ const MedidoresScreen = () => {
         ]
       );
     };
-
     fetchMedidores();
   }, [navigation]);
 
+  const handleNavigateToHistorialCliente = (medidorId) => {
+    navigation.navigate('HistorialClienteScreen', { medidorId });
+  };
+
   return (
     <View style={styles.container}>
-            <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')} style={styles.backButtonContainer}>
-                <Text style={styles.backButtonText}>Volver</Text>
-            </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')} style={styles.backButtonContainer}>
+        <Text style={styles.backButtonText}>Volver</Text>
+      </TouchableOpacity>
       <Text style={styles.title}>Seleccione un Medidor</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
@@ -120,6 +123,7 @@ const MedidoresScreen = () => {
                       numeroCliente: medidor.numcliente,
                     }}
                     medidorId={medidor.id}
+                    onPress={() => handleNavigateToHistorialCliente(medidor.id)}
                   />
                 </View>
                 <TouchableOpacity onPress={() => handleDelete(medidor.id)} style={styles.trashButton}>
@@ -155,13 +159,12 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 24, //18
+    fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20, // Margen inferior ajustado
-    marginTop: 20, // Margen superior añadido para separación del botón de regreso
+    marginBottom: 20,
+    marginTop: 20,
     color: '#333333',
   },
-  
 
   noMedidoresContainer: {
     flex: 1,

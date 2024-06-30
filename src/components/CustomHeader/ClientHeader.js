@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 
-const ClientHeader = ({ direccion, medidorId }) => {
+const ClientHeader = ({ direccion, medidorId, onPress }) => {
   const navigation = useNavigation();
 
   if (!direccion) {
@@ -11,7 +11,9 @@ const ClientHeader = ({ direccion, medidorId }) => {
   }
 
   const handleNavigateToHistorialCliente = () => {
-    navigation.navigate('HistorialClienteScreen', { medidorId });
+    if (onPress) {
+      onPress();  // Llama a la función onPress proporcionada desde MedidoresScreen
+    }
   };
 
   return (
@@ -41,7 +43,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: '#ffff', //Fondo del Client Header
+    backgroundColor: '#ffff', // Fondo del Client Header
     borderRadius: 10,
     flex: 1, // Permite que el contenedor tome el espacio disponible
   },
@@ -69,4 +71,3 @@ const styles = StyleSheet.create({
 });
 
 export default ClientHeader;
-

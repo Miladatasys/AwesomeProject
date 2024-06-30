@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, Pressable, StyleSheet, Alert } from 'react-native';
+import { View, Text, Image, Pressable, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -60,13 +60,15 @@ const CotizacionConsumoScreen = () => {
                 },
             ]);
         } catch (error) {
-            Alert.alert('Error', 'Error cotizar la lectura');
-            console.error('Error submitting data', error);
+            Alert.alert('Error', 'No puede enviar una lectura vacia');
         }
     };
 
     return (
         <View style={styles.container}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('HomeScreen')}>
+            <Text style={styles.backButtonText}>Volver a Home</Text>
+         </TouchableOpacity>
             <Text style={styles.headerTitle}>Previsualización</Text>
             <View style={styles.textContainer}>
                 <Text style={styles.textTitle}>Lectura Reconocida:</Text>
@@ -154,6 +156,16 @@ const styles = StyleSheet.create({
         color: '#333333',
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    backButton: {
+        alignSelf: 'flex-start',
+        marginBottom: 10,
+    },
+    backButtonText: {
+        fontSize: 16,
+        color: '#4271d4',
+        fontWeight: 'bold',
+        fontFamily: 'Roboto-Regular',
     },
 });
 
