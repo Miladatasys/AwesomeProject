@@ -23,7 +23,7 @@ const NewPasswordScreen = () => {
             setPasswordError('Ingrese la nueva contraseña');
             isValid = false;
         } else if (newPassword.length < 8) {
-            setPasswordError('La contraseña debe tener al menos 8 caracteres');
+            setPasswordError('La contraseña debe tener al menos 8 caracteres y máximo 15, una letra mayúscula, una letra minúscula y un número');
             isValid = false;
         } else if (!passwordRegex.test(newPassword)) {
             setPasswordError('La contraseña debe tener al menos 8 caracteres y máximo 15, una letra mayúscula, una letra minúscula y un número');
@@ -44,6 +44,7 @@ const NewPasswordScreen = () => {
         return isValid;
     };
 
+
     const calculatePasswordStrength = (password) => {
         let strength = 0;
         if (password.length >= 8) {
@@ -61,11 +62,51 @@ const NewPasswordScreen = () => {
         return (strength / 4) * 100;
     };
 
+    const calculateConfirmPassword = () => {
+        if (confirmNewPassword !== newPassword) {
+            return 100; // Si las contraseñas no coinciden, la fortaleza es 0%
+        } else {
+            return 0; // Si las contraseñas coinciden, la fortaleza es 100%
+        }
+    };
+
+
     const handlePasswordChange = (text) => {
         setNewPassword(text);
         const strength = calculatePasswordStrength(text);
         setPasswordStrength(strength);
+        let isValid = true;
+        if (!text.trim()) {
+            setPasswordError('Ingrese la nueva contraseña');
+            isValid = false;
+        } else if (text.length < 8) {
+            setPasswordError('La contraseña debe tener al menos 8 caracteres y máximo 15, una letra mayúscula, una letra minúscula y un número');
+            isValid = false;
+        } else if (!passwordRegex.test(text)) {
+            setPasswordError('La contraseña debe tener al menos 8 caracteres y máximo 15, una letra mayúscula, una letra minúscula y un número');
+            isValid = false;
+        } else {
+            setPasswordError('');
+        }
     };
+    
+    
+    const handleConfirmPasswordChange = (text) =>{
+        setConfirmNewPassword(text); //
+        let isValidConfirm = true;
+        if (!text.trim()) {
+            setConfirmPasswordError('Confirme la nueva contraseña');
+            isValidConfirm = false;
+        } else if (text !== newPassword) {
+            setConfirmPasswordError('Las contraseñas no coinciden');
+            isValidConfirm = false;
+        } else {
+            setConfirmPasswordError('');
+        }
+
+    };
+
+
 
     const onSubmitPressed = () => {
         if (validateInputs()) {
@@ -115,7 +156,6 @@ const NewPasswordScreen = () => {
                     secureTextEntry
                     error={passwordError}
                 />
-                {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
 
                 <View style={styles.passwordStrengthContainer}>
                     <View
@@ -124,8 +164,10 @@ const NewPasswordScreen = () => {
                             {
                                 width: `${passwordStrength}%`,
                                 backgroundColor:
-                                    passwordStrength < 50
-                                        ? 'gray'
+                            !newPassword || passwordStrength === 0
+                            ? 'grey'
+                                    :passwordStrength < 50
+                                        ? 'grey'
                                         : passwordStrength < 75
                                             ? 'yellow'
                                             : 'green',
@@ -133,14 +175,29 @@ const NewPasswordScreen = () => {
                         ]}
                     />
                 </View>
+                {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+
 
                 <CustomInput
                     placeholder="Confirmar nueva contraseña" 
                     value={confirmNewPassword} 
-                    setValue={setConfirmNewPassword}
+                    setValue={handleConfirmPasswordChange}
                     secureTextEntry
                     error={confirmPasswordError}
                 />
+                <View style={styles.passwordStrengthContainer}>
+                <View
+                    style={[
+                        styles.passwordStrengthIndicator,
+                        {
+                            width: `${calculateConfirmPassword()}%`,
+                            backgroundColor: 
+                            confirmNewPassword !== newPassword ? 'grey' : 'green',
+                        },
+                    ]}
+                />
+            </View>
+
                 {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
 
                 <CustomButton text="Enviar" onPress={onSubmitPressed} style={styles.button} disabled={!!passwordError || !passwordStrength} />
@@ -171,6 +228,9 @@ const styles = StyleSheet.create({
         color: '#FE0F64',
         fontSize: 12,
         fontFamily: 'Roboto-Regular',
+        marginBottom: 20,
+        alignSelf: 'flex-start', 
+        textAlign: 'left', 
     },
     button: {
         marginTop: 20,
