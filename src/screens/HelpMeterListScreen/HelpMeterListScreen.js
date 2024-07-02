@@ -19,7 +19,7 @@ const HelpMeterListScreen = () => {
                     throw new Error('No token found');
                 }
                 const response = await axios.get('http://192.168.1.88:8080/cliente/userMedidores/profile', {
-                    headers: { Authorization: `Bearer ${token}` }
+                  headers: { Authorization: `Bearer ${token}` }
                 });
                 if (response.data && response.data.object) {
                     setMeters(response.data.object);
@@ -139,4 +139,3 @@ const styles = StyleSheet.create({
 });
 
 export default HelpMeterListScreen;
-
